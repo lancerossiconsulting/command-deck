@@ -2,9 +2,14 @@
 
 Lance's "Jarvis" heads-up display. A single-page HUD over every active project line: priority stack, line health traffic lights, sprint gauge, writing pipeline, live flags, carry-forward ticker, live Manhattan KS weather, and a capacity dimmer.
 
+**Live (desktop + mobile):** https://lancerossiconsulting.github.io/command-deck/
+Repo: https://github.com/lancerossiconsulting/command-deck — push to `main` redeploys in ~1 minute.
+
 ## Run it
 
 **One file, fully portable.** Double-click `index.html` — or copy it anywhere (Downloads, iCloud, another machine) and double-click it there. No build step, no server, no companion files. (Weather needs internet; everything else works offline.)
+
+On a phone, open the live URL and use Share → **Add to Home Screen** — the deck installs as a dark full-screen app (theme + status bar are pre-configured). Note: the dispatch queue, wallpaper choice, and capacity live in each device's localStorage — the phone's queue is separate from the desktop's.
 
 ## Architecture
 
@@ -21,7 +26,8 @@ When Lance asks to "sync the deck" / "update the command deck":
 2. Gather what changed — morning-brief logic, Linear/Notion state, project memories, this session's outcomes.
 3. Rewrite the data block only: set `updated` to today's date, re-triage `priorities` (any `nofail` entry flips the top-bar pill to NO-FAIL ACTIVE), refresh `lines`, `flags`, `carry`, `sprint`, and the per-line `pages`.
 4. Do not touch the shell unless the deck needs a new capability.
-5. If Lance keeps a copy elsewhere (e.g. `Downloads\command-deck.html`), refresh that copy too.
+5. Commit and push to `main` — GitHub Pages redeploys the live/mobile deck in ~1 minute.
+6. If Lance keeps a copy elsewhere (e.g. `Downloads\command-deck.html`), refresh that copy too.
 
 Line lights: `g` green · `y` yellow · `r` red · `d` dormant (back-burnered).
 Priority tags: `nofail` · `behind` · `decision` · `next`.
