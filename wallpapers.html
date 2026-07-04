@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cloud &amp; Fire // Wallpapers</title>
+<style>
+/* =====================================================================
+   CLOUD & FIRE — INTERACTIVE SHADER WALLPAPERS
+   Five fullscreen WebGL wallpapers. Mouse bends each field; clicks
+   pulse, splash, warp, shock, and ripple. Keys 1-5 (or the dots)
+   switch wallpapers; the last choice persists.
+   Single file — usable directly in Wallpaper Engine / Lively Wallpaper
+   as a web wallpaper, or fullscreen in a browser (F11).
+   ===================================================================== */
+html,body{margin:0;height:100%;overflow:hidden;background:#070b12}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block;cursor:crosshair}
+#dots{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:2;opacity:.25;transition:opacity .3s}
+#dots:hover{opacity:1}
+.dot{width:10px;height:10px;border-radius:50%;border:1px solid #56708c;background:transparent;cursor:pointer;padding:0}
+.dot.on{background:#e8913a;border-color:#e8913a}
+#name{position:fixed;bottom:36px;left:50%;transform:translateX(-50%);font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#56708c;opacity:0;transition:opacity .4s;pointer-events:none;z-index:2}
+</style>
+</head>
+<body>
+<canvas id="wp"></canvas>
+<div id="name"></div>
+<div id="dots"></div>
+<script>
+const SH=[
+{name:'Ember Flow',src:`float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float n(vec2 p){vec2 i=floor(p);vec2 f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1.,0.)),f.x),mix(h(i+vec2(0.,1.)),h(i+vec2(1.,1.)),f.x),f.y);}
+float fbm(vec2 p){float v=0.;float a=.5;for(int i=0;i<5;i++){v+=a*n(p);p*=2.03;a*=.5;}return v;}
+void main(){vec2 uv=(gl_FragCoord.xy-.5*u_res)/u_res.y;vec2 m=(u_mouse-.5*u_res)/u_res.y;
+float dm=length(uv-m);vec2 q=uv*2.2+vec2(0.,u_time*.13);q+=(uv-m)*.55/(dm+.45);
+float f=fbm(q+1.6*fbm(q+u_time*.05));
+vec3 col=mix(vec3(.025,.045,.085),vec3(.16,.26,.40),f);
+col+=vec3(.91,.45,.18)*smoothstep(.55,.95,f)*(.5+.3*sin(u_time*.7));
+col+=vec3(.91,.45,.18)*u_click*exp(-length(uv-u_cpos)*3.);
+gl_FragColor=vec4(col,1.);}`},
+{name:'Liquid Orbs',src:`float bl(vec2 d,float s){return s/(length(d)+.012);}
+void main(){vec2 uv=(gl_FragCoord.xy-.5*u_res)/u_res.y;vec2 m=(u_mouse-.5*u_res)/u_res.y;
+float t=u_time;float v=0.;
+v+=bl(uv-m,.055);
+v+=bl(uv-vec2(sin(t*.7)*.5,cos(t*.9)*.3),.045);
+v+=bl(uv-vec2(sin(t*1.1+2.)*.38,sin(t*.6)*.4),.04);
+v+=bl(uv-vec2(cos(t*.5)*.45,sin(t*1.3+1.)*.27),.05);
+v+=bl(uv-vec2(cos(t*.85+4.)*.55,cos(t*1.05+2.)*.2),.035);
+v+=u_click*bl(uv-u_cpos,.08);
+vec3 col=mix(vec3(.02,.04,.08),vec3(.30,.42,.58),smoothstep(.7,1.7,v));
+col=mix(col,vec3(.91,.45,.18),smoothstep(2.,2.8,v));
+gl_FragColor=vec4(col,1.);}`},
+{name:'Warp Field',src:`float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+void main(){vec2 uv=(gl_FragCoord.xy-.5*u_res)/u_res.y;vec2 m=(u_mouse-.5*u_res)/u_res.y;
+uv-=m*.45;vec3 col=vec3(.012,.02,.045);float sp=1.+u_click*3.5;
+for(int i=0;i<4;i++){float fi=float(i);
+float t=fract(u_time*.07*sp+fi*.25);float sc=mix(10.,.55,t);
+vec2 gv=fract(uv*sc)-.5;vec2 id=floor(uv*sc)+fi*119.;
+vec2 off=(vec2(h(id),h(id+7.))-.5)*.85;
+float star=smoothstep(.04+.03*h(id+3.),.0,length(gv-off));
+float tw=.6+.4*sin(u_time*3.+h(id)*6.28);
+col+=star*t*t*tw*mix(vec3(.49,.61,.74),vec3(.91,.45,.18),step(.8,h(id+11.)));}
+gl_FragColor=vec4(col,1.);}`},
+{name:'Circuit Cells',src:`vec2 h2(vec2 p){return fract(sin(vec2(dot(p,vec2(127.1,311.7)),dot(p,vec2(269.5,183.3))))*43758.5453);}
+void main(){vec2 uv=(gl_FragCoord.xy-.5*u_res)/u_res.y;vec2 m=(u_mouse-.5*u_res)/u_res.y;
+vec2 p=uv*5.5;vec2 ip=floor(p);vec2 fp=fract(p);
+float f1=8.;float f2=8.;
+for(int y=-1;y<=1;y++){for(int x=-1;x<=1;x++){
+vec2 g=vec2(float(x),float(y));vec2 o=h2(ip+g);o=.5+.45*sin(u_time*.5+6.28*o);
+float d=length(g+o-fp);if(d<f1){f2=f1;f1=d;}else if(d<f2){f2=d;}}}
+float glow=exp(-(f2-f1)*9.);float boost=exp(-length(uv-m)*2.5);
+vec3 col=vec3(.015,.025,.05);
+col+=vec3(.18,.28,.42)*glow*(.35+.65*boost);
+col+=vec3(.91,.45,.18)*glow*boost*.7;
+float ring=abs(length(uv-u_cpos)-(1.-u_click)*1.2);
+col+=vec3(.91,.45,.18)*exp(-ring*14.)*u_click;
+gl_FragColor=vec4(col,1.);}`},
+{name:'Ripple Pool',src:`void main(){vec2 uv=(gl_FragCoord.xy-.5*u_res)/u_res.y;vec2 m=(u_mouse-.5*u_res)/u_res.y;
+float w=0.;
+for(int i=0;i<6;i++){float a=u_time-u_drops[i].z;
+if(a>0.&&a<7.){float d=length(uv-u_drops[i].xy);w+=sin(d*36.-a*7.)*exp(-d*2.5)*exp(-a*.7);}}
+float dm=length(uv-m);
+w+=sin(dm*28.-u_time*5.)*exp(-dm*3.5)*.6;
+vec3 col=mix(vec3(.02,.035,.07),vec3(.30,.42,.58),.5+.5*w);
+col+=vec3(.91,.45,.18)*smoothstep(.55,1.,w)*.45;
+gl_FragColor=vec4(col,1.);}`}
+];
+
+const cv=document.getElementById('wp');
+const gl=cv.getContext('webgl');
+const VS='attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+const HDR='precision highp float;\nuniform vec2 u_res;uniform float u_time;uniform vec2 u_mouse;uniform float u_click;uniform vec2 u_cpos;uniform vec3 u_drops[6];\n';
+
+function size(){const d=Math.min(1.5,devicePixelRatio||1);cv.width=innerWidth*d;cv.height=innerHeight*d;gl.viewport(0,0,cv.width,cv.height);}
+size();addEventListener('resize',size);
+
+gl.bindBuffer(gl.ARRAY_BUFFER,gl.createBuffer());
+gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+
+function sh(type,src){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))console.error(gl.getShaderInfoLog(s));return s;}
+function build(frag){
+  const p=gl.createProgram();
+  gl.attachShader(p,sh(gl.VERTEX_SHADER,VS));
+  gl.attachShader(p,sh(gl.FRAGMENT_SHADER,HDR+frag));
+  gl.linkProgram(p);
+  return {p,a:gl.getAttribLocation(p,'p'),
+    res:gl.getUniformLocation(p,'u_res'),time:gl.getUniformLocation(p,'u_time'),
+    mouse:gl.getUniformLocation(p,'u_mouse'),click:gl.getUniformLocation(p,'u_click'),
+    cpos:gl.getUniformLocation(p,'u_cpos'),drops:gl.getUniformLocation(p,'u_drops')};
+}
+
+const store={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:v;}catch(e){return d;}},set(k,v){try{localStorage.setItem(k,v);}catch(e){}}};
+const progs=[],dots=[];let cur=-1;
+const nameEl=document.getElementById('name');let nameTimer;
+function use(i){
+  if(i===cur)return;
+  cur=i;
+  if(!progs[i])progs[i]=build(SH[i].src);
+  gl.useProgram(progs[i].p);
+  gl.enableVertexAttribArray(progs[i].a);
+  gl.vertexAttribPointer(progs[i].a,2,gl.FLOAT,false,0,0);
+  dots.forEach((d,j)=>d.classList.toggle('on',j===i));
+  nameEl.textContent=SH[i].name;nameEl.style.opacity=1;
+  clearTimeout(nameTimer);nameTimer=setTimeout(()=>nameEl.style.opacity=0,1400);
+  store.set('wp.cur',i);
+}
+
+const bar=document.getElementById('dots');
+SH.forEach((s,i)=>{
+  const d=document.createElement('button');
+  d.className='dot';d.title=(i+1)+' · '+s.name;d.setAttribute('aria-label',s.name);
+  d.addEventListener('click',()=>use(i));
+  bar.appendChild(d);dots.push(d);
+});
+addEventListener('keydown',e=>{const k=+e.key;if(k>=1&&k<=5)use(k-1);});
+
+let mx=0,my=0,tx=0,ty=0,click=0,cpx=0,cpy=0,di=0;
+const drops=new Float32Array(18);
+for(let i=0;i<6;i++)drops[i*3+2]=-99;
+const t0=performance.now();
+const pos=e=>[e.clientX/innerWidth*cv.width,cv.height-e.clientY/innerHeight*cv.height];
+addEventListener('pointermove',e=>{[tx,ty]=pos(e);});
+addEventListener('pointerdown',e=>{
+  if(e.target.classList&&e.target.classList.contains('dot'))return;
+  const[px,py]=pos(e),t=(performance.now()-t0)/1000;
+  click=1;
+  cpx=(px-.5*cv.width)/cv.height;cpy=(py-.5*cv.height)/cv.height;
+  drops[di*3]=cpx;drops[di*3+1]=cpy;drops[di*3+2]=t;di=(di+1)%6;
+});
+tx=mx=cv.width*.5;ty=my=cv.height*.5;
+use(Math.min(4,Math.max(0,+store.get('wp.cur',0))));
+
+(function loop(){
+  const t=(performance.now()-t0)/1000;
+  mx+=(tx-mx)*.08;my+=(ty-my)*.08;click*=.965;
+  const P=progs[cur];
+  gl.uniform2f(P.res,cv.width,cv.height);
+  gl.uniform1f(P.time,t);
+  gl.uniform2f(P.mouse,mx,my);
+  gl.uniform1f(P.click,click);
+  gl.uniform2f(P.cpos,cpx,cpy);
+  if(P.drops)gl.uniform3fv(P.drops,drops);
+  gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

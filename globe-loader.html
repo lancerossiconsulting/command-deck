@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Globe Loader</title>
+<style>
+/* =====================================================================
+   GLOBE LOADING INDICATOR — prototype
+   200x200 monochrome spinning globe with real country outlines
+   (world-atlas 110m via CDN, decoded inline — no libraries), wrapped
+   in a whirl of orbiting strokes, centered on an off-white field.
+   Falls back to a graticule-only sphere if offline. No text by design.
+   ===================================================================== */
+html,body{margin:0;height:100%}
+body{background:#f2f0ea;display:flex;align-items:center;justify-content:center}
+canvas{width:200px;height:200px}
+</style>
+</head>
+<body>
+<canvas id="g" width="200" height="200" role="img" aria-label="Loading"></canvas>
+<script>
+(function(){
+const cv=document.getElementById('g');
+const dpr=Math.min(2,devicePixelRatio||1);
+cv.width=200*dpr;cv.height=200*dpr;
+const ctx=cv.getContext('2d');ctx.scale(dpr,dpr);
+const R=62,CX=100,CY=100,T=-0.32,sT=Math.sin(T),cT=Math.cos(T);
+let rings=null;
+
+/* decode TopoJSON countries to rings of [lon,lat] — no library needed */
+function ringify(topo){
+  const tr=topo.transform;
+  const arcs=topo.arcs.map(a=>{let x=0,y=0;return a.map(d=>{x+=d[0];y+=d[1];return[x*tr.scale[0]+tr.translate[0],y*tr.scale[1]+tr.translate[1]];});});
+  const out=[];
+  const add=r=>{let pts=[];r.forEach(i=>{let a=i<0?arcs[~i].slice().reverse():arcs[i].slice();if(pts.length)a=a.slice(1);pts=pts.concat(a);});out.push(pts);};
+  topo.objects.countries.geometries.forEach(g=>{
+    if(g.type==='Polygon')g.arcs.forEach(add);
+    else if(g.type==='MultiPolygon')g.arcs.forEach(p=>p.forEach(add));
+  });
+  return out;
+}
+fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
+  .then(r=>r.json()).then(t=>{rings=ringify(t);}).catch(()=>{});
+
+function proj(lon,lat,rot){
+  const L=(lon-rot)*Math.PI/180,P=lat*Math.PI/180;
+  const sP=Math.sin(P),cP=Math.cos(P),cL=Math.cos(L);
+  return [CX+R*cP*Math.sin(L),CY-R*(cT*sP-sT*cP*cL),sT*sP+cT*cP*cL>0];
+}
+function strokeRings(list,rot){
+  ctx.beginPath();
+  for(const ring of list){
+    let pen=false;
+    for(const pt of ring){
+      const [x,y,v]=proj(pt[0],pt[1],rot);
+      if(v){if(pen)ctx.lineTo(x,y);else{ctx.moveTo(x,y);pen=true;}}else pen=false;
+    }
+  }
+  ctx.stroke();
+}
+const grat=[];
+for(let lon=-180;lon<180;lon+=30){const r=[];for(let lat=-85;lat<=85;lat+=5)r.push([lon,lat]);grat.push(r);}
+for(let lat=-60;lat<=60;lat+=30){const r=[];for(let lon=-180;lon<=180;lon+=5)r.push([lon,lat]);grat.push(r);}
+
+function frame(now){
+  const t=now/1000,rot=t*42;
+  ctx.fillStyle='#f2f0ea';ctx.fillRect(0,0,200,200);
+  ctx.lineCap='round';
+  for(let i=0;i<22;i++){
+    const a=-t*1.5+i*2.4,r2=80+9*Math.sin(t*1.7+i*1.3),len=0.18+0.12*Math.sin(i*2.1+t);
+    ctx.beginPath();
+    ctx.strokeStyle='rgba(40,40,40,'+(0.06+0.10*((i*37)%10)/10).toFixed(2)+')';
+    ctx.lineWidth=1+((i*13)%3)*0.5;
+    ctx.arc(CX,CY,r2,a,a+len);ctx.stroke();
+  }
+  ctx.setLineDash([1,7]);ctx.lineDashOffset=-t*14;
+  ctx.beginPath();ctx.strokeStyle='rgba(40,40,40,0.25)';ctx.lineWidth=1;
+  ctx.arc(CX,CY,72,0,7);ctx.stroke();ctx.setLineDash([]);
+  ctx.beginPath();ctx.fillStyle='#faf9f5';ctx.arc(CX,CY,R,0,7);ctx.fill();
+  ctx.beginPath();ctx.lineWidth=1.4;ctx.strokeStyle='#2b2b2b';ctx.arc(CX,CY,R,0,7);ctx.stroke();
+  ctx.lineWidth=0.5;ctx.strokeStyle='rgba(43,43,43,0.18)';strokeRings(grat,rot);
+  if(rings){ctx.lineWidth=0.7;ctx.strokeStyle='#2b2b2b';strokeRings(rings,rot);}
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
