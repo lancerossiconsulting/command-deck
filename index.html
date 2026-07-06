@@ -468,15 +468,32 @@ body.conserve .ekg .b{animation:none}
 /* overview layout — named areas so wide screens re-flow cleanly */
 .ovgrid{display:grid;gap:12px;align-items:start;
   grid-template-columns:1fr 1fr;
-  grid-template-areas:"priority lines" "priority sprint" "pipe form"}
+  grid-template-areas:"priority lines" "priority sprint" "pipe form" "ledger ledger"}
 .p-priority{grid-area:priority}
 .p-lines{grid-area:lines}
 .p-sprint{grid-area:sprint}
 .p-pipe{grid-area:pipe}
 .p-form{grid-area:form}
+.p-ledger{grid-area:ledger}
 @media (max-width:900px){
-  .ovgrid{grid-template-columns:1fr;grid-template-areas:"priority" "lines" "sprint" "pipe" "form"}
+  .ovgrid{grid-template-columns:1fr;grid-template-areas:"priority" "lines" "sprint" "pipe" "form" "ledger"}
 }
+
+/* ledger pulse — read-only HUD strip fed by the Ledger app's
+   /api/deck-summary route. No inputs; display only. */
+.pulse{display:flex;flex-wrap:wrap;gap:18px 28px;align-items:baseline}
+.pulse .pstat{display:flex;flex-direction:column;gap:3px;min-width:88px}
+.pulse .pstat .pk{font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--ink-faint);text-transform:uppercase}
+.pulse .pstat .pv{font-family:var(--mono);font-size:15px;color:var(--ink)}
+.pulse .pstat .pv.ok{color:var(--ok)}
+.pulse .pstat .pv.risk{color:var(--risk)}
+.pulse .pstat .pv.dim{color:var(--ink-faint);font-size:12px}
+.pulse .spacer{flex:1;min-width:0}
+.pulse .pchip{font-family:var(--mono);font-size:9px;letter-spacing:.12em;padding:4px 9px;white-space:nowrap;text-transform:uppercase;align-self:center;
+  clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px)}
+.pchip.locked{background:rgba(74,222,128,0.1);color:var(--ok);border:1px solid rgba(74,222,128,.35)}
+.pchip.open{background:rgba(90,209,240,0.1);color:var(--cyan);border:1px solid rgba(90,209,240,.35)}
+.pchip.off{background:rgba(111,126,146,.1);color:var(--ink-faint);border:1px solid var(--line)}
 
 /* readability guards — no infinite line lengths on wide panels */
 .prow .ptext .s,.litem .body .d,.flag .dsc{max-width:78ch}
@@ -489,7 +506,7 @@ body.conserve .ekg .b{animation:none}
   .deck{grid-template-columns:260px 1fr 390px;grid-template-rows:64px 1fr 38px;gap:2px;padding:12px}
   .main{padding:24px 30px 30px}
   .ovgrid{gap:14px;grid-template-columns:1.25fr 1fr 1fr;
-    grid-template-areas:"priority lines sprint" "priority pipe form"}
+    grid-template-areas:"priority lines sprint" "priority pipe form" "ledger ledger ledger"}
   .panel{padding:16px 18px}
   .pagehead h1{font-size:27px}
   .pagehead .meta{font-size:12px}
@@ -984,6 +1001,10 @@ function renderOverview(){
           <div class="k">Constraint</div><div class="v">Energy conservation is real — pace the deck to capacity</div>
         </div>
       </div>
+      <div class="panel p-ledger" id="ledgerpanel">
+        <h3>Household Ledger <span class="tag" id="ledgertag">connecting</span></h3>
+        <div class="pulse" id="pulse"><span class="pk" style="font-family:var(--mono);font-size:11px;color:var(--ink-faint)">reaching localhost:5181…</span></div>
+      </div>
     </div>`;
 
   const ps = document.getElementById('pstack');
@@ -1007,6 +1028,8 @@ function renderOverview(){
        <span class="track"><span class="fill" data-w="${s.pct}" style="width:0"></span></span>
        <span class="ct">${s.count}</span>`));
   });
+
+  pollLedger();
 }
 
 function renderPage(id){
@@ -1135,6 +1158,56 @@ async function weather(){
   }
 }
 weather(); setInterval(weather, 15*60*1000);
+
+/* ---------- ledger pulse ----------
+   Read-only current-month summary fetched from the Ledger app's
+   /api/deck-summary route (localhost:5181). Display only — no inputs,
+   no writes back to Ledger. Safe no-op if Overview isn't the active
+   page or the Ledger dev server isn't running (shows an offline chip). */
+const LEDGER_URL = 'http://localhost:5181/api/deck-summary';
+function timeAgo(iso){
+  if(!iso) return null;
+  const s = Math.max(0, (Date.now()-new Date(iso).getTime())/1000);
+  if(s<60) return 'just now';
+  const m=Math.floor(s/60); if(m<60) return m+'m ago';
+  const h=Math.floor(m/60); if(h<24) return h+'h ago';
+  return Math.floor(h/24)+'d ago';
+}
+function money2(n){
+  return n==null ? '—' : '$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function renderPulse(data,ok){
+  const tag = document.getElementById('ledgertag');
+  const pulse = document.getElementById('pulse');
+  if(!tag || !pulse) return;
+  if(!ok || !data || data.hasUser===false){
+    tag.textContent='offline';
+    pulse.innerHTML = `<span class="pchip off">NOT RUNNING</span>
+      <span style="font-family:var(--mono);font-size:11px;color:var(--ink-mute)">start Ledger on port 5181 to see this month's figures</span>`;
+    return;
+  }
+  tag.textContent = data.locked ? 'locked' : 'in progress';
+  const surplusClass = data.surplus==null ? '' : (data.surplus>=0 ? 'ok' : 'risk');
+  pulse.innerHTML = `
+    <span class="pchip ${data.locked?'locked':'open'}">${data.locked?'LOCKED':'OPEN'}</span>
+    <div class="pstat"><span class="pk">${data.monthLabel}</span><span class="pv">${data.entriesLogged}/${data.budgetItemCount} logged</span></div>
+    <div class="pstat"><span class="pk">Income floor</span><span class="pv">${money2(data.incomeFloor)}</span></div>
+    <div class="pstat"><span class="pk">Income actual</span><span class="pv ${data.incomeActual==null?'dim':''}">${data.incomeActual!=null?money2(data.incomeActual):'not entered'}</span></div>
+    <div class="pstat"><span class="pk">Outflow</span><span class="pv ${data.totalOutflow==null?'dim':''}">${data.totalOutflow!=null?money2(data.totalOutflow):'not entered'}</span></div>
+    <div class="pstat"><span class="pk">Surplus</span><span class="pv ${surplusClass}">${data.surplus!=null?money2(data.surplus):'—'}</span></div>
+    <span class="spacer"></span>
+    <div class="pstat" style="align-items:flex-end"><span class="pk">Updated</span><span class="pv dim">${timeAgo(data.lastUpdated)||'no entries yet'}</span></div>`;
+}
+async function pollLedger(){
+  try{
+    const r = await fetch(LEDGER_URL, { cache:'no-store' });
+    if(!r.ok) throw new Error('bad status');
+    renderPulse(await r.json(), true);
+  }catch(e){
+    renderPulse(null, false);
+  }
+}
+pollLedger(); setInterval(pollLedger, 60*1000);
 
 /* ---------- capacity ---------- */
 const capInput=document.getElementById('capacity');
