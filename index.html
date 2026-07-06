@@ -7,6 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Command Deck">
+<meta name="robots" content="noindex, nofollow, noarchive">
 <title>Cloud &amp; Fire // Command Deck MK II</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -102,6 +103,24 @@ body::after{
   animation:sweep 14s linear infinite;
 }
 @keyframes sweep{0%{top:-12%}55%{top:112%}100%{top:112%}}
+
+/* ---------- access gate ----------
+   Client-side passphrase screen. This is NOT real security — the page
+   source (including DECK_DATA) ships to the browser regardless of
+   whether this is showing; it only stops casual visitors and search
+   engines, which is all it's meant to do on a public Pages URL. */
+#lock{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;background:#05080d;transition:opacity .4s ease}
+#lock.gone{opacity:0;pointer-events:none;display:none}
+.lockcard{width:280px;text-align:center}
+.lockcard .lk-brand{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--cyan-dim);text-transform:uppercase;margin-bottom:18px}
+.lockcard input{width:100%;box-sizing:border-box;background:rgba(13,18,27,.7);border:1px solid var(--line);color:var(--ink);font-family:var(--mono);font-size:13px;padding:10px 12px;border-radius:2px;outline:none;text-align:center;letter-spacing:.12em}
+.lockcard input:focus{border-color:var(--cyan-dim);box-shadow:0 0 0 1px var(--cyan-glow)}
+.lockcard button{margin-top:10px;width:100%;background:none;border:1px solid var(--cyan-dim);color:var(--cyan);font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;padding:9px;cursor:pointer;border-radius:2px}
+.lockcard button:hover{background:rgba(90,209,240,.08)}
+.lockcard .lk-err{font-family:var(--mono);font-size:10px;color:var(--risk);margin-top:10px;min-height:14px;opacity:0;transition:opacity .2s}
+.lockcard .lk-err.show{opacity:1}
+.lockcard.shake{animation:lkshake .35s}
+@keyframes lkshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 
 /* ---------- boot: arc reactor + globe + system log ---------- */
 #boot{
@@ -571,6 +590,53 @@ body.conserve .ekg .b{animation:none}
 </style>
 </head>
 <body>
+<div id="lock">
+  <div class="lockcard" id="lockcard">
+    <div class="lk-brand">Cloud &amp; Fire // Access</div>
+    <input type="password" id="lockpass" placeholder="passphrase" autocomplete="off" aria-label="Passphrase">
+    <button id="lockbtn" type="button">Unlock</button>
+    <div class="lk-err" id="lockerr">incorrect passphrase</div>
+  </div>
+</div>
+<script>
+(function accessGate(){
+  var HASH = '70928272093e23709244bae4971d14890c3befbb38dc7082bd048903fd2037d0';
+  var KEY = 'deck.unlocked';
+  var lock = document.getElementById('lock');
+  var input = document.getElementById('lockpass');
+  var btn = document.getElementById('lockbtn');
+  var err = document.getElementById('lockerr');
+  var card = document.getElementById('lockcard');
+
+  function sha256hex(msg){
+    return crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg)).then(function(buf){
+      return Array.prototype.map.call(new Uint8Array(buf), function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+    });
+  }
+  function unlock(){ lock.classList.add('gone'); }
+
+  var stored = null;
+  try{ stored = localStorage.getItem(KEY); }catch(e){}
+  if(stored === HASH){ unlock(); }
+  else{
+    input.focus();
+    function tryUnlock(){
+      sha256hex(input.value).then(function(h){
+        if(h === HASH){
+          try{ localStorage.setItem(KEY, HASH); }catch(e){}
+          unlock();
+        } else {
+          err.classList.add('show');
+          card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+          input.value=''; input.focus();
+        }
+      });
+    }
+    btn.addEventListener('click', tryUnlock);
+    input.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); tryUnlock(); } });
+  }
+})();
+</script>
 <canvas id="bgfx" aria-hidden="true"></canvas>
 <div id="hudgrid" aria-hidden="true"></div>
 <div id="hudsweep" aria-hidden="true"></div>
