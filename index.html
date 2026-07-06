@@ -1253,9 +1253,15 @@ function renderPulse(data,ok){
     return;
   }
   tag.textContent = data.locked ? 'locked' : 'in progress';
+  // "Surplus" only means something once real income is entered, and even
+  // then it isn't true surplus unless it clears the savings goal -- a
+  // positive-but-under-goal number is a miss, not neutral, so it's red.
   const projected = data.surplusIsProjected !== false;   // default true if the API is older/missing the field
-  const surplusClass = data.surplus==null ? '' : (projected ? 'dim' : (data.surplus>=0 ? 'ok' : 'risk'));
-  const surplusLabel = projected ? 'Surplus (proj.)' : 'Surplus';
+  let surplusClass, surplusLabel;
+  if(data.surplus==null){ surplusClass=''; surplusLabel='Surplus'; }
+  else if(projected){ surplusClass='dim'; surplusLabel='Surplus (proj.)'; }
+  else if(data.metSavingsGoal){ surplusClass='ok'; surplusLabel='Surplus'; }
+  else { surplusClass='risk'; surplusLabel='Below goal'; }
   pulse.innerHTML = `
     <span class="pchip ${data.locked?'locked':'open'}">${data.locked?'LOCKED':'OPEN'}</span>
     <div class="pstat"><span class="pk">${data.monthLabel}</span><span class="pv">${data.entriesLogged}/${data.budgetItemCount} logged</span></div>
