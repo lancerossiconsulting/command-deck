@@ -1253,14 +1253,16 @@ function renderPulse(data,ok){
     return;
   }
   tag.textContent = data.locked ? 'locked' : 'in progress';
-  const surplusClass = data.surplus==null ? '' : (data.surplus>=0 ? 'ok' : 'risk');
+  const projected = data.surplusIsProjected !== false;   // default true if the API is older/missing the field
+  const surplusClass = data.surplus==null ? '' : (projected ? 'dim' : (data.surplus>=0 ? 'ok' : 'risk'));
+  const surplusLabel = projected ? 'Surplus (proj.)' : 'Surplus';
   pulse.innerHTML = `
     <span class="pchip ${data.locked?'locked':'open'}">${data.locked?'LOCKED':'OPEN'}</span>
     <div class="pstat"><span class="pk">${data.monthLabel}</span><span class="pv">${data.entriesLogged}/${data.budgetItemCount} logged</span></div>
     <div class="pstat"><span class="pk">Income floor</span><span class="pv">${money2(data.incomeFloor)}</span></div>
     <div class="pstat"><span class="pk">Income actual</span><span class="pv ${data.incomeActual==null?'dim':''}">${data.incomeActual!=null?money2(data.incomeActual):'not entered'}</span></div>
     <div class="pstat"><span class="pk">Outflow</span><span class="pv ${data.totalOutflow==null?'dim':''}">${data.totalOutflow!=null?money2(data.totalOutflow):'not entered'}</span></div>
-    <div class="pstat"><span class="pk">Surplus</span><span class="pv ${surplusClass}">${data.surplus!=null?money2(data.surplus):'—'}</span></div>
+    <div class="pstat"><span class="pk">${surplusLabel}</span><span class="pv ${surplusClass}">${data.surplus!=null?money2(data.surplus):'—'}</span></div>
     <span class="spacer"></span>
     <div class="pstat" style="align-items:flex-end"><span class="pk">Updated</span><span class="pv dim">${timeAgo(data.lastUpdated)||'no entries yet'}</span></div>`;
 }
