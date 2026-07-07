@@ -250,10 +250,13 @@ body.live .deck{animation:deckin .5s ease}
 .dispatchbar button.listening::after{content:"";position:absolute;inset:-1px;border:1px solid var(--fire);border-radius:2px;animation:sonar 1.4s ease-out infinite}
 @keyframes sonar{from{transform:scale(1);opacity:.7}to{transform:scale(1.9);opacity:0}}
 
-/* GitHub project link menu (replaces the old click-to-switch page nav) */
+/* project link menu — primary click opens the LIVE page (Pages URL or
+   localhost app); the small gh suffix opens the repo. */
+.gitrow{display:flex;align-items:stretch}
 .gitlink{
+  flex:1;min-width:0;
   display:flex;align-items:center;gap:9px;
-  padding:9px 16px;cursor:pointer;border-left:2px solid transparent;
+  padding:9px 0 9px 16px;cursor:pointer;border-left:2px solid transparent;
   color:var(--ink-mute);text-decoration:none;
   transition:background .15s,color .15s,border-color .15s,transform .15s;
   user-select:none;
@@ -263,8 +266,17 @@ body.live .deck{animation:deckin .5s ease}
 .gitlink .gi{font-family:var(--mono);font-size:11px;color:var(--ink-faint);flex:none}
 .gitlink .gn{font-size:12.5px;letter-spacing:.02em;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .gitlink .gv{font-family:var(--mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;padding:2px 5px;border:1px solid var(--line);color:var(--ink-faint);flex:none}
-.gitlink .gv.pub{color:var(--ok);border-color:rgba(74,222,128,.3)}
-.gitlink .gv.priv{color:var(--warn);border-color:rgba(232,193,74,.3)}
+.gitlink .gv.live{color:var(--ok);border-color:rgba(74,222,128,.3)}
+.gitlink .gv.local{color:var(--cyan);border-color:rgba(90,209,240,.3)}
+.gitlink .gv.repo{color:var(--ink-faint);border-color:var(--line)}
+.gitgh{
+  display:flex;align-items:center;padding:0 10px;flex:none;
+  font-family:var(--mono);font-size:9px;letter-spacing:.06em;
+  color:var(--ink-faint);text-decoration:none;
+  transition:color .15s,background .15s;
+}
+.gitgh:hover{color:var(--cyan);background:rgba(90,209,240,.06)}
+.gitgh:focus-visible{outline:2px solid var(--cyan);outline-offset:-2px}
 
 .nav .keys{margin-top:auto;padding:10px 16px 4px;font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;color:var(--ink-faint);text-transform:uppercase;line-height:2;border-top:1px solid var(--line-soft)}
 .nav .keys b{color:var(--cyan-dim);font-weight:500}
@@ -597,9 +609,11 @@ body.conserve .ekg .b{animation:none}
   .nav .eyebrow{padding:0 0 8px}
   .dispatchbar{padding:0 0 12px}
   .dispatchbar input{font-size:16px}   /* prevents iOS focus zoom */
-  .gitlink{display:inline-flex;border:1px solid var(--line);border-left:2px solid transparent;padding:8px 11px;margin:0 6px 6px 0;width:auto}
+  .gitrow{display:inline-flex;border:1px solid var(--line);margin:0 6px 6px 0;width:auto}
+  .gitlink{display:inline-flex;border-left:2px solid transparent;padding:8px 4px 8px 11px;margin:0;flex:none}
   .gitlink:hover{transform:none}
   .gitlink .gn{white-space:normal}
+  .gitgh{padding:0 8px}
   .nav .keys{display:none}
   .nav .capacity{margin-top:4px;padding:10px 0 0;border-top:1px solid var(--line-soft)}
   .main{padding:14px;overflow:visible}
@@ -812,16 +826,19 @@ window.DECK_DATA = {
   // schedule from your meetings with Pastor Brian and this populates.
   bibleCalendar: [],
 
+  // Sidebar link menu. `live` = the page you land on (GitHub Pages URL,
+  // or a localhost app for private tools); `url` = the repo, reachable
+  // via the small gh suffix button. No `live` -> repo is the primary.
   githubProjects: [
-    { name:"command-deck",           url:"https://github.com/lancerossiconsulting/command-deck",           visibility:"public",  desc:"This deck" },
-    { name:"ledger",                 url:"https://github.com/lancerossiconsulting/ledger",                  visibility:"private", desc:"Household budget" },
-    { name:"vantage",                url:"https://github.com/lancerossiconsulting/vantage",                 visibility:"private", desc:"Prediction-market analyzer" },
-    { name:"cloud-and-fire",         url:"https://github.com/lancerossiconsulting/cloud-and-fire",          visibility:"public",  desc:"Fellowship site" },
-    { name:"once-and-future-people", url:"https://github.com/lancerossiconsulting/once-and-future-people",  visibility:"public",  desc:"Book project" },
-    { name:"legacy-media-podsphere", url:"https://github.com/lancerossiconsulting/legacy-media-podsphere",  visibility:"public",  desc:"Site" },
-    { name:"constitutive-rhetoric-study", url:"https://github.com/lancerossiconsulting/constitutive-rhetoric-study", visibility:"public", desc:"Site" },
-    { name:"pratt-study",            url:"https://github.com/lancerossiconsulting/pratt-study",             visibility:"public",  desc:"Site" },
-    { name:"writings",               url:"https://github.com/lancerossiconsulting/writings",                visibility:"private", desc:"Corpus" }
+    { name:"cloud-and-fire",         live:"https://lancerossiconsulting.github.io/cloud-and-fire/",          url:"https://github.com/lancerossiconsulting/cloud-and-fire",          kind:"live",  desc:"Fellowship site" },
+    { name:"pratt-study",            live:"https://lancerossiconsulting.github.io/pratt-study/",             url:"https://github.com/lancerossiconsulting/pratt-study",             kind:"live",  desc:"Pratt study site" },
+    { name:"legacy-media-podsphere", live:"https://lancerossiconsulting.github.io/legacy-media-podsphere/",  url:"https://github.com/lancerossiconsulting/legacy-media-podsphere",  kind:"live",  desc:"Legacy media site" },
+    { name:"constitutive-rhetoric-study", live:"https://lancerossiconsulting.github.io/constitutive-rhetoric-study/", url:"https://github.com/lancerossiconsulting/constitutive-rhetoric-study", kind:"live", desc:"Rhetoric study site" },
+    { name:"once-and-future-people", live:"https://lancerossiconsulting.github.io/once-and-future-people/",  url:"https://github.com/lancerossiconsulting/once-and-future-people",  kind:"live",  desc:"Book project site" },
+    { name:"command-deck",           live:"https://lancerossiconsulting.github.io/command-deck/",            url:"https://github.com/lancerossiconsulting/command-deck",            kind:"live",  desc:"This deck, hosted" },
+    { name:"ledger",                 live:"http://localhost:5181/",                                          url:"https://github.com/lancerossiconsulting/ledger",                  kind:"local", desc:"Household budget app (this machine)" },
+    { name:"vantage",                live:"http://localhost:8765/",                                          url:"https://github.com/lancerossiconsulting/vantage",                  kind:"local", desc:"Prediction-market dashboard (this machine)" },
+    { name:"writings",               url:"https://github.com/lancerossiconsulting/writings",                 kind:"repo",  desc:"Corpus (repo only, no site)" }
   ],
 
   priorities: [
@@ -1218,15 +1235,29 @@ function renderMain(){
   pollVantage();
 }
 
-/* ---------- GitHub project link menu ---------- */
+/* ---------- project link menu ----------
+   Primary click = the live page (Pages site, or localhost app for
+   private tools). Small gh suffix = the repo. Repo-only projects
+   link straight to GitHub. */
 (function buildGitLinks(){
   const box = document.getElementById('gitlinks');
   (DATA.githubProjects||[]).forEach(p=>{
+    const primary = p.live || p.url;
+    const kind = p.kind || (p.live ? 'live' : 'repo');
+    const row = document.createElement('div');
+    row.className = 'gitrow';
     const a = document.createElement('a');
-    a.className='gitlink'; a.href=p.url; a.target='_blank'; a.rel='noopener noreferrer';
+    a.className='gitlink'; a.href=primary; a.target='_blank'; a.rel='noopener noreferrer';
     a.title=p.desc||'';
-    a.innerHTML = `<span class="gi">◈</span><span class="gn">${p.name}</span><span class="gv ${p.visibility==='public'?'pub':'priv'}">${p.visibility==='public'?'pub':'priv'}</span>`;
-    box.appendChild(a);
+    a.innerHTML = `<span class="gi">◈</span><span class="gn">${p.name}</span><span class="gv ${kind}">${kind}</span>`;
+    row.appendChild(a);
+    if(p.live && p.url){
+      const gh = document.createElement('a');
+      gh.className='gitgh'; gh.href=p.url; gh.target='_blank'; gh.rel='noopener noreferrer';
+      gh.title='repo · '+p.name; gh.textContent='gh';
+      row.appendChild(gh);
+    }
+    box.appendChild(row);
   });
 })();
 
