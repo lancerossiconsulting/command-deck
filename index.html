@@ -20,8 +20,11 @@
    A Claude session refreshes the deck by rewriting that block only;
    the shell (everything else) should rarely change.
 
-   Controls: 0-9 jump lines · W cycles wallpaper · / focuses dispatch
-   · B replays the boot sequence · any key skips boot.
+   MK III layout (2026-07-07): left nav is a GitHub project link menu
+   (no more click-to-switch pages); main is one stacked single column
+   of all project content; right column is live Household Finances
+   (Ledger) + Vantage HUD. Controls: 0-9 scroll to a section · W cycles
+   wallpaper · / focuses dispatch · B replays the boot sequence.
    The classic (MK I) shell is preserved at deck-classic.html.
    ===================================================================== */
 
@@ -160,11 +163,11 @@ body.live .deck{animation:deckin .5s ease}
   position:relative;z-index:1;
   height:100vh;
   display:grid;
-  grid-template-columns: 224px 1fr 322px;
+  grid-template-columns: 224px 1fr 340px;
   grid-template-rows: 58px 1fr 34px;
   grid-template-areas:
     "top  top  top"
-    "nav  main flags"
+    "nav  main finance"
     "tick tick tick";
   gap:1px;
   padding:10px;
@@ -247,27 +250,21 @@ body.live .deck{animation:deckin .5s ease}
 .dispatchbar button.listening::after{content:"";position:absolute;inset:-1px;border:1px solid var(--fire);border-radius:2px;animation:sonar 1.4s ease-out infinite}
 @keyframes sonar{from{transform:scale(1);opacity:.7}to{transform:scale(1.9);opacity:0}}
 
-.navitem{
-  display:flex;align-items:center;gap:11px;
-  padding:10px 16px;cursor:pointer;border-left:2px solid transparent;
-  color:var(--ink-mute);transition:background .15s,color .15s,border-color .15s,transform .15s;
-  user-select:none;position:relative;
+/* GitHub project link menu (replaces the old click-to-switch page nav) */
+.gitlink{
+  display:flex;align-items:center;gap:9px;
+  padding:9px 16px;cursor:pointer;border-left:2px solid transparent;
+  color:var(--ink-mute);text-decoration:none;
+  transition:background .15s,color .15s,border-color .15s,transform .15s;
+  user-select:none;
 }
-.navitem .ix{font-family:var(--mono);font-size:10px;color:var(--ink-faint);width:26px;flex:none;transition:color .15s}
-.navitem .lbl{font-size:13px;letter-spacing:.02em}
-.navitem .pip{margin-left:auto;width:6px;height:6px;border-radius:50%;background:var(--line);flex:none}
-.navitem .pip.g{background:var(--ok)}
-.navitem .pip.y{background:var(--warn)}
-.navitem .pip.r{background:var(--risk)}
-.navitem .pip.d{background:var(--ink-faint)}
-.navitem:hover{background:rgba(90,209,240,0.05);color:var(--ink);transform:translateX(2px)}
-.navitem.active{background:linear-gradient(90deg,rgba(232,145,58,0.10),rgba(232,145,58,0.02));border-left-color:var(--fire);color:var(--ink)}
-.navitem.active .ix{color:var(--gold)}
-.navitem.active .ix::before{content:"["}
-.navitem.active .ix::after{content:"]"}
-.navitem.active::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;
-  background:linear-gradient(90deg,var(--fire-glow),transparent 80%)}
-.navitem:focus-visible{outline:2px solid var(--cyan);outline-offset:-2px}
+.gitlink:hover{background:rgba(90,209,240,0.05);color:var(--ink);transform:translateX(2px);border-left-color:var(--cyan-dim)}
+.gitlink:focus-visible{outline:2px solid var(--cyan);outline-offset:-2px}
+.gitlink .gi{font-family:var(--mono);font-size:11px;color:var(--ink-faint);flex:none}
+.gitlink .gn{font-size:12.5px;letter-spacing:.02em;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gitlink .gv{font-family:var(--mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;padding:2px 5px;border:1px solid var(--line);color:var(--ink-faint);flex:none}
+.gitlink .gv.pub{color:var(--ok);border-color:rgba(74,222,128,.3)}
+.gitlink .gv.priv{color:var(--warn);border-color:rgba(232,193,74,.3)}
 
 .nav .keys{margin-top:auto;padding:10px 16px 4px;font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;color:var(--ink-faint);text-transform:uppercase;line-height:2;border-top:1px solid var(--line-soft)}
 .nav .keys b{color:var(--cyan-dim);font-weight:500}
@@ -277,7 +274,7 @@ body.live .deck{animation:deckin .5s ease}
 .capacity input[type=range]{width:100%;margin-top:8px;accent-color:var(--fire)}
 .capacity .hint{font-size:10px;color:var(--ink-faint);margin-top:6px;min-height:14px}
 
-/* ---------- main panel ---------- */
+/* ---------- main panel (single stacked column) ---------- */
 .main{
   grid-area:main;
   border:1px solid var(--line);
@@ -286,7 +283,8 @@ body.live .deck{animation:deckin .5s ease}
   padding:18px 20px 24px;
   position:relative;
 }
-.pagehead{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:16px;border-bottom:1px solid var(--line-soft);padding-bottom:12px;flex-wrap:wrap;gap:10px}
+.stack{display:flex;flex-direction:column;gap:12px}
+.pagehead{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:4px;border-bottom:1px solid var(--line-soft);padding-bottom:12px;flex-wrap:wrap;gap:10px}
 .pagehead h1{
   margin:0;font-family:var(--disp);font-size:22px;font-weight:600;
   letter-spacing:.07em;text-transform:uppercase;color:var(--ink);
@@ -295,6 +293,13 @@ body.live .deck{animation:deckin .5s ease}
 .pagehead .crumb{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:6px}
 .pagehead .crumb::before{content:"◢ ";color:var(--cyan-dim)}
 .pagehead .meta{font-family:var(--mono);font-size:11px;color:var(--cloud-dim);text-align:right}
+
+/* section head — one per project, inside the stacked column */
+.sechead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:2px}
+.sechead h2{margin:0;font-family:var(--disp);font-size:16px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ink)}
+.sechead .crumb2{font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--ink-faint);text-transform:uppercase}
+.sechead .meta2{font-family:var(--mono);font-size:10.5px;color:var(--cloud-dim)}
+.section{scroll-margin-top:14px}
 
 /* HUD panel */
 .grid{display:grid;gap:12px}
@@ -340,32 +345,34 @@ body.live .deck{animation:deckin .5s ease}
 .prow .ptext .s{font-size:11px;color:var(--ink-mute);margin-top:2px}
 .prow .when{font-family:var(--mono);font-size:11px;color:var(--cloud-dim);white-space:nowrap}
 
-/* traffic lights */
-.tl{display:flex;align-items:center;gap:10px;padding:7px 0}
-.tl .light{width:9px;height:9px;border-radius:50%;flex:none}
-.tl .light.g{background:var(--ok);box-shadow:0 0 7px rgba(74,222,128,.6)}
-.tl .light.y{background:var(--warn);box-shadow:0 0 7px rgba(232,193,74,.5);animation:pulse 2.8s infinite}
-.tl .light.r{background:var(--risk);box-shadow:0 0 7px rgba(240,85,107,.5);animation:pulse 1.6s infinite}
-.tl .light.d{background:var(--ink-faint)}
-.tl .name{font-size:13px;color:var(--ink);flex:1}
-.tl .note{font-size:11px;color:var(--ink-mute);font-family:var(--mono)}
+/* today's reading — daily bible-study prompt */
+.readingbox{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.readingbox .rday{font-family:var(--disp);font-size:15px;font-weight:600;color:var(--gold);letter-spacing:.04em;white-space:nowrap}
+.readingbox .rref{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--ink)}
+.readingbox .rnote{font-size:11.5px;color:var(--ink-mute)}
+.readingbox .rempty{font-size:12px;color:var(--ink-mute);line-height:1.6}
 
 /* gauge */
 .gauge{display:flex;align-items:center;gap:14px}
 .gauge svg{flex:none;overflow:visible}
 .gauge .grot{transform-origin:46px 46px;animation:rot 16s linear infinite}
 .gauge .read{font-family:var(--mono)}
-.gauge .read .big{font-family:var(--disp);font-size:30px;font-weight:600;color:var(--ink);line-height:1}
-.gauge .read .lbl{font-size:10px;letter-spacing:.16em;color:var(--ink-faint);text-transform:uppercase;margin-top:4px}
-.gauge .read .nt{font-size:10px;color:var(--ink-mute);margin-top:3px}
+.gauge .read .big{font-family:var(--disp);font-size:26px;font-weight:600;color:var(--ink);line-height:1}
+.gauge .read .lbl{font-size:9.5px;letter-spacing:.14em;color:var(--ink-faint);text-transform:uppercase;margin-top:4px}
+.gauge .read .nt{font-size:9.5px;color:var(--ink-mute);margin-top:3px}
+
+/* compact stats row: sprint gauge + pipeline + formation, one panel */
+.statsrow{display:grid;grid-template-columns:auto 1fr 1fr;gap:18px;align-items:center}
+@media (max-width:1200px){.statsrow{grid-template-columns:1fr;gap:14px}}
+.statsrow .col h4{margin:0 0 8px;font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--ink-faint);text-transform:uppercase}
 
 /* pipeline bars */
-.pipe{display:flex;flex-direction:column;gap:9px}
+.pipe{display:flex;flex-direction:column;gap:7px}
 .pipe .seg{display:flex;align-items:center;gap:10px}
-.pipe .seg .nm{color:var(--ink-mute);width:96px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase}
-.pipe .seg .track{flex:1;height:7px;background:var(--line-soft);position:relative;overflow:hidden}
+.pipe .seg .nm{color:var(--ink-mute);width:80px;font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase}
+.pipe .seg .track{flex:1;height:6px;background:var(--line-soft);position:relative;overflow:hidden}
 .pipe .seg .fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--cloud-dim),var(--cyan));transition:width .9s cubic-bezier(.2,.8,.25,1)}
-.pipe .seg .ct{font-family:var(--mono);font-size:11px;color:var(--cyan);width:24px;text-align:right}
+.pipe .seg .ct{font-family:var(--mono);font-size:10.5px;color:var(--cyan);width:20px;text-align:right}
 
 /* item lists */
 .list{display:flex;flex-direction:column}
@@ -384,17 +391,79 @@ body.live .deck{animation:deckin .5s ease}
 .kv .k{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--ink-faint);text-transform:uppercase;white-space:nowrap;padding-top:1px}
 .kv .v{color:var(--ink)}
 
-/* ---------- right flags rail ---------- */
-.flags{
-  grid-area:flags;
+/* project section: brief + items side by side, single column overall */
+.secbody{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+@media (max-width:1200px){.secbody{grid-template-columns:1fr}}
+
+/* traffic lights (still used inline for section status) */
+.tl{display:flex;align-items:center;gap:8px}
+.tl .light{width:8px;height:8px;border-radius:50%;flex:none}
+.tl .light.g{background:var(--ok);box-shadow:0 0 6px rgba(74,222,128,.6)}
+.tl .light.y{background:var(--warn);box-shadow:0 0 6px rgba(232,193,74,.5)}
+.tl .light.r{background:var(--risk);box-shadow:0 0 6px rgba(240,85,107,.5)}
+.tl .light.d{background:var(--ink-faint)}
+
+/* ---------- right finance column ---------- */
+.finance{
+  grid-area:finance;
   border:1px solid var(--line);
   background:var(--panel);
   display:flex;flex-direction:column;
   overflow:hidden;
 }
-.flags .fhead{padding:12px 14px;border-bottom:1px solid var(--line-soft);font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--ink-faint);text-transform:uppercase;display:flex;align-items:center;gap:8px}
-.flags .fhead::before{content:"//";color:var(--cyan-dim);font-size:9px}
-.flags .fscroll{flex:1;overflow:auto;padding:6px 14px}
+.finance .fhead{padding:12px 14px;border-bottom:1px solid var(--line-soft);font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--ink-faint);text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.finance .fhead::before{content:"//";color:var(--cyan-dim);font-size:9px}
+.finance .fscroll{flex:1;overflow:auto;padding:12px 14px}
+.fsection{margin-bottom:16px}
+.fsection:last-child{margin-bottom:0}
+.fsection h4{margin:0 0 8px;font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--ink-faint);text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.fsection h4 .tag{margin-left:auto;font-size:8.5px;padding:2px 6px;border:1px solid var(--line);color:var(--cyan-dim)}
+
+/* ledger pulse — read-only HUD strip fed by the Ledger app's
+   /api/deck-summary route. No inputs; display only. */
+.pulse{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:baseline}
+.pulse .pstat{display:flex;flex-direction:column;gap:3px;min-width:74px}
+.pulse .pstat .pk{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;color:var(--ink-faint);text-transform:uppercase}
+.pulse .pstat .pv{font-family:var(--mono);font-size:13.5px;color:var(--ink)}
+.pulse .pstat .pv.ok{color:var(--ok)}
+.pulse .pstat .pv.risk{color:var(--risk)}
+.pulse .pstat .pv.dim{color:var(--ink-faint);font-size:11px}
+.pulse .spacer{flex:1;min-width:0}
+.pulse .pchip{font-family:var(--mono);font-size:9px;letter-spacing:.12em;padding:4px 9px;white-space:nowrap;text-transform:uppercase;align-self:center;
+  clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px)}
+.pchip.locked{background:rgba(74,222,128,0.1);color:var(--ok);border:1px solid rgba(74,222,128,.35)}
+.pchip.open{background:rgba(90,209,240,0.1);color:var(--cyan);border:1px solid rgba(90,209,240,.35)}
+.pchip.off{background:rgba(111,126,146,.1);color:var(--ink-faint);border:1px solid var(--line)}
+.pchip.risk{background:rgba(240,85,107,.12);color:var(--risk);border:1px solid rgba(240,85,107,.4)}
+
+/* category expected vs actual (tiers) */
+.tiers{display:flex;flex-direction:column;gap:7px;margin-top:10px}
+.tierrow{display:flex;align-items:center;gap:8px}
+.tierrow .tn{font-size:11px;color:var(--ink-mute);width:96px;flex:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tierrow .track{flex:1;height:6px;background:var(--line-soft);position:relative;overflow:hidden}
+.tierrow .track .exp{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--ink-faint)}
+.tierrow .track .act{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--cloud-dim),var(--cyan))}
+.tierrow .track .act.over{background:linear-gradient(90deg,#a85a3a,var(--fire))}
+.tierrow .tv{font-family:var(--mono);font-size:10px;color:var(--ink-mute);width:98px;text-align:right;flex:none}
+.tierrow .tv b{color:var(--ink)}
+
+/* vantage hot markets */
+.hotmkt{display:flex;flex-direction:column;gap:9px}
+.hotmkt a.mk{display:block;color:inherit;text-decoration:none;padding:8px 0;border-bottom:1px solid var(--line-soft)}
+.hotmkt a.mk:last-child{border-bottom:0}
+.hotmkt a.mk:hover .mq{color:var(--cyan)}
+.hotmkt .mq{font-size:12px;color:var(--ink);line-height:1.4;transition:color .15s}
+.hotmkt .mmeta{display:flex;gap:8px;margin-top:4px;font-family:var(--mono);font-size:9.5px;color:var(--ink-faint)}
+.hotmkt .madv{color:var(--gold)}
+.vempty{font-size:11.5px;color:var(--ink-mute);line-height:1.6}
+
+/* contemplative line — the serif signature */
+.verse{padding:13px 14px;border-top:1px solid var(--line)}
+.verse .ref{font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--fire);text-transform:uppercase;margin-bottom:6px}
+.verse .txt{font-family:var(--serif);font-size:13px;font-style:italic;color:var(--cloud);line-height:1.55}
+
+/* live flags — now a section inside the main stack */
+.flaglist{display:flex;flex-direction:column}
 .flag{padding:11px 0;border-bottom:1px solid var(--line-soft)}
 .flag:last-child{border-bottom:0}
 .flag .top{display:flex;align-items:center;gap:8px;padding:0;border:0;background:none}
@@ -404,7 +473,7 @@ body.live .deck{animation:deckin .5s ease}
 .flag .ttl{font-size:12.5px;color:var(--ink);flex:1}
 .flag .dsc{font-size:11px;color:var(--ink-mute);margin-top:5px;line-height:1.5;padding-left:15px}
 
-/* dispatch queue */
+/* dispatch queue — now lives at the bottom of the finance column */
 .dqpanel{border-top:1px solid var(--line);padding:10px 14px;display:none;max-height:170px;overflow:auto}
 .dqpanel.has{display:block}
 .dqhead{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--ink-faint);text-transform:uppercase;display:flex;align-items:center;gap:8px;margin-bottom:6px}
@@ -417,11 +486,6 @@ body.live .deck{animation:deckin .5s ease}
 .dqitem .tx{flex:1;font-size:11.5px;color:var(--ink);line-height:1.45}
 .dqitem .rm{background:none;border:0;color:var(--ink-faint);cursor:pointer;font-size:11px;padding:0 2px}
 .dqitem .rm:hover{color:var(--risk)}
-
-/* contemplative line — the serif signature */
-.verse{padding:13px 14px;border-top:1px solid var(--line)}
-.verse .ref{font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--fire);text-transform:uppercase;margin-bottom:6px}
-.verse .txt{font-family:var(--serif);font-size:13.5px;font-style:italic;color:var(--cloud);line-height:1.55}
 
 /* ---------- ticker ---------- */
 .tick{
@@ -456,7 +520,7 @@ body.live .deck{animation:deckin .5s ease}
 
 /* low-capacity dimming */
 body.conserve .panel:not(.live){opacity:.5}
-body.conserve .flags .flag:not(.r){opacity:.55}
+body.conserve .finance .flag:not(.r){opacity:.55}
 body.conserve #hudsweep{display:none}
 body.conserve .ekg .b{animation:none}
 
@@ -468,7 +532,7 @@ body.conserve .ekg .b{animation:none}
 @media (prefers-reduced-motion: reduce){
   .tickmove{animation:none;padding-left:0}
   .pillar::after,#hudsweep{animation:none;opacity:0}
-  .statepill.hot .dot,.tl .light.y,.tl .light.r,.sev.r{animation:none}
+  .statepill.hot .dot,.sev.r{animation:none}
   .brandreactor,.brandreactor::after,.statepill .orbit,.gauge .grot,
   .reactor .g1,.reactor .g2,.reactor .g3,.ekg .b{animation:none}
   .panel.pre{opacity:1}
@@ -478,84 +542,46 @@ body.conserve .ekg .b{animation:none}
 
 @media (max-width:1100px){
   .deck{grid-template-columns:184px 1fr;grid-template-areas:"top top" "nav main" "tick tick"}
-  .flags{display:none}
+  .finance{display:none}
 }
-.cols-2{grid-template-columns:1fr 1fr}
-.cols-3{grid-template-columns:1fr 1fr 1fr}
-@media (max-width:1500px){.cols-3{grid-template-columns:1fr 1fr}}
-
-/* overview layout — named areas so wide screens re-flow cleanly */
-.ovgrid{display:grid;gap:12px;align-items:start;
-  grid-template-columns:1fr 1fr;
-  grid-template-areas:"priority lines" "priority sprint" "pipe form" "ledger ledger"}
-.p-priority{grid-area:priority}
-.p-lines{grid-area:lines}
-.p-sprint{grid-area:sprint}
-.p-pipe{grid-area:pipe}
-.p-form{grid-area:form}
-.p-ledger{grid-area:ledger}
-@media (max-width:900px){
-  .ovgrid{grid-template-columns:1fr;grid-template-areas:"priority" "lines" "sprint" "pipe" "form" "ledger"}
-}
-
-/* ledger pulse — read-only HUD strip fed by the Ledger app's
-   /api/deck-summary route. No inputs; display only. */
-.pulse{display:flex;flex-wrap:wrap;gap:18px 28px;align-items:baseline}
-.pulse .pstat{display:flex;flex-direction:column;gap:3px;min-width:88px}
-.pulse .pstat .pk{font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--ink-faint);text-transform:uppercase}
-.pulse .pstat .pv{font-family:var(--mono);font-size:15px;color:var(--ink)}
-.pulse .pstat .pv.ok{color:var(--ok)}
-.pulse .pstat .pv.risk{color:var(--risk)}
-.pulse .pstat .pv.dim{color:var(--ink-faint);font-size:12px}
-.pulse .spacer{flex:1;min-width:0}
-.pulse .pchip{font-family:var(--mono);font-size:9px;letter-spacing:.12em;padding:4px 9px;white-space:nowrap;text-transform:uppercase;align-self:center;
-  clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px)}
-.pchip.locked{background:rgba(74,222,128,0.1);color:var(--ok);border:1px solid rgba(74,222,128,.35)}
-.pchip.open{background:rgba(90,209,240,0.1);color:var(--cyan);border:1px solid rgba(90,209,240,.35)}
-.pchip.off{background:rgba(111,126,146,.1);color:var(--ink-faint);border:1px solid var(--line)}
 
 /* readability guards — no infinite line lengths on wide panels */
 .prow .ptext .s,.litem .body .d,.flag .dsc{max-width:78ch}
 
 /* ---------- ultrawide / second-screen tier (21:9 boards) ----------
-   Tuned for a ~2560x1080-class display used as a glance board:
-   three-across overview (no dead zone), wider rails, larger type. */
+   Tuned for a ~2560x1080-class display used as a glance board. */
 @media (min-width:1800px){
   body{font-size:15px}
-  .deck{grid-template-columns:260px 1fr 390px;grid-template-rows:64px 1fr 38px;gap:2px;padding:12px}
+  .deck{grid-template-columns:260px 1fr 400px;grid-template-rows:64px 1fr 38px;gap:2px;padding:12px}
   .main{padding:24px 30px 30px}
-  .ovgrid{gap:14px;grid-template-columns:1.25fr 1fr 1fr;
-    grid-template-areas:"priority lines sprint" "priority pipe form" "ledger ledger ledger"}
   .panel{padding:16px 18px}
   .pagehead h1{font-size:27px}
   .pagehead .meta{font-size:12px}
+  .sechead h2{font-size:18px}
   .top .clock{font-size:27px}
   .top .date{font-size:10px}
   .metric .v{font-size:13.5px}
   .brand .mark{font-size:14px}
-  .navitem{padding:12px 18px}
-  .navitem .lbl{font-size:14px}
+  .gitlink{padding:11px 18px}
+  .gitlink .gn{font-size:13.5px}
   .dispatchbar input{font-size:12px}
   .prow .ptext .t{font-size:14px}
   .prow .ptext .s{font-size:12px}
   .prow .when{font-size:12px}
-  .tl{padding:8px 0}
-  .tl .name{font-size:14px}
-  .tl .note{font-size:12px}
   .litem .body .t{font-size:14px}
   .litem .body .d{font-size:12.5px}
   .kv{font-size:13.5px}
   .panel h3{font-size:11px}
   .flag .ttl{font-size:13.5px}
   .flag .dsc{font-size:12px}
-  .verse .txt{font-size:15px}
+  .verse .txt{font-size:14.5px}
   .tickmove{font-size:13px}
-  .gauge .read .big{font-size:34px}
+  .gauge .read .big{font-size:30px}
 }
 
 /* ---------- mobile / phone tier ----------
    The deck reflows to a scrolling column: wrapped top bar, nav as
-   tappable chips, full-width panels, flags rail restored below main.
+   tappable chips, full-width panels, finance column restored below main.
    Wallpaper + HUD chrome stay fixed behind the scroll. */
 @media (max-width:700px){
   html,body{height:auto}
@@ -571,16 +597,18 @@ body.conserve .ekg .b{animation:none}
   .nav .eyebrow{padding:0 0 8px}
   .dispatchbar{padding:0 0 12px}
   .dispatchbar input{font-size:16px}   /* prevents iOS focus zoom */
-  .navitem{display:inline-flex;border:1px solid var(--line);border-left:2px solid transparent;padding:8px 11px;margin:0 6px 6px 0}
-  .navitem:hover{transform:none}
+  .gitlink{display:inline-flex;border:1px solid var(--line);border-left:2px solid transparent;padding:8px 11px;margin:0 6px 6px 0;width:auto}
+  .gitlink:hover{transform:none}
+  .gitlink .gn{white-space:normal}
   .nav .keys{display:none}
   .nav .capacity{margin-top:4px;padding:10px 0 0;border-top:1px solid var(--line-soft)}
   .main{padding:14px;overflow:visible}
-  .grid.cols-2,.grid.cols-3{grid-template-columns:1fr}
+  .secbody{grid-template-columns:1fr}
+  .statsrow{grid-template-columns:1fr}
   .pagehead .meta{text-align:left}
   .prow{flex-wrap:wrap}
-  .flags{display:flex;overflow:visible}
-  .flags .fscroll{flex:none;overflow:visible}
+  .finance{display:flex;overflow:visible}
+  .finance .fscroll{flex:none;overflow:visible}
   .dqpanel{max-height:none}
   .bootstack{gap:14px}
   .reactor{transform:scale(.82)}
@@ -669,7 +697,7 @@ body.conserve .ekg .b{animation:none}
     <div class="brand">
       <span class="brandreactor" aria-hidden="true"></span>
       <span class="mark">CLOUD &amp; <b>FIRE</b></span>
-      <span class="sub">Command Deck · MK II</span>
+      <span class="sub">Command Deck · MK III</span>
     </div>
     <div class="clockwrap">
       <svg class="secring" width="34" height="34" viewBox="0 0 34 34" aria-hidden="true">
@@ -696,7 +724,7 @@ body.conserve .ekg .b{animation:none}
     </div>
   </header>
 
-  <!-- LEFT NAV -->
+  <!-- LEFT NAV: dispatch + GitHub project links + capacity -->
   <nav class="nav" id="nav">
     <div class="dispatchbar">
       <div class="eyebrow" style="padding:0 0 8px">Dispatch</div>
@@ -705,9 +733,9 @@ body.conserve .ekg .b{animation:none}
         <button id="dmic" title="Voice dispatch" aria-label="Voice dispatch">◉</button>
       </div>
     </div>
-    <div class="eyebrow">Project Lines</div>
-    <!-- nav items injected -->
-    <div class="keys"><b>0-9</b> lines · <b>W</b> wallpaper · <b>/</b> dispatch · <b>B</b> boot</div>
+    <div class="eyebrow">GitHub Projects</div>
+    <div id="gitlinks"><!-- links injected --></div>
+    <div class="keys"><b>0-9</b> scroll to section · <b>W</b> wallpaper · <b>/</b> dispatch · <b>B</b> boot</div>
     <div class="capacity">
       <div class="k"><span>Capacity</span><b id="capval">3 / 5</b></div>
       <input type="range" id="capacity" min="1" max="5" step="1" value="3" aria-label="Energy capacity">
@@ -715,13 +743,23 @@ body.conserve .ekg .b{animation:none}
     </div>
   </nav>
 
-  <!-- MAIN -->
-  <main class="main" id="main"><!-- page injected --></main>
+  <!-- MAIN: single stacked column, all content -->
+  <main class="main" id="main"><!-- stack injected --></main>
 
-  <!-- RIGHT FLAGS -->
-  <aside class="flags">
-    <div class="fhead"><span>Live Flags</span><span style="margin-left:auto;font-size:9px" id="flagcount"></span></div>
-    <div class="fscroll" id="flagscroll"></div>
+  <!-- RIGHT: household finances + vantage -->
+  <aside class="finance">
+    <div class="fhead"><span>Real Financials</span><span style="margin-left:auto;font-size:9px" id="financesynced"></span></div>
+    <div class="fscroll" id="financescroll">
+      <div class="fsection">
+        <h4>Household Ledger <span class="tag" id="ledgertag">connecting</span></h4>
+        <div class="pulse" id="pulse"><span style="font-family:var(--mono);font-size:11px;color:var(--ink-faint)">reaching localhost:5181…</span></div>
+        <div class="tiers" id="tiers"></div>
+      </div>
+      <div class="fsection">
+        <h4>Vantage <span class="tag" id="vantagetag">connecting</span></h4>
+        <div id="vantagebody"><span style="font-family:var(--mono);font-size:11px;color:var(--ink-faint)">reaching localhost:8765…</span></div>
+      </div>
+    </div>
     <div class="dqpanel" id="dqpanel">
       <div class="dqhead"><span>Dispatch Queue</span><span id="dqn"></span>
         <span class="act"><button id="dqcopy">copy</button><button id="dqclear">clear</button></span>
@@ -745,22 +783,45 @@ body.conserve .ekg .b{animation:none}
 /* =====================================================================
    DECK DATA START — sync protocol rewrites everything in this block.
    Schema:
-   - updated:    ISO date of last sync (shown in top bar)
-   - priorities: tag is nofail | behind | decision | next.
-                 Any "nofail" entry flips the state pill to NO-FAIL ACTIVE.
-   - lines:      light is g | y | r | d  (d = dormant/back-burnered)
-   - sprint:     score 0-100, or null when no sprint is running
-   - nav:        deck order; every non-overview id needs a pages entry
+   - updated:       ISO date of last sync (shown in top bar)
+   - priorities:    tag is nofail | behind | decision | next.
+                    Any "nofail" entry flips the state pill to NO-FAIL ACTIVE.
+   - lines:         light is g | y | r | d (d = dormant/back-burnered) —
+                    still used for each project section's status dot.
+   - sprint:        score 0-100, or null when no sprint is running
+   - nav:           section order for the main stack; every non-overview
+                    id needs a pages entry. Also drives 0-9 scroll-to.
+   - githubProjects: [{ name, url, visibility:"public"|"private", desc }]
+                    — the left-nav link menu.
+   - bibleCalendar: [{ date:"YYYY-MM-DD", ref, note }] — daily reading
+                    prompt. Empty until Lance supplies his real schedule;
+                    the deck shows an honest "no calendar loaded" state.
    ===================================================================== */
 window.DECK_DATA = {
 
-  updated: "2026-06-12",
+  updated: "2026-07-07",
   rhythm: "Productive",
 
   verses: [
     { ref:"Exodus 13:21", txt:"By day in a pillar of cloud, by night in a pillar of fire — so they could travel by day or night." },
     { ref:"Romans 5:3-4", txt:"Problems and trials… help us develop endurance, and endurance develops strength of character." },
     { ref:"Acts 27:25", txt:"Take courage. For I believe God. It will be just as he said." }
+  ],
+
+  // Daily Bible-reading prompt. Empty for now -- send the real
+  // schedule from your meetings with Pastor Brian and this populates.
+  bibleCalendar: [],
+
+  githubProjects: [
+    { name:"command-deck",           url:"https://github.com/lancerossiconsulting/command-deck",           visibility:"public",  desc:"This deck" },
+    { name:"ledger",                 url:"https://github.com/lancerossiconsulting/ledger",                  visibility:"private", desc:"Household budget" },
+    { name:"vantage",                url:"https://github.com/lancerossiconsulting/vantage",                 visibility:"private", desc:"Prediction-market analyzer" },
+    { name:"cloud-and-fire",         url:"https://github.com/lancerossiconsulting/cloud-and-fire",          visibility:"public",  desc:"Fellowship site" },
+    { name:"once-and-future-people", url:"https://github.com/lancerossiconsulting/once-and-future-people",  visibility:"public",  desc:"Book project" },
+    { name:"legacy-media-podsphere", url:"https://github.com/lancerossiconsulting/legacy-media-podsphere",  visibility:"public",  desc:"Site" },
+    { name:"constitutive-rhetoric-study", url:"https://github.com/lancerossiconsulting/constitutive-rhetoric-study", visibility:"public", desc:"Site" },
+    { name:"pratt-study",            url:"https://github.com/lancerossiconsulting/pratt-study",             visibility:"public",  desc:"Site" },
+    { name:"writings",               url:"https://github.com/lancerossiconsulting/writings",                visibility:"private", desc:"Corpus" }
   ],
 
   priorities: [
@@ -777,7 +838,7 @@ window.DECK_DATA = {
     { name:"Writing Corpus",       light:"g", note:"3 pieces live, 2 in flight" },
     { name:"Theology / Seminary",  light:"g", note:"Fall 2026 onboarding ahead" },
     { name:"Bible Study",          light:"g", note:"Acts + Romans, In Progress" },
-    { name:"Ledger",               light:"g", note:"running at localhost:3000" },
+    { name:"Ledger",               light:"g", note:"running at localhost:5181" },
     { name:"The Stack",            light:"y", note:"Linear synced 2026-07-03 — 3 status mismatches flagged" },
     { name:"FRGET",                light:"d", note:"back-burnered 2026-06-12" }
   ],
@@ -806,12 +867,11 @@ window.DECK_DATA = {
     "Outlook inbox zeroed — ~80k emails cleared 2026-06-10",
     "Pratt Study live — Lighthouse 100/100, push-to-deploy",
     "Acts 27 + Romans 1–6 logged — Romans 7 opens next",
-    "Ledger app — Next.js 16 + Prisma 7, household reconciliation",
+    "Ledger app — Next.js 16 + Prisma 7, household reconciliation, now on port 5181",
     "Linear sync dashboard live — CODE\\ops\\linear-sync\\dashboard.html (144 issues, VANTAGE shipped M1 ingest pipeline 2026-07-03)"
   ],
 
   nav: [
-    { id:"overview",  label:"Overview" },
     { id:"cloudfire", label:"Cloud & Fire" },
     { id:"rossi",     label:"Rossi Comms" },
     { id:"writing",   label:"Writing Corpus" },
@@ -897,14 +957,15 @@ window.DECK_DATA = {
       ]
     },
     ledger: {
-      title:"Ledger", crumb:"Line · Household", meta:"CODE/ledger · localhost:3000",
+      title:"Ledger", crumb:"Line · Household", meta:"CODE/ledger · localhost:5181 · live figures at right →",
       kv:[
         ["Purpose","Household budget reconciliation"],
         ["Stack","Next.js 16 · Prisma 7 + libsql · Auth.js v5 · Recharts"],
-        ["Status","Running locally"]
+        ["Status","Running locally, auto-starts at Windows logon"]
       ],
       items:[
-        { st:"active", t:"Budget reconciliation app", d:"Live at localhost:3000. Ongoing household use." }
+        { st:"active", t:"Budget reconciliation app", d:"Live at localhost:5181. See Real Financials → for this month's numbers." },
+        { st:"done",   t:"Savings goal tracking", d:"$600/mo target now built into the app (lib/budget.ts) — surplus only counts once it clears the bar." }
       ]
     },
     stack: {
@@ -919,7 +980,7 @@ window.DECK_DATA = {
         { st:"done",   t:"Linear rebuild", d:"144 issues live post-reset. VANTAGE closed 5 issues 2026-07-03 building the M1 ingest→tag→resolve→settle pipeline — real, current work." },
         { st:"active", t:"Linear sync dashboard", d:"Single-file HTML at CODE/ops/linear-sync/dashboard.html, regenerated via render_dashboard.py after each semi-weekly sync report." },
         { st:"queued", t:"Project-status reconciliation", d:"EPOCH + VANTAGE project fields stuck at Backlog despite completed/active work; Beyond the Pews 31-issue backlog needs a done-vs-open verdict." },
-        { st:"active", t:"Command Deck MK II", d:"This deck. Single portable file; data block refreshed by Claude sessions; five live wallpapers; arc-reactor boot." },
+        { st:"active", t:"Command Deck MK III", d:"This deck. Single stacked column, GitHub link sidebar, live Ledger + Vantage finance rail." },
         { st:"done",   t:"Weekly Bible synthesis skill", d:"Reads In Progress notes; you write the journal entry." },
         { st:"draft",  t:"Notion / Linear alignment", d:"Re-audit once the fresh Linear structure exists." }
       ]
@@ -953,7 +1014,7 @@ if(!DATA){
 const NAV = DATA.nav;
 const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/* nav id → line light, for the nav pips */
+/* section id → line light, for the section status dot */
 const LINE_LIGHT = {};
 (DATA.lines||[]).forEach(l=>{
   const nav = NAV.find(n=>n.label.toLowerCase().startsWith(l.name.toLowerCase().slice(0,5)) || l.name.toLowerCase().startsWith(n.label.toLowerCase().slice(0,5)));
@@ -1002,20 +1063,20 @@ function stagger(){
   if(REDUCE) return;
   document.querySelectorAll('.main .panel').forEach((p,i)=>{
     p.classList.add('pre');
-    p.style.animationDelay=(i*75)+'ms';
+    p.style.animationDelay=(Math.min(i,14)*60)+'ms';
     requestAnimationFrame(()=>requestAnimationFrame(()=>p.classList.add('in')));
   });
 }
 
-/* ---------- renderers ---------- */
+/* ---------- gauge ---------- */
 function gauge(score){
-  const r=34, c=2*Math.PI*r;
-  const orbit=`<g class="grot"><circle cx="46" cy="46" r="42" fill="none" stroke="rgba(90,209,240,.3)" stroke-width="1" stroke-dasharray="2 6"/></g>`;
+  const r=30, c=2*Math.PI*r;
+  const orbit=`<g class="grot"><circle cx="40" cy="40" r="37" fill="none" stroke="rgba(90,209,240,.3)" stroke-width="1" stroke-dasharray="2 6"/></g>`;
   if(score==null){
     return `<div class="gauge">
-      <svg width="92" height="92" viewBox="0 0 92 92">
+      <svg width="80" height="80" viewBox="0 0 80 80">
         ${orbit}
-        <circle cx="46" cy="46" r="${r}" fill="none" stroke="var(--line)" stroke-width="6" stroke-dasharray="3 5"/>
+        <circle cx="40" cy="40" r="${r}" fill="none" stroke="var(--line)" stroke-width="6" stroke-dasharray="3 5"/>
       </svg>
       <div class="read"><div class="big">—</div><div class="lbl">${DATA.sprint.label}</div>${DATA.sprint.note?`<div class="nt">${DATA.sprint.note}</div>`:''}</div>
     </div>`;
@@ -1023,155 +1084,164 @@ function gauge(score){
   const off=c*(1-score/100);
   const col = score>=70?'var(--ok)':score>=45?'var(--warn)':'var(--risk)';
   return `<div class="gauge">
-    <svg width="92" height="92" viewBox="0 0 92 92">
+    <svg width="80" height="80" viewBox="0 0 80 80">
       ${orbit}
-      <circle cx="46" cy="46" r="${r}" fill="none" stroke="var(--line)" stroke-width="6"/>
-      <circle cx="46" cy="46" r="${r}" fill="none" stroke="${col}" stroke-width="6"
+      <circle cx="40" cy="40" r="${r}" fill="none" stroke="var(--line)" stroke-width="6"/>
+      <circle cx="40" cy="40" r="${r}" fill="none" stroke="${col}" stroke-width="6"
         stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${off}"
-        transform="rotate(-90 46 46)" style="transition:stroke-dashoffset .9s ease"/>
+        transform="rotate(-90 40 40)" style="transition:stroke-dashoffset .9s ease"/>
     </svg>
     <div class="read"><div class="big" id="sprintnum" data-score="${score}">0</div><div class="lbl">${DATA.sprint.label}</div>${DATA.sprint.note?`<div class="nt">${DATA.sprint.note}</div>`:''}</div>
   </div>`;
 }
 
-function renderOverview(){
+/* ---------- today's reading (daily bible-study prompt) ---------- */
+function todayISO(){
+  const d=new Date(); const p=n=>String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;
+}
+function readingBox(){
+  const cal = DATA.bibleCalendar||[];
+  const today = todayISO();
+  const entry = cal.find(c=>c.date===today);
+  const dayLbl = new Date().toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
+  if(!cal.length){
+    return `<div class="panel live section" id="sec-reading">
+      <h3>Today's Reading <span class="tag">bible calendar</span></h3>
+      <div class="readingbox"><div class="rempty">No calendar loaded yet — send the reading schedule from your Pastor Brian meetings and this becomes a daily prompt keyed to today's date.</div></div>
+    </div>`;
+  }
+  if(!entry){
+    return `<div class="panel live section" id="sec-reading">
+      <h3>Today's Reading <span class="tag">bible calendar</span></h3>
+      <div class="readingbox"><div class="rday">${dayLbl}</div><div class="rempty">No assignment logged for today in the calendar.</div></div>
+    </div>`;
+  }
+  return `<div class="panel live section" id="sec-reading">
+    <h3>Today's Reading <span class="tag">bible calendar</span></h3>
+    <div class="readingbox">
+      <div class="rday">${dayLbl}</div>
+      <div class="rref">${entry.ref}</div>
+      ${entry.note?`<div class="rnote">${entry.note}</div>`:''}
+    </div>
+  </div>`;
+}
+
+/* ---------- main stack: everything in one scrolling column ---------- */
+function renderMain(){
   const m = document.getElementById('main');
+  const priorityRows = DATA.priorities.map(p=>`
+    <div class="prow">
+      <span class="badge ${p.tag}">${p.tag.toUpperCase()}</span>
+      <div class="ptext"><div class="t">${p.t}</div><div class="s">${p.s}</div></div>
+      <span class="when">${p.when}</span>
+    </div>`).join('');
+
+  const pipeRows = DATA.pipeline.map(s=>`
+    <div class="seg">
+      <span class="nm">${s.nm}</span>
+      <span class="track"><span class="fill" data-w="${s.pct}" style="width:0"></span></span>
+      <span class="ct">${s.count}</span>
+    </div>`).join('');
+
+  const flagRows = DATA.flags.map(f=>`
+    <div class="flag ${f.sev==='r'?'r':''}">
+      <div class="top"><span class="sev ${f.sev}"></span><span class="ttl">${f.ttl}</span></div>
+      <div class="dsc">${f.dsc}</div>
+    </div>`).join('');
+
+  const sections = NAV.map(n=>{
+    const p = DATA.pages[n.id]; if(!p) return '';
+    const kv = p.kv.map(([k,v])=>`<div class="k">${k}</div><div class="v">${v}</div>`).join('');
+    const items = p.items.map(it=>`
+      <div class="litem">
+        <span class="st ${it.st}">${it.st.toUpperCase()}</span>
+        <div class="body"><div class="t">${it.t}</div><div class="d">${it.d}</div></div>
+      </div>`).join('');
+    const light = LINE_LIGHT[n.id]||'d';
+    return `
+    <div class="panel section" id="sec-${n.id}">
+      <div class="sechead">
+        <div><div class="crumb2">${p.crumb}</div><h2>${p.title}</h2></div>
+        <div class="meta2"><span class="tl"><span class="light ${light}"></span></span> ${p.meta}</div>
+      </div>
+      <div class="secbody">
+        <div><div class="kv">${kv}</div></div>
+        <div class="list">${items}</div>
+      </div>
+    </div>`;
+  }).join('');
+
   m.innerHTML = `
     <div class="pagehead">
-      <div><div class="crumb">Command · All Lines</div><h1 data-title="Overview">Overview</h1></div>
-      <div class="meta">${NAV.length-1} project lines tracked · synced ${DATA.updated}</div>
+      <div><div class="crumb">Command Deck</div><h1 data-title="All Systems">All Systems</h1></div>
+      <div class="meta">${NAV.length} project lines · synced ${DATA.updated}</div>
     </div>
-    <div class="ovgrid">
-      <div class="panel live p-priority">
+    <div class="stack">
+      ${readingBox()}
+      <div class="panel live section" id="sec-priority">
         <h3>Priority Stack <span class="tag">triage</span></h3>
-        <div id="pstack"></div>
+        ${priorityRows}
       </div>
-      <div class="panel p-lines">
-        <h3>Line Health</h3>
-        <div id="tlights"></div>
+      <div class="panel section" id="sec-flags">
+        <h3>Live Flags <span class="tag" id="flagcount"></span></h3>
+        <div class="flaglist">${flagRows}</div>
       </div>
-      <div class="panel p-sprint">
-        <h3>Sprint</h3>
-        ${gauge(DATA.sprint.score)}
-      </div>
-      <div class="panel p-pipe">
-        <h3>Writing Pipeline</h3>
-        <div class="pipe" id="pipe"></div>
-      </div>
-      <div class="panel p-form">
-        <h3>Formation &amp; Rhythm</h3>
-        <div class="kv">
-          <div class="k">Mode</div><div class="v">${DATA.rhythm} — focused execution</div>
-          <div class="k">Daily</div><div class="v">Acts + Romans · Notion Bible Notes</div>
-          <div class="k">Weekly</div><div class="v">Pastor Brian · synthesis review</div>
-          <div class="k">Constraint</div><div class="v">Energy conservation is real — pace the deck to capacity</div>
+      <div class="panel section" id="sec-stats">
+        <h3>Sprint &amp; Formation</h3>
+        <div class="statsrow">
+          <div class="col">${gauge(DATA.sprint.score)}</div>
+          <div class="col"><h4>Writing Pipeline</h4><div class="pipe">${pipeRows}</div></div>
+          <div class="col"><h4>Formation &amp; Rhythm</h4>
+            <div class="kv">
+              <div class="k">Mode</div><div class="v">${DATA.rhythm} — focused execution</div>
+              <div class="k">Daily</div><div class="v">Acts + Romans · Notion Bible Notes</div>
+              <div class="k">Weekly</div><div class="v">Pastor Brian · synthesis review</div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="panel p-ledger" id="ledgerpanel">
-        <h3>Household Ledger <span class="tag" id="ledgertag">connecting</span></h3>
-        <div class="pulse" id="pulse"><span class="pk" style="font-family:var(--mono);font-size:11px;color:var(--ink-faint)">reaching localhost:5181…</span></div>
-      </div>
+      ${sections}
     </div>`;
 
-  const ps = document.getElementById('pstack');
-  DATA.priorities.forEach(p=>{
-    ps.appendChild(el('div','prow',
-      `<span class="badge ${p.tag}">${p.tag.toUpperCase()}</span>
-       <div class="ptext"><div class="t">${p.t}</div><div class="s">${p.s}</div></div>
-       <span class="when">${p.when}</span>`));
-  });
-
-  const tl = document.getElementById('tlights');
-  DATA.lines.forEach(l=>{
-    tl.appendChild(el('div','tl',
-      `<span class="light ${l.light}"></span><span class="name">${l.name}</span><span class="note">${l.note}</span>`));
-  });
-
-  const pipe = document.getElementById('pipe');
-  DATA.pipeline.forEach(s=>{
-    pipe.appendChild(el('div','seg',
-      `<span class="nm">${s.nm}</span>
-       <span class="track"><span class="fill" data-w="${s.pct}" style="width:0"></span></span>
-       <span class="ct">${s.count}</span>`));
-  });
-
-  pollLedger();
-}
-
-function renderPage(id){
-  const p = DATA.pages[id]; if(!p) return renderOverview();
-  const m = document.getElementById('main');
-  const kv = p.kv.map(([k,v])=>`<div class="k">${k}</div><div class="v">${v}</div>`).join('');
-  const items = p.items.map(it=>`
-    <div class="litem">
-      <span class="st ${it.st}">${it.st.toUpperCase()}</span>
-      <div class="body"><div class="t">${it.t}</div><div class="d">${it.d}</div></div>
-    </div>`).join('');
-  m.innerHTML = `
-    <div class="pagehead">
-      <div><div class="crumb">${p.crumb}</div><h1 data-title="${p.title}">${p.title}</h1></div>
-      <div class="meta">${p.meta}</div>
-    </div>
-    <div class="grid cols-2" style="align-items:start">
-      <div class="panel"><h3>Brief</h3><div class="kv">${kv}</div></div>
-      <div class="panel"><h3>Active Items <span class="tag">${p.items.length}</span></h3><div class="list">${items}</div></div>
-    </div>`;
-}
-
-/* post-render FX: stagger, decrypt title, fill bars, count numbers */
-function fxPage(){
-  stagger();
-  const h1=document.querySelector('.pagehead h1');
-  if(h1) decrypt(h1, h1.dataset.title||h1.textContent);
-  const fills=document.querySelectorAll('.pipe .fill');
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    fills.forEach(f=>{ f.style.width=f.dataset.w+'%'; });
+    document.querySelectorAll('.pipe .fill').forEach(f=>{ f.style.width=f.dataset.w+'%'; });
   }));
   const sn=document.getElementById('sprintnum');
   if(sn) tickNum(sn, +sn.dataset.score, 900);
+  tickNum(document.getElementById('flagcount'), DATA.flags.length, 800, ' OPEN');
+  stagger();
+  const h1=document.querySelector('.pagehead h1');
+  if(h1) decrypt(h1, h1.dataset.title||h1.textContent);
+
+  pollLedger();
+  pollVantage();
 }
 
-function setActive(id){
-  document.querySelectorAll('.navitem').forEach(n=>n.classList.toggle('active', n.dataset.id===id));
-  if(id==='overview') renderOverview(); else renderPage(id);
-  store.set('deck.view', id);
-  document.dispatchEvent(new CustomEvent('deck:transition'));
-  fxPage();
-}
-
-/* ---------- nav build ---------- */
-(function buildNav(){
-  const nav = document.getElementById('nav');
-  const keys = nav.querySelector('.keys');
-  NAV.forEach((n,i)=>{
-    const item = el('div','navitem');
-    item.tabIndex=0; item.dataset.id=n.id;
-    item.innerHTML = `<span class="ix">${String(i).padStart(2,'0')}</span><span class="lbl">${n.label}</span><span class="pip ${LINE_LIGHT[n.id]||''}"></span>`;
-    item.addEventListener('click',()=>setActive(n.id));
-    item.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();setActive(n.id);} });
-    nav.insertBefore(item, keys);
+/* ---------- GitHub project link menu ---------- */
+(function buildGitLinks(){
+  const box = document.getElementById('gitlinks');
+  (DATA.githubProjects||[]).forEach(p=>{
+    const a = document.createElement('a');
+    a.className='gitlink'; a.href=p.url; a.target='_blank'; a.rel='noopener noreferrer';
+    a.title=p.desc||'';
+    a.innerHTML = `<span class="gi">◈</span><span class="gn">${p.name}</span><span class="gv ${p.visibility==='public'?'pub':'priv'}">${p.visibility==='public'?'pub':'priv'}</span>`;
+    box.appendChild(a);
   });
 })();
 
-/* number keys 0-9 jump lines (ignored while typing) */
+/* number keys 0-9 scroll to a section (ignored while typing) */
 document.addEventListener('keydown',e=>{
   if(e.target.matches && e.target.matches('input,textarea,select')) return;
   if(e.key>='0' && e.key<='9'){
     const n = NAV[+e.key];
-    if(n) setActive(n.id);
+    const target = n ? document.getElementById('sec-'+n.id) : document.getElementById('sec-priority');
+    if(target) target.scrollIntoView({behavior: REDUCE?'auto':'smooth', block:'start'});
   }
 });
 
-/* ---------- flags + verse + ticker ---------- */
+/* ---------- verse + ticker ---------- */
 (function buildSide(){
-  const fs = document.getElementById('flagscroll');
-  DATA.flags.forEach(f=>{
-    const flag=el('div','flag '+(f.sev==='r'?'r':''));
-    flag.innerHTML=`<div class="top"><span class="sev ${f.sev}"></span><span class="ttl">${f.ttl}</span></div><div class="dsc">${f.dsc}</div>`;
-    fs.appendChild(flag);
-  });
-  tickNum(document.getElementById('flagcount'), DATA.flags.length, 800, ' OPEN');
-
   const v = DATA.verses[Math.floor(Math.random()*DATA.verses.length)];
   document.getElementById('verseref').textContent = v.ref;
   document.getElementById('versetxt').textContent = '“'+v.txt+'”';
@@ -1225,11 +1295,10 @@ async function weather(){
 }
 weather(); setInterval(weather, 15*60*1000);
 
-/* ---------- ledger pulse ----------
+/* ---------- household ledger pulse ----------
    Read-only current-month summary fetched from the Ledger app's
    /api/deck-summary route (localhost:5181). Display only — no inputs,
-   no writes back to Ledger. Safe no-op if Overview isn't the active
-   page or the Ledger dev server isn't running (shows an offline chip). */
+   no writes back to Ledger. Shows an offline chip if it isn't running. */
 const LEDGER_URL = 'http://localhost:5181/api/deck-summary';
 function timeAgo(iso){
   if(!iso) return null;
@@ -1242,21 +1311,27 @@ function timeAgo(iso){
 function money2(n){
   return n==null ? '—' : '$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 }
+function moneyShort(n){
+  return n==null ? '—' : '$'+n.toLocaleString('en-US',{maximumFractionDigits:0});
+}
 function renderPulse(data,ok){
   const tag = document.getElementById('ledgertag');
   const pulse = document.getElementById('pulse');
+  const tiersEl = document.getElementById('tiers');
   if(!tag || !pulse) return;
   if(!ok || !data || data.hasUser===false){
     tag.textContent='offline';
     pulse.innerHTML = `<span class="pchip off">NOT RUNNING</span>
       <span style="font-family:var(--mono);font-size:11px;color:var(--ink-mute)">start Ledger on port 5181 to see this month's figures</span>`;
+    if(tiersEl) tiersEl.innerHTML='';
+    document.getElementById('financesynced').textContent='';
     return;
   }
   tag.textContent = data.locked ? 'locked' : 'in progress';
   // "Surplus" only means something once real income is entered, and even
   // then it isn't true surplus unless it clears the savings goal -- a
   // positive-but-under-goal number is a miss, not neutral, so it's red.
-  const projected = data.surplusIsProjected !== false;   // default true if the API is older/missing the field
+  const projected = data.surplusIsProjected !== false;
   let surplusClass, surplusLabel;
   if(data.surplus==null){ surplusClass=''; surplusLabel='Surplus'; }
   else if(projected){ surplusClass='dim'; surplusLabel='Surplus (proj.)'; }
@@ -1265,12 +1340,27 @@ function renderPulse(data,ok){
   pulse.innerHTML = `
     <span class="pchip ${data.locked?'locked':'open'}">${data.locked?'LOCKED':'OPEN'}</span>
     <div class="pstat"><span class="pk">${data.monthLabel}</span><span class="pv">${data.entriesLogged}/${data.budgetItemCount} logged</span></div>
-    <div class="pstat"><span class="pk">Income floor</span><span class="pv">${money2(data.incomeFloor)}</span></div>
-    <div class="pstat"><span class="pk">Income actual</span><span class="pv ${data.incomeActual==null?'dim':''}">${data.incomeActual!=null?money2(data.incomeActual):'not entered'}</span></div>
+    <div class="pstat"><span class="pk">Income</span><span class="pv ${data.incomeActual==null?'dim':''}">${data.incomeActual!=null?money2(data.incomeActual):'not entered'}</span></div>
     <div class="pstat"><span class="pk">Outflow</span><span class="pv ${data.totalOutflow==null?'dim':''}">${data.totalOutflow!=null?money2(data.totalOutflow):'not entered'}</span></div>
-    <div class="pstat"><span class="pk">${surplusLabel}</span><span class="pv ${surplusClass}">${data.surplus!=null?money2(data.surplus):'—'}</span></div>
-    <span class="spacer"></span>
-    <div class="pstat" style="align-items:flex-end"><span class="pk">Updated</span><span class="pv dim">${timeAgo(data.lastUpdated)||'no entries yet'}</span></div>`;
+    <div class="pstat"><span class="pk">${surplusLabel}</span><span class="pv ${surplusClass}">${data.surplus!=null?money2(data.surplus):'—'}</span></div>`;
+
+  if(tiersEl){
+    if(Array.isArray(data.tiers) && data.tiers.length){
+      tiersEl.innerHTML = data.tiers.map(t=>{
+        const exp = t.expected||0, act = t.actual;
+        const maxV = Math.max(exp, act||0, 1);
+        const expPct = Math.min(100, exp/maxV*100);
+        const actPct = act!=null ? Math.min(100, act/maxV*100) : 0;
+        const over = act!=null && act>exp;
+        return `<div class="tierrow">
+          <span class="tn">${t.name}</span>
+          <span class="track"><span class="exp" style="left:${expPct}%"></span>${act!=null?`<span class="act ${over?'over':''}" style="width:${actPct}%"></span>`:''}</span>
+          <span class="tv">${act!=null?`<b>${moneyShort(act)}</b> / ${moneyShort(exp)}`:`— / ${moneyShort(exp)}`}</span>
+        </div>`;
+      }).join('');
+    } else tiersEl.innerHTML='';
+  }
+  document.getElementById('financesynced').textContent = timeAgo(data.lastUpdated)||'';
 }
 async function pollLedger(){
   try{
@@ -1281,7 +1371,53 @@ async function pollLedger(){
     renderPulse(null, false);
   }
 }
-pollLedger(); setInterval(pollLedger, 60*1000);
+setInterval(pollLedger, 60*1000);
+
+/* ---------- vantage HUD ----------
+   Read-only feed from the Vantage app's /api/deck-summary route
+   (localhost:8765). Top hot markets + mock-portfolio progress.
+   No trading, no writes -- pure glance widget. */
+const VANTAGE_URL = 'http://localhost:8765/api/deck-summary';
+function renderVantage(data,ok){
+  const tag = document.getElementById('vantagetag');
+  const body = document.getElementById('vantagebody');
+  if(!tag || !body) return;
+  if(!ok || !data || !data.connected){
+    tag.textContent='offline';
+    body.innerHTML = `<span style="font-family:var(--mono);font-size:11px;color:var(--ink-mute)">start Vantage on port 8765 to see hot markets</span>`;
+    return;
+  }
+  tag.textContent = data.neutralProfile ? 'cold start' : 'live';
+  const port = data.portfolio||{};
+  const pnl = (port.realizedPnl||0)+(port.unrealizedPnl||0);
+  const pnlClass = pnl>0?'ok':(pnl<0?'risk':'');
+  const markets = (data.hotMarkets||[]).slice(0,5);
+  const marketsHtml = markets.length
+    ? markets.map(m=>`
+        <a class="mk" href="${m.url}" target="_blank" rel="noopener noreferrer">
+          <div class="mq">${m.question}</div>
+          <div class="mmeta"><span class="madv">adv ${(m.advantage*100).toFixed(0)}%</span><span>${m.subject}</span><span>${m.verdict}</span></div>
+        </a>`).join('')
+    : `<div class="vempty">${data.neutralProfile?'Cold start — no calibrated opinions logged yet, so nothing clears the advantage bar honestly.':'No markets clear the advantage threshold right now.'}</div>`;
+  body.innerHTML = `
+    <div class="pulse" style="margin-bottom:10px">
+      <div class="pstat"><span class="pk">Equity</span><span class="pv">${moneyShort(port.equity)}</span></div>
+      <div class="pstat"><span class="pk">P&amp;L</span><span class="pv ${pnlClass}">${moneyShort(pnl)}</span></div>
+      <div class="pstat"><span class="pk">Positions</span><span class="pv">${port.nOpen||0} open · ${port.nClosed||0} closed</span></div>
+      <div class="pstat"><span class="pk">Markets</span><span class="pv dim">${(data.marketCount||0).toLocaleString()}</span></div>
+    </div>
+    <div class="hotmkt">${marketsHtml}</div>`;
+}
+async function pollVantage(){
+  try{
+    const r = await fetch(VANTAGE_URL, { cache:'no-store' });
+    if(!r.ok) throw new Error('bad status');
+    renderVantage(await r.json(), true);
+  }catch(e){
+    renderVantage(null, false);
+  }
+}
+setInterval(pollVantage, 90*1000);
 
 /* ---------- capacity ---------- */
 const capInput=document.getElementById('capacity');
@@ -1524,11 +1660,11 @@ const bootCtl = (function bootGlobe(){
 
   /* typed system log */
   const LOG_LINES=[
-    '> CLOUD & FIRE OS · MK II · FABLE BUILD',
-    '> mounting project lines ......... '+(NAV.length-1)+' OK',
+    '> CLOUD & FIRE OS · MK III',
+    '> mounting project sections ...... '+NAV.length+' OK',
     '> weather wire [MHK] ............. LINKED',
     '> dispatch queue ................. ARMED',
-    '> wallpaper field ................ LIVE',
+    '> finance rail (ledger+vantage) .. LIVE',
     '> all systems nominal'
   ];
   let logTimers=[];
@@ -1597,7 +1733,7 @@ document.addEventListener('keydown',e=>{
 /* ---------- boot ---------- */
 (function boot(){
   const cap=+store.get('deck.cap',3); capInput.value=cap; applyCapacity(cap);
-  setActive(store.get('deck.view','overview'));
+  renderMain();
 })();
 </script>
 </body>
