@@ -1,6 +1,6 @@
 # Cloud & Fire — Command Deck
 
-Lance's "Jarvis" heads-up display. A single-page HUD over every active project line: priority stack, line health traffic lights, sprint gauge, writing pipeline, live flags, carry-forward ticker, live Manhattan KS weather, and a capacity dimmer.
+Lance's "Jarvis" heads-up display. A single-page HUD: a GitHub project link menu on the left, every project line stacked in one scrolling column in the middle (priority stack, live flags, sprint/pipeline/formation, a daily Bible-reading prompt, then each project's brief), and a live Real Financials rail on the right (Household Ledger income/outflow/savings-goal + category spend, Vantage hot markets + mock-portfolio P&L). Plus carry-forward ticker, live Manhattan KS weather, and a capacity dimmer.
 
 Repo (private): https://github.com/lancerossiconsulting/command-deck
 
@@ -25,7 +25,7 @@ When Lance asks to "sync the deck" / "update the command deck":
 
 1. Open `index.html` and find the block between `DECK DATA START` and `DECK DATA END` (schema notes are in its header comment).
 2. Gather what changed — morning-brief logic, Linear/Notion state, project memories, this session's outcomes.
-3. Rewrite the data block only: set `updated` to today's date, re-triage `priorities` (any `nofail` entry flips the top-bar pill to NO-FAIL ACTIVE), refresh `lines`, `flags`, `carry`, `sprint`, and the per-line `pages`.
+3. Rewrite the data block only: set `updated` to today's date, re-triage `priorities` (any `nofail` entry flips the top-bar pill to NO-FAIL ACTIVE), refresh `lines`, `flags`, `carry`, `sprint`, `githubProjects`, `bibleCalendar`, and the per-line `pages`.
 4. Do not touch the shell unless the deck needs a new capability.
 5. Commit and push to `main` (private repo — history only, no live deploy).
 6. If Lance keeps a copy elsewhere (e.g. `Downloads\command-deck.html`, a phone copy), refresh that copy too.
@@ -36,15 +36,36 @@ Sprint score: `0–100`, or `null` when no sprint is running (shows an em-dash g
 
 ## Controls
 
-- **Number keys 0–9** jump between lines; click or Enter on the left nav also works.
+- **Number keys 0–9** smooth-scroll to a project section in the main column (no more page-switching — everything is stacked and visible via scroll).
+- The left nav is now a **GitHub project link menu** — click any repo name to open it on GitHub in a new tab. Public/private tags shown per repo.
 - **Capacity slider** (bottom-left, persists): 1–2 dims everything except live panels and red flags.
 - **W key** cycles the five shader wallpapers (Ember Flow, Liquid Orbs, Warp Field, Circuit Cells, Ripple Pool). Choice persists.
 - **B key** replays the arc-reactor boot sequence; any key or click skips it.
-- Last view, capacity, and wallpaper persist via localStorage.
+- Capacity and wallpaper choice persist via localStorage.
 
-## MK II shell (current)
+## Real Financials rail (right column)
 
-The deck runs the MK II HUD shell — Iron Man-grade chrome over the same data and features:
+Two live, read-only widgets, polled every 60–90s, both fed by companion apps' own `/api/deck-summary` routes (same pattern: GET-only, CORS opened for that one route, aggregate data only):
+
+- **Household Ledger** (`localhost:5181`) — this month's income/outflow/savings-goal status, plus category (tier) bars showing expected vs actual spend. Shows a "NOT RUNNING" chip if the Ledger dev server isn't up.
+- **Vantage** (`localhost:8765`) — top hot markets from the ranked feed (question, advantage, verdict, link to Kalshi/Polymarket) and mock-portfolio equity/P&L/position counts. Read-only, no trading. Shows a cold-start note if the stance profile has no calibrated opinions yet rather than presenting zero-advantage numbers as real signal.
+
+Both require the companion app's dev server running **on the same machine** as the browser — `localhost` means "this computer," not a shared service. Ledger auto-starts at Windows logon (see its own README); Vantage does not yet.
+
+## Today's Reading (daily Bible-study prompt)
+
+A panel at the top of the main column looks up today's date in `DATA.bibleCalendar` (empty by default) and shows the assignment, or an honest "no calendar loaded" placeholder if it's empty or today has no entry. To wire in real data, populate `bibleCalendar` in the DECK DATA block:
+
+```js
+bibleCalendar: [
+  { date:"2026-07-08", ref:"Romans 7", note:"optional context" },
+  ...
+]
+```
+
+## MK III shell (current)
+
+The deck runs the MK III HUD shell — same Iron Man-grade chrome as before, restructured layout:
 
 - Arc-reactor boot: rotating reactor rings around the HUD-cyan wireframe globe, typed system log, progress arc. Auto-dismisses on a timer (never hangs). `BOOT_GLOBE_THEME='mono'` in the shell restores the off-white monochrome globe.
 - Rajdhani display type, cyan/gold holographic accents, faint HUD grid + periodic scan sweep.
@@ -52,6 +73,8 @@ The deck runs the MK II HUD shell — Iron Man-grade chrome over the same data a
 - Panels stagger in with corner-bracket draw; page titles resolve with a character-scramble decrypt; sprint score and flag count tick up; pipeline bars fill on view.
 - Chamfered (clip-path) badges, tags, and ticker lead; gold diamond separators in the ticker.
 - All of it honors `prefers-reduced-motion` (static frames, no scramble/stagger) and conserve mode (sweep off, EKG still).
+
+Only MK I is separately archived (`deck-classic.html`, same data schema). MK II was not preserved as a separate file — MK III replaced it directly in `index.html`; git history has the diff if you ever need to see MK II again.
 
 The previous MK I shell is preserved at `deck-classic.html` (same data schema — the DECK DATA block is interchangeable between shells).
 
