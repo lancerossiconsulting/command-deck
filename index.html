@@ -250,6 +250,34 @@ body.live .deck{animation:deckin .5s ease}
 .dispatchbar button.listening::after{content:"";position:absolute;inset:-1px;border:1px solid var(--fire);border-radius:2px;animation:sonar 1.4s ease-out infinite}
 @keyframes sonar{from{transform:scale(1);opacity:.7}to{transform:scale(1.9);opacity:0}}
 
+/* decisions — sidebar push tray */
+.decbar{padding:0 14px 12px;border-bottom:1px solid var(--line-soft);margin-bottom:10px}
+.decbar .deccount{font-family:var(--mono);font-size:11px;color:var(--ink-mute);margin-bottom:7px}
+.decbar .deccount b{color:var(--cyan)}
+.decbar .drow{display:flex;gap:6px}
+.decbar button{flex:1;background:none;border:1px solid var(--line);color:var(--ink-mute);font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:7px 6px;cursor:pointer;border-radius:2px;transition:color .2s,border-color .2s}
+.decbar #decpush{color:var(--cyan);border-color:var(--cyan-dim)}
+.decbar #decpush:hover:not(:disabled){background:rgba(90,209,240,.08)}
+.decbar button:hover:not(:disabled){color:var(--ink);border-color:var(--cyan-dim)}
+.decbar button:disabled{opacity:.4;cursor:default}
+
+/* decisions — per-item controls (priorities + project tasks) */
+.dcontrols{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:9px;padding-top:8px;border-top:1px dashed var(--line-soft)}
+.dseg{display:flex;gap:4px;flex:none}
+.dbtn{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:4px 9px;border:1px solid var(--line);color:var(--ink-faint);background:none;cursor:pointer;border-radius:2px;transition:all .15s}
+.dbtn:hover{color:var(--ink);border-color:var(--cyan-dim)}
+.dbtn.on.act{background:rgba(74,222,128,.14);color:var(--ok);border-color:rgba(74,222,128,.5)}
+.dbtn.on.hold{background:rgba(232,193,74,.14);color:var(--warn);border-color:rgba(232,193,74,.5)}
+.dbtn.on.drop{background:rgba(240,85,107,.14);color:var(--risk);border-color:rgba(240,85,107,.5)}
+.dbtn.on.ask{background:rgba(90,209,240,.12);color:var(--cyan);border-color:rgba(90,209,240,.5)}
+.dnote{flex:1;min-width:130px;background:rgba(13,18,27,.6);border:1px solid var(--line);color:var(--ink);font-family:var(--mono);font-size:10px;padding:5px 7px;border-radius:2px;outline:none;display:none}
+.dnote.show{display:block}
+.dnote:focus{border-color:var(--cyan-dim)}
+.dclr{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--ink-faint);background:none;border:0;cursor:pointer;padding:4px 6px;display:none}
+.dclr.show{display:inline}
+.dclr:hover{color:var(--risk)}
+.prow.decided,.litem.decided{border-left:2px solid var(--cyan-dim);margin-left:-10px;padding-left:8px}
+
 /* project link menu — primary click opens the LIVE page (Pages URL or
    localhost app); the small gh suffix opens the repo. */
 .gitrow{display:flex;align-items:stretch}
@@ -752,6 +780,14 @@ body.conserve .ekg .b{animation:none}
         <button id="dmic" title="Voice dispatch" aria-label="Voice dispatch">◉</button>
       </div>
     </div>
+    <div class="decbar">
+      <div class="eyebrow" style="padding:0 0 8px">Decisions</div>
+      <div class="deccount" id="deccount">no decisions pending</div>
+      <div class="drow">
+        <button id="decpush" title="Send decisions to a Claude session for action">push →</button>
+        <button id="deccopy" title="Copy decisions as markdown">copy</button>
+      </div>
+    </div>
     <div class="eyebrow">GitHub Projects</div>
     <div id="gitlinks"><!-- links injected --></div>
     <div class="keys"><b>0-9</b> scroll to section · <b>W</b> wallpaper · <b>/</b> dispatch · <b>B</b> boot</div>
@@ -1211,12 +1247,121 @@ function readingBox(){
 }
 
 /* ---------- main stack: everything in one scrolling column ---------- */
+/* ---------- decisions ----------
+   Toggle a response (ACT / HOLD / DROP / ASK) on any priority item or
+   project task, add an optional note, then Push. Push POSTs the pending
+   set to the Ledger server's /api/deck-inbox route, which appends them
+   to CODE/ops/command-deck-inbox.md — a file a Claude session (or Chief
+   of Staff) reads to spin up the work. Copy is the phone/offline
+   fallback (markdown to clipboard). State persists in localStorage. */
+let DEC = {};
+try{ DEC = JSON.parse(store.get('deck.decisions','{}')) || {}; }catch(e){ DEC = {}; }
+function saveDecisions(){ store.set('deck.decisions', JSON.stringify(DEC)); }
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function slug(s){ return String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,52); }
+
+function decisionControls(scope, title){
+  const id = scope+':'+slug(title);
+  return `<div class="dcontrols" data-did="${esc(id)}" data-scope="${esc(scope)}" data-title="${esc(title)}">
+    <div class="dseg">
+      <button type="button" class="dbtn act"  data-dec="ACT">act</button>
+      <button type="button" class="dbtn hold" data-dec="HOLD">hold</button>
+      <button type="button" class="dbtn drop" data-dec="DROP">drop</button>
+      <button type="button" class="dbtn ask"  data-dec="ASK">ask</button>
+    </div>
+    <input class="dnote" placeholder="note (optional)" aria-label="Decision note">
+    <button type="button" class="dclr" title="clear decision">clear</button>
+  </div>`;
+}
+
+function pendingDecisions(){
+  return Object.entries(DEC).filter(([,d])=>d.decision && !d.pushed)
+    .map(([id,d])=>({ id, scope:d.scope, title:d.title, decision:d.decision, note:d.note||'' }));
+}
+function refreshDecisionUI(){
+  document.querySelectorAll('.dcontrols').forEach(box=>{
+    const d = DEC[box.dataset.did];
+    box.querySelectorAll('.dbtn').forEach(b=> b.classList.toggle('on', !!d && d.decision===b.dataset.dec));
+    const note = box.querySelector('.dnote');
+    const clr  = box.querySelector('.dclr');
+    const item = box.closest('.prow, .litem');
+    if(d){
+      note.classList.add('show'); clr.classList.add('show');
+      if(document.activeElement!==note) note.value = d.note||'';
+      if(item) item.classList.add('decided');
+    } else {
+      note.classList.remove('show'); clr.classList.remove('show'); note.value='';
+      if(item) item.classList.remove('decided');
+    }
+  });
+}
+function renderDecTray(){
+  const n = pendingDecisions().length;
+  const c = document.getElementById('deccount');
+  if(c) c.innerHTML = n ? `<b>${n}</b> pending push` : 'no decisions pending';
+  const push = document.getElementById('decpush'); if(push) push.disabled = n===0;
+  const copy = document.getElementById('deccopy'); if(copy) copy.disabled = n===0;
+}
+function setDecision(id, scope, title, dec){
+  const cur = DEC[id];
+  if(cur && cur.decision===dec){ delete DEC[id]; }               /* click active = toggle off */
+  else { DEC[id] = { scope, title, decision:dec, note:(cur&&cur.note)||'', pushed:false }; }
+  saveDecisions(); refreshDecisionUI(); renderDecTray();
+}
+function decisionsMarkdown(list){
+  return `# Command Deck decisions — ${new Date().toLocaleString('en-US')}\n\n` +
+    list.map(d=>`- **${d.decision}** — ${d.title} _(${d.scope})_${d.note?`\n    note: ${d.note}`:''}`).join('\n');
+}
+async function pushDecisions(){
+  const pend = pendingDecisions(); if(!pend.length) return;
+  const btn = document.getElementById('decpush'); const orig='push →';
+  btn.textContent='pushing…';
+  try{
+    const r = await fetch('http://localhost:5181/api/deck-inbox', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ decisions: pend })
+    });
+    if(!r.ok) throw new Error('bad status');
+    pend.forEach(p=>{ if(DEC[p.id]) DEC[p.id].pushed=true; });
+    saveDecisions(); renderDecTray();
+    btn.textContent='pushed ✓'; setTimeout(()=>btn.textContent=orig,1600);
+  }catch(e){
+    btn.textContent='ledger offline'; setTimeout(()=>btn.textContent=orig,2000);
+  }
+}
+function copyDecisions(){
+  const pend = pendingDecisions(); if(!pend.length) return;
+  const btn = document.getElementById('deccopy');
+  navigator.clipboard?.writeText(decisionsMarkdown(pend)).then(()=>{
+    pend.forEach(p=>{ if(DEC[p.id]) DEC[p.id].pushed=true; });
+    saveDecisions(); renderDecTray();
+    btn.textContent='copied'; setTimeout(()=>btn.textContent='copy',1400);
+  }).catch(()=>{ btn.textContent='blocked'; setTimeout(()=>btn.textContent='copy',1400); });
+}
+
+/* delegated handlers (survive re-render; #main content is replaced) */
+document.addEventListener('click', e=>{
+  const btn = e.target.closest && e.target.closest('.dbtn');
+  if(btn){ const box=btn.closest('.dcontrols'); setDecision(box.dataset.did, box.dataset.scope, box.dataset.title, btn.dataset.dec); return; }
+  const clr = e.target.closest && e.target.closest('.dclr');
+  if(clr){ const box=clr.closest('.dcontrols'); delete DEC[box.dataset.did]; saveDecisions(); refreshDecisionUI(); renderDecTray(); }
+});
+document.addEventListener('input', e=>{
+  const note = e.target.closest && e.target.closest('.dnote');
+  if(note){ const id=note.closest('.dcontrols').dataset.did;
+    if(!DEC[id]) return;                        /* note only editable once a decision is set */
+    DEC[id].note = note.value; DEC[id].pushed=false; saveDecisions(); renderDecTray(); }
+});
+document.getElementById('decpush').addEventListener('click', pushDecisions);
+document.getElementById('deccopy').addEventListener('click', copyDecisions);
+
 function renderMain(){
   const m = document.getElementById('main');
   const priorityRows = DATA.priorities.map(p=>`
     <div class="prow">
       <span class="badge ${p.tag}">${p.tag.toUpperCase()}</span>
-      <div class="ptext"><div class="t">${p.t}</div><div class="s">${p.s}</div></div>
+      <div class="ptext"><div class="t">${p.t}</div><div class="s">${p.s}</div>${decisionControls('priority', p.t)}</div>
       <span class="when">${p.when}</span>
     </div>`).join('');
 
@@ -1239,7 +1384,7 @@ function renderMain(){
     const items = p.items.map(it=>`
       <div class="litem">
         <span class="st ${it.st}">${it.st.toUpperCase()}</span>
-        <div class="body"><div class="t">${it.t}</div><div class="d">${it.d}</div></div>
+        <div class="body"><div class="t">${it.t}</div><div class="d">${it.d}</div>${decisionControls(n.id, it.t)}</div>
       </div>`).join('');
     const light = LINE_LIGHT[n.id]||'d';
     return `
@@ -1297,6 +1442,8 @@ function renderMain(){
   const h1=document.querySelector('.pagehead h1');
   if(h1) decrypt(h1, h1.dataset.title||h1.textContent);
 
+  refreshDecisionUI();
+  renderDecTray();
   pollLedger();
   pollVantage();
 }
