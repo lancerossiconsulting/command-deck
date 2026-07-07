@@ -363,6 +363,7 @@ body.live .deck{animation:deckin .5s ease}
 .readingbox .rref{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--ink)}
 .readingbox .rnote{font-size:11.5px;color:var(--ink-mute)}
 .readingbox .rempty{font-size:12px;color:var(--ink-mute);line-height:1.6}
+.readingbox .rnext{font-family:var(--serif);font-style:italic;color:var(--cyan)}
 
 /* gauge */
 .gauge{display:flex;align-items:center;gap:14px}
@@ -826,9 +827,60 @@ window.DECK_DATA = {
     { ref:"Acts 27:25", txt:"Take courage. For I believe God. It will be just as he said." }
   ],
 
-  // Daily Bible-reading prompt. Empty for now -- send the real
-  // schedule from your meetings with Pastor Brian and this populates.
-  bibleCalendar: [],
+  // Daily Bible-reading prompt, transcribed from Lance's printed plan
+  // (biblereadingplangenerator.com checkbox grid, photographed 2026-07-08).
+  // Spans Jun 7 - Oct 28, 2026: Romans 5 -> Revelation 22, NLT, for the
+  // Pastor Brian meetings. Days absent from this list are rest days.
+  bibleCalendar: [
+    { date:"2026-06-07", ref:"Romans 5" },  { date:"2026-06-08", ref:"Romans 6" },  { date:"2026-06-09", ref:"Romans 7" },
+    { date:"2026-06-11", ref:"Romans 8" },  { date:"2026-06-13", ref:"Romans 9" },
+    { date:"2026-06-14", ref:"Romans 10" }, { date:"2026-06-15", ref:"Romans 11" }, { date:"2026-06-16", ref:"Romans 12" },
+    { date:"2026-06-17", ref:"Romans 13" }, { date:"2026-06-18", ref:"Romans 14" }, { date:"2026-06-19", ref:"Romans 15" },
+    { date:"2026-06-21", ref:"Romans 16" }, { date:"2026-06-22", ref:"1 Corinthians 1" }, { date:"2026-06-23", ref:"1 Corinthians 2" },
+    { date:"2026-06-24", ref:"1 Corinthians 3" }, { date:"2026-06-25", ref:"1 Corinthians 4" }, { date:"2026-06-26", ref:"1 Corinthians 5-6" },
+    { date:"2026-06-28", ref:"1 Corinthians 7" }, { date:"2026-06-29", ref:"1 Corinthians 8" }, { date:"2026-06-30", ref:"1 Corinthians 9" },
+    { date:"2026-07-02", ref:"1 Corinthians 10" }, { date:"2026-07-03", ref:"1 Corinthians 11" }, { date:"2026-07-04", ref:"1 Corinthians 12" },
+    { date:"2026-07-05", ref:"1 Corinthians 13" }, { date:"2026-07-06", ref:"1 Corinthians 14" },
+    { date:"2026-07-09", ref:"1 Corinthians 15" }, { date:"2026-07-10", ref:"1 Corinthians 16" }, { date:"2026-07-11", ref:"2 Corinthians 1" },
+    { date:"2026-07-12", ref:"2 Corinthians 2" }, { date:"2026-07-13", ref:"2 Corinthians 3" }, { date:"2026-07-14", ref:"2 Corinthians 4" },
+    { date:"2026-07-15", ref:"2 Corinthians 5" }, { date:"2026-07-16", ref:"2 Corinthians 6" }, { date:"2026-07-17", ref:"2 Corinthians 7" },
+    { date:"2026-07-18", ref:"2 Corinthians 8" },
+    { date:"2026-07-19", ref:"2 Corinthians 9-10" }, { date:"2026-07-21", ref:"2 Corinthians 11" }, { date:"2026-07-22", ref:"2 Corinthians 12" },
+    { date:"2026-07-23", ref:"2 Corinthians 13" }, { date:"2026-07-24", ref:"Galatians 1" }, { date:"2026-07-25", ref:"Galatians 2" },
+    { date:"2026-07-26", ref:"Galatians 3" }, { date:"2026-07-27", ref:"Galatians 4" }, { date:"2026-07-29", ref:"Galatians 5-6" },
+    { date:"2026-07-30", ref:"Ephesians 1" }, { date:"2026-07-31", ref:"Ephesians 2" }, { date:"2026-08-01", ref:"Ephesians 3" },
+    { date:"2026-08-02", ref:"Ephesians 4" }, { date:"2026-08-04", ref:"Ephesians 5" }, { date:"2026-08-05", ref:"Ephesians 6" },
+    { date:"2026-08-06", ref:"Philippians 1" }, { date:"2026-08-07", ref:"Philippians 2" }, { date:"2026-08-08", ref:"Philippians 3" },
+    { date:"2026-08-09", ref:"Philippians 4" }, { date:"2026-08-11", ref:"Colossians 1" }, { date:"2026-08-12", ref:"Colossians 2" },
+    { date:"2026-08-13", ref:"Colossians 3" }, { date:"2026-08-14", ref:"Colossians 4; 1 Thessalonians 1" }, { date:"2026-08-15", ref:"1 Thessalonians 2" },
+    { date:"2026-08-16", ref:"1 Thessalonians 3" }, { date:"2026-08-17", ref:"1 Thessalonians 4-5" }, { date:"2026-08-18", ref:"2 Thessalonians 1" },
+    { date:"2026-08-19", ref:"2 Thessalonians 2" }, { date:"2026-08-20", ref:"2 Thessalonians 3; 1 Timothy 1" }, { date:"2026-08-21", ref:"1 Timothy 2" },
+    { date:"2026-08-22", ref:"1 Timothy 3-4" },
+    { date:"2026-08-23", ref:"1 Timothy 5" }, { date:"2026-08-24", ref:"1 Timothy 6" }, { date:"2026-08-25", ref:"2 Timothy 1" },
+    { date:"2026-08-26", ref:"2 Timothy 2" }, { date:"2026-08-27", ref:"2 Timothy 3" }, { date:"2026-08-28", ref:"2 Timothy 4; Titus 1" },
+    { date:"2026-08-29", ref:"Titus 2" },
+    { date:"2026-08-30", ref:"Titus 3; Philemon" }, { date:"2026-08-31", ref:"Hebrews 1" }, { date:"2026-09-01", ref:"Hebrews 2" },
+    { date:"2026-09-02", ref:"Hebrews 3" }, { date:"2026-09-03", ref:"Hebrews 4-5" }, { date:"2026-09-04", ref:"Hebrews 6" },
+    { date:"2026-09-05", ref:"Hebrews 7" },
+    { date:"2026-09-06", ref:"Hebrews 8" }, { date:"2026-09-07", ref:"Hebrews 9" }, { date:"2026-09-09", ref:"Hebrews 10" },
+    { date:"2026-09-11", ref:"Hebrews 11" }, { date:"2026-09-12", ref:"Hebrews 12" },
+    { date:"2026-09-14", ref:"Hebrews 13" }, { date:"2026-09-15", ref:"James 1" }, { date:"2026-09-16", ref:"James 2" },
+    { date:"2026-09-17", ref:"James 3" }, { date:"2026-09-18", ref:"James 4-5" },
+    { date:"2026-09-20", ref:"1 Peter 1" }, { date:"2026-09-21", ref:"1 Peter 2" }, { date:"2026-09-22", ref:"1 Peter 3" },
+    { date:"2026-09-23", ref:"1 Peter 4" }, { date:"2026-09-24", ref:"1 Peter 5; 2 Peter 1" }, { date:"2026-09-26", ref:"2 Peter 2" },
+    { date:"2026-09-27", ref:"2 Peter 3; 1 John 1" }, { date:"2026-09-28", ref:"1 John 2" }, { date:"2026-09-30", ref:"1 John 3" },
+    { date:"2026-10-01", ref:"1 John 4" }, { date:"2026-10-02", ref:"1 John 5" }, { date:"2026-10-03", ref:"2 John; 3 John" },
+    { date:"2026-10-04", ref:"Jude" }, { date:"2026-10-05", ref:"Revelation 1" }, { date:"2026-10-07", ref:"Revelation 2" },
+    { date:"2026-10-08", ref:"Revelation 3" }, { date:"2026-10-09", ref:"Revelation 4" }, { date:"2026-10-10", ref:"Revelation 5" },
+    { date:"2026-10-11", ref:"Revelation 6" }, { date:"2026-10-12", ref:"Revelation 7" }, { date:"2026-10-13", ref:"Revelation 8" },
+    { date:"2026-10-14", ref:"Revelation 9" }, { date:"2026-10-15", ref:"Revelation 10" }, { date:"2026-10-16", ref:"Revelation 11" },
+    { date:"2026-10-17", ref:"Revelation 12" },
+    { date:"2026-10-18", ref:"Revelation 13" }, { date:"2026-10-19", ref:"Revelation 14" }, { date:"2026-10-20", ref:"Revelation 15" },
+    { date:"2026-10-21", ref:"Revelation 16" }, { date:"2026-10-22", ref:"Revelation 17" }, { date:"2026-10-23", ref:"Revelation 18" },
+    { date:"2026-10-24", ref:"Revelation 19" },
+    { date:"2026-10-25", ref:"Revelation 20" }, { date:"2026-10-27", ref:"Revelation 21" },
+    { date:"2026-10-28", ref:"Revelation 22", note:"Plan complete — Romans 5 to Revelation 22 with Pastor Brian." }
+  ],
 
   // Sidebar link menu. `live` = the page you land on (GitHub Pages URL,
   // or a localhost app for private tools); `url` = the repo, reachable
@@ -966,9 +1018,9 @@ window.DECK_DATA = {
     bible: {
       title:"Bible Study", crumb:"Line · Daily", meta:"NLT · Notion 'Bible Notes' · w/ Pastor Brian",
       kv:[
-        ["Current","Acts + Romans"],
-        ["Logged","Acts 27 · Romans 1–6"],
-        ["Next","Romans 7 — law and flesh"],
+        ["Plan","Romans 5 → Revelation 22 · Jun 7 – Oct 28"],
+        ["Current","1 Corinthians (per calendar)"],
+        ["Prompt","Today's Reading panel at the top of the deck"],
         ["Rule","Entries stay 'In Progress' until closed with Pastor Brian"]
       ],
       items:[
@@ -1133,9 +1185,19 @@ function readingBox(){
     </div>`;
   }
   if(!entry){
+    /* rest day (or outside the plan window) — point at what's next */
+    const next = cal.find(c=>c.date>today);   /* cal is date-sorted; ISO strings compare correctly */
+    let msg;
+    if(next){
+      const [y,mo,da]=next.date.split('-').map(Number);
+      const nd=new Date(y,mo-1,da).toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
+      msg=`Rest day — no assigned chapter. Next: <span class="rnext">${next.ref}</span> on ${nd}.`;
+    } else {
+      msg=`Plan complete — Romans 5 through Revelation 22, finished Oct 28. Bring the next calendar from Pastor Brian.`;
+    }
     return `<div class="panel live section" id="sec-reading">
       <h3>Today's Reading <span class="tag">bible calendar</span></h3>
-      <div class="readingbox"><div class="rday">${dayLbl}</div><div class="rempty">No assignment logged for today in the calendar.</div></div>
+      <div class="readingbox"><div class="rday">${dayLbl}</div><div class="rempty">${msg}</div></div>
     </div>`;
   }
   return `<div class="panel live section" id="sec-reading">
