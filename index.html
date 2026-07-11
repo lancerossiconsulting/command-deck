@@ -261,8 +261,15 @@ body.live .deck{animation:deckin .5s ease}
 .decbar button:hover:not(:disabled){color:var(--ink);border-color:var(--cyan-dim)}
 .decbar button:disabled{opacity:.4;cursor:default}
 
-/* decisions — per-item controls (priorities + project tasks) */
-.dcontrols{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:9px;padding-top:8px;border-top:1px dashed var(--line-soft)}
+/* decisions — per-item controls (priorities + project tasks).
+   Instruction box is the primary input (how to act); the ACT/HOLD/
+   DROP/ASK buttons set disposition (when/whether). */
+.dcontrols{margin-top:9px;padding-top:8px;border-top:1px dashed var(--line-soft)}
+.dnote{width:100%;display:block;background:rgba(13,18,27,.6);border:1px solid var(--line);color:var(--ink);font-family:var(--mono);font-size:11px;line-height:1.5;padding:7px 9px;border-radius:2px;outline:none;resize:vertical;min-height:32px;transition:border-color .2s,box-shadow .2s}
+.dnote::placeholder{color:var(--ink-faint)}
+.dnote:focus{border-color:var(--cyan-dim);box-shadow:0 0 0 1px var(--cyan-glow)}
+.drow2{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:6px}
+.drow2 .dlab{font-family:var(--mono);font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin-right:2px}
 .dseg{display:flex;gap:4px;flex:none}
 .dbtn{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:4px 9px;border:1px solid var(--line);color:var(--ink-faint);background:none;cursor:pointer;border-radius:2px;transition:all .15s}
 .dbtn:hover{color:var(--ink);border-color:var(--cyan-dim)}
@@ -270,11 +277,8 @@ body.live .deck{animation:deckin .5s ease}
 .dbtn.on.hold{background:rgba(232,193,74,.14);color:var(--warn);border-color:rgba(232,193,74,.5)}
 .dbtn.on.drop{background:rgba(240,85,107,.14);color:var(--risk);border-color:rgba(240,85,107,.5)}
 .dbtn.on.ask{background:rgba(90,209,240,.12);color:var(--cyan);border-color:rgba(90,209,240,.5)}
-.dnote{flex:1;min-width:130px;background:rgba(13,18,27,.6);border:1px solid var(--line);color:var(--ink);font-family:var(--mono);font-size:10px;padding:5px 7px;border-radius:2px;outline:none;display:none}
-.dnote.show{display:block}
-.dnote:focus{border-color:var(--cyan-dim)}
-.dclr{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--ink-faint);background:none;border:0;cursor:pointer;padding:4px 6px;display:none}
-.dclr.show{display:inline}
+.dclr{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--ink-faint);background:none;border:0;cursor:pointer;padding:4px 6px;margin-left:auto;visibility:hidden}
+.dclr.show{visibility:visible}
 .dclr:hover{color:var(--risk)}
 .prow.decided,.litem.decided{border-left:2px solid var(--cyan-dim);margin-left:-10px;padding-left:8px}
 
@@ -813,6 +817,10 @@ body.conserve .ekg .b{animation:none}
       <div class="fsection">
         <h4>Vantage <span class="tag" id="vantagetag">connecting</span></h4>
         <div id="vantagebody"><span style="font-family:var(--mono);font-size:11px;color:var(--ink-faint)">reaching localhost:8765…</span></div>
+      </div>
+      <div class="fsection">
+        <h4>Vincent &amp; Kayla <span class="tag" id="vkstag">connecting</span></h4>
+        <div id="vksbody"><span style="font-family:var(--mono);font-size:11px;color:var(--ink-faint)">checking status light…</span></div>
       </div>
     </div>
     <div class="dqpanel" id="dqpanel">
@@ -1446,6 +1454,7 @@ function renderMain(){
   renderDecTray();
   pollLedger();
   pollVantage();
+  pollVKS();
 }
 
 /* ---------- project link menu ----------
@@ -1666,6 +1675,55 @@ async function pollVantage(){
   }
 }
 setInterval(pollVantage, 90*1000);
+
+/* ---------- Vincent & Kayla status light ----------
+   Read-only poll of the status slot their budget worksheet publishes to
+   (opt-in on their side, percentages only — never dollar amounts).
+   Same pattern as the Ledger/Vantage pollers, different transport: the
+   kids' data can't be reached at a localhost, so the worksheet PUTs to a
+   shared kvdb slot and this fetches it. */
+const VKS_URL = 'https://kvdb.io/T1SxHa1r126cVFmn4NUSEB/vincent-status';
+const VKS_COL = { green:'#5FB880', amber:'#D9A13B', red:'#C75048' };
+function renderVKS(d, ok){
+  const tag = document.getElementById('vkstag');
+  const body = document.getElementById('vksbody');
+  if(!tag || !body) return;
+  if(!ok || !d || !d.level){
+    tag.textContent = 'no report';
+    body.innerHTML = `<span style="font-family:var(--mono);font-size:11px;color:var(--ink-faint)">waiting for the kids to switch on their status light</span>`;
+    return;
+  }
+  const ageDays = d.updated ? (Date.now()-new Date(d.updated).getTime())/864e5 : null;
+  const stale = ageDays!=null && ageDays > 40;
+  const col = VKS_COL[d.level] || 'var(--ink-faint)';
+  tag.textContent = d.level.toUpperCase() + (stale ? ' · STALE' : '');
+  const pct = d.pct;
+  const pctRow = pct ? `
+    <div class="pstat"><span class="pk">Plan / income</span><span class="pv">${pct.planned}%</span></div>
+    <div class="pstat"><span class="pk">Spent / income</span><span class="pv">${pct.spent}%</span></div>
+    <div class="pstat"><span class="pk">Savings share</span><span class="pv">${pct.savings}%</span></div>`
+    : `<div class="pstat"><span class="pk">Plan</span><span class="pv dim">still sketching</span></div>`;
+  const flags = (d.flags && d.flags.length)
+    ? `<div style="margin-top:6px;font-size:11px;line-height:1.5;color:var(--ink-mute)">`+
+        d.flags.map(f=>`• ${f.text}`).join('<br>')+`</div>`
+    : (d.level==='green' ? `<div style="margin-top:6px;font-size:11px;color:var(--ink-faint)">all quiet — nothing needs you</div>` : '');
+  const call = (d.level!=='green' && !stale)
+    ? `<div style="margin-top:6px;font-size:11px;color:${col};font-weight:600">worth a call this week</div>` : '';
+  body.innerHTML = `
+    <span class="pchip" style="background:${col};color:#0b0f14">${(d.monthLabel||d.month||'').toUpperCase()}</span>
+    ${pctRow}${flags}${call}
+    <div style="margin-top:5px;font-size:10px;color:var(--ink-faint)">${d.updated?('reported '+timeAgo(d.updated)):''}</div>`;
+}
+async function pollVKS(){
+  try{
+    const r = await fetch(VKS_URL, { cache:'no-store' });
+    if(!r.ok) throw new Error('no status yet');
+    renderVKS(await r.json(), true);
+  }catch(e){
+    renderVKS(null, false);
+  }
+}
+setInterval(pollVKS, 5*60*1000);
 
 /* ---------- capacity ---------- */
 const capInput=document.getElementById('capacity');
