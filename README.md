@@ -1,85 +1,83 @@
 # Cloud & Fire — Command Deck
 
-Lance's "Jarvis" heads-up display. A single-page HUD: a GitHub project link menu on the left, every project line stacked in one scrolling column in the middle (priority stack, live flags, sprint/pipeline/formation, a daily Bible-reading prompt, then each project's brief), and a live Real Financials rail on the right (Household Ledger income/outflow/savings-goal + category spend, Vantage hot markets + mock-portfolio P&L). Plus carry-forward ticker, live Manhattan KS weather, and a capacity dimmer.
+Lance's "Jarvis" heads-up display, reset to essentials. As of 2026-07-17 the
+side projects were retired, so the deck now carries only the things worth
+keeping on a glanceable screen: the clock and local weather, a live finance
+rail, and the daily Bible-reading calendar — all inside the same MK III HUD
+chrome (access gate, arc-reactor boot, living wallpaper).
 
-Repo (private): https://github.com/lancerossiconsulting/command-deck
+Repo: https://github.com/lancerossiconsulting/command-deck
+Hosted on GitHub Pages: https://lancerossiconsulting.github.io/command-deck/
 
-**No hosted URL.** The repo is private, and GitHub Pages only serves private repos on paid plans — Lance chose to keep the repo private and drop hosting rather than upgrade or go public. The deck exists as files, git-tracked for history, not as a live website.
+## What the deck shows now
+
+- **Top bar** — local clock with seconds ring, date, live Manhattan KS
+  weather (Open-Meteo, no key), rhythm pill, last-synced date.
+- **Left rail** — dispatch capture (typed or voice, queued to localStorage),
+  a finance-links menu (command-deck, ledger, vantage only), the wallpaper /
+  boot / dispatch key legend, and the capacity dimmer.
+- **Main column** — the Bible reading calendar: today's assignment keyed to
+  the date, plus the next twelve upcoming readings. On rest days it points at
+  what's next; when the plan ends it says so.
+- **Real Financials rail (right)** — three read-only, live widgets (below).
+- **Ticker** — a short ambient status line across the footer.
+
+## Real Financials rail
+
+All three widgets are read-only, poll on their own timers, and degrade to an
+honest "not running / no signal" state when their source is offline.
+
+- **Household Ledger** (`localhost:5181/api/deck-summary`, every 60s) — this
+  month's income / outflow / savings-goal status plus per-tier spend bars.
+  This is the personal ledger feed surfaced directly in the rail; it shows a
+  "NOT RUNNING" chip if the Ledger dev server isn't up on this machine.
+- **Vantage** (`localhost:8765/api/deck-summary`, every 90s) — top hot markets
+  from the ranked feed and mock-portfolio equity / P&L / position counts. No
+  trading. Shows a cold-start note when the profile has no calibrated opinions.
+- **Vincent & Kayla** (Pantry basket, every 5 min) — a single LED status light
+  (green / amber / red, or off) parsed down from the opt-in status the kids'
+  budget worksheet publishes. Percentages/levels only, never dollar amounts.
+
+The two `localhost` widgets require the companion app's dev server running on
+the **same machine** as the browser. The Ledger, Vantage, and Vincent-budget
+companion repos all remain live.
 
 ## Run it
 
-**One file, fully portable.** Double-click `index.html` — or copy it anywhere (Downloads, iCloud, another machine) and double-click it there. No build step, no server, no companion files. (Weather needs internet; everything else works offline.)
+**One file, fully portable.** Open `index.html` — no build step, no server, no
+companion files. Weather and the finance rail need network / the local dev
+servers; the clock, boot, wallpaper, and Bible calendar work offline.
 
-**Mobile:** there's a phone-width layout built in (chip nav, scrolling column, PWA meta tags) — it just needs the file transferred to the device manually, e.g. AirDrop, OneDrive/iCloud sync, or emailing `index.html` to yourself and opening it in a mobile browser. Once open, Share → **Add to Home Screen** installs it as a dark full-screen app. The dispatch queue, wallpaper choice, and capacity live in each device's localStorage, so a phone copy and the desktop copy keep separate state.
-
-## Architecture
-
-Everything lives in `index.html`:
-
-- **Shell** — layout, styles, behavior. Rarely changes.
-- **Data block** — everything the deck renders, in one `<script>` block fenced by `DECK DATA START` / `DECK DATA END` markers. **Claude rewrites only this block on every sync.**
-
-## Refresh protocol (for Claude sessions)
-
-When Lance asks to "sync the deck" / "update the command deck":
-
-1. Open `index.html` and find the block between `DECK DATA START` and `DECK DATA END` (schema notes are in its header comment).
-2. Gather what changed — morning-brief logic, Linear/Notion state, project memories, this session's outcomes.
-3. Rewrite the data block only: set `updated` to today's date, re-triage `priorities` (any `nofail` entry flips the top-bar pill to NO-FAIL ACTIVE), refresh `lines`, `flags`, `carry`, `sprint`, `githubProjects`, `bibleCalendar`, and the per-line `pages`.
-4. Do not touch the shell unless the deck needs a new capability.
-5. Commit and push to `main` (private repo — history only, no live deploy).
-6. If Lance keeps a copy elsewhere (e.g. `Downloads\command-deck.html`, a phone copy), refresh that copy too.
-
-Line lights: `g` green · `y` yellow · `r` red · `d` dormant (back-burnered).
-Priority tags: `nofail` · `behind` · `decision` · `next`.
-Sprint score: `0–100`, or `null` when no sprint is running (shows an em-dash gauge).
+An access gate (passphrase) guards the page; once unlocked it's remembered in
+that browser's localStorage.
 
 ## Controls
 
-- **Number keys 0–9** smooth-scroll to a project section in the main column (no more page-switching — everything is stacked and visible via scroll).
-- The left nav is now a **GitHub project link menu** — click any repo name to open it on GitHub in a new tab. Public/private tags shown per repo.
-- **Capacity slider** (bottom-left, persists): 1–2 dims everything except live panels and red flags.
-- **W key** cycles the five shader wallpapers (Ember Flow, Liquid Orbs, Warp Field, Circuit Cells, Ripple Pool). Choice persists.
-- **B key** replays the arc-reactor boot sequence; any key or click skips it.
-- Capacity and wallpaper choice persist via localStorage.
+- **W** cycles the five shader wallpapers (choice persists).
+- **B** replays the arc-reactor boot sequence; any key or click skips it.
+- **/** focuses the dispatch input.
+- **Capacity slider** (bottom-left, persists): 1–2 dims everything except the
+  live finance panels.
 
-## Real Financials rail (right column)
+## Data block
 
-Two live, read-only widgets, polled every 60–90s, both fed by companion apps' own `/api/deck-summary` routes (same pattern: GET-only, CORS opened for that one route, aggregate data only):
+Everything the deck renders lives in one `<script>` block in `index.html`
+fenced by `DECK DATA START` / `DECK DATA END`. After the reset it carries only:
 
-- **Household Ledger** (`localhost:5181`) — this month's income/outflow/savings-goal status, plus category (tier) bars showing expected vs actual spend. Shows a "NOT RUNNING" chip if the Ledger dev server isn't up.
-- **Vantage** (`localhost:8765`) — top hot markets from the ranked feed (question, advantage, verdict, link to Kalshi/Polymarket) and mock-portfolio equity/P&L/position counts. Read-only, no trading. Shows a cold-start note if the stance profile has no calibrated opinions yet rather than presenting zero-advantage numbers as real signal.
+- `updated` — last-synced date (top bar)
+- `rhythm` — one-word mode label (top bar)
+- `verses` — scripture pool for the rail (one shown at random)
+- `bibleCalendar` — `[{ date:"YYYY-MM-DD", ref, note }]`, the daily + upcoming
+  reading source
+- `githubProjects` — the finance-links menu (command-deck, ledger, vantage)
+- `carry` — the footer ticker's ambient status lines
 
-Both require the companion app's dev server running **on the same machine** as the browser — `localhost` means "this computer," not a shared service. Ledger auto-starts at Windows logon (see its own README); Vantage does not yet.
+The finance widgets pull their numbers live from the companion apps at render
+time; nothing about them is stored in the data block.
 
-## Today's Reading (daily Bible-study prompt)
+## Other files (unchanged)
 
-A panel at the top of the main column looks up today's date in `DATA.bibleCalendar` (empty by default) and shows the assignment, or an honest "no calendar loaded" placeholder if it's empty or today has no entry. To wire in real data, populate `bibleCalendar` in the DECK DATA block:
-
-```js
-bibleCalendar: [
-  { date:"2026-07-08", ref:"Romans 7", note:"optional context" },
-  ...
-]
-```
-
-## MK III shell (current)
-
-The deck runs the MK III HUD shell — same Iron Man-grade chrome as before, restructured layout:
-
-- Arc-reactor boot: rotating reactor rings around the HUD-cyan wireframe globe, typed system log, progress arc. Auto-dismisses on a timer (never hangs). `BOOT_GLOBE_THEME='mono'` in the shell restores the off-white monochrome globe.
-- Rajdhani display type, cyan/gold holographic accents, faint HUD grid + periodic scan sweep.
-- Seconds ring around the clock, EKG pulse beside Rhythm, orbiting state-pill spinner, mini reactor brand mark.
-- Panels stagger in with corner-bracket draw; page titles resolve with a character-scramble decrypt; sprint score and flag count tick up; pipeline bars fill on view.
-- Chamfered (clip-path) badges, tags, and ticker lead; gold diamond separators in the ticker.
-- All of it honors `prefers-reduced-motion` (static frames, no scramble/stagger) and conserve mode (sweep off, EKG still).
-
-Only MK I is separately archived (`deck-classic.html`, same data schema). MK II was not preserved as a separate file — MK III replaced it directly in `index.html`; git history has the diff if you ever need to see MK II again.
-
-The previous MK I shell is preserved at `deck-classic.html` (same data schema — the DECK DATA block is interchangeable between shells).
-
-## Built-in visual layer
-
-- **Living wallpaper** — the background is one of five cursor-reactive WebGL shaders, retuned from `wallpapers.html` to stay subdued behind the data and flare bright/glowy on every transition, then ease back. Falls back to the body gradient if WebGL is unavailable; renders a static frame under prefers-reduced-motion.
-- **Globe boot loader** — on load, the monochrome country-outline globe (from `globe-loader.html`) spins inside its whirl over the live wallpaper, then fades out after ~1.6s and fires a reveal flare. It dismisses on a timer regardless of network or globe state, so the deck never hangs.
-- `wallpapers.html` and `globe-loader.html` remain as standalone files for fullscreen / wallpaper-engine use; the deck embeds copies so `index.html` stays self-contained and portable.
+- `deck-classic.html` — the archived MK I shell.
+- `wallpapers.html`, `globe-loader.html` — standalone shader / globe demos the
+  deck embeds copies of so `index.html` stays self-contained.
+- `robots.txt`.

@@ -250,39 +250,7 @@ body.live .deck{animation:deckin .5s ease}
 .dispatchbar button.listening::after{content:"";position:absolute;inset:-1px;border:1px solid var(--fire);border-radius:2px;animation:sonar 1.4s ease-out infinite}
 @keyframes sonar{from{transform:scale(1);opacity:.7}to{transform:scale(1.9);opacity:0}}
 
-/* decisions — sidebar push tray */
-.decbar{padding:0 14px 12px;border-bottom:1px solid var(--line-soft);margin-bottom:10px}
-.decbar .deccount{font-family:var(--mono);font-size:11px;color:var(--ink-mute);margin-bottom:7px}
-.decbar .deccount b{color:var(--cyan)}
-.decbar .drow{display:flex;gap:6px}
-.decbar button{flex:1;background:none;border:1px solid var(--line);color:var(--ink-mute);font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:7px 6px;cursor:pointer;border-radius:2px;transition:color .2s,border-color .2s}
-.decbar #decpush{color:var(--cyan);border-color:var(--cyan-dim)}
-.decbar #decpush:hover:not(:disabled){background:rgba(90,209,240,.08)}
-.decbar button:hover:not(:disabled){color:var(--ink);border-color:var(--cyan-dim)}
-.decbar button:disabled{opacity:.4;cursor:default}
-
-/* decisions — per-item controls (priorities + project tasks).
-   Instruction box is the primary input (how to act); the ACT/HOLD/
-   DROP/ASK buttons set disposition (when/whether). */
-.dcontrols{margin-top:9px;padding-top:8px;border-top:1px dashed var(--line-soft)}
-.dnote{width:100%;display:block;background:rgba(13,18,27,.6);border:1px solid var(--line);color:var(--ink);font-family:var(--mono);font-size:11px;line-height:1.5;padding:7px 9px;border-radius:2px;outline:none;resize:vertical;min-height:32px;transition:border-color .2s,box-shadow .2s}
-.dnote::placeholder{color:var(--ink-faint)}
-.dnote:focus{border-color:var(--cyan-dim);box-shadow:0 0 0 1px var(--cyan-glow)}
-.drow2{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:6px}
-.drow2 .dlab{font-family:var(--mono);font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin-right:2px}
-.dseg{display:flex;gap:4px;flex:none}
-.dbtn{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:4px 9px;border:1px solid var(--line);color:var(--ink-faint);background:none;cursor:pointer;border-radius:2px;transition:all .15s}
-.dbtn:hover{color:var(--ink);border-color:var(--cyan-dim)}
-.dbtn.on.act{background:rgba(74,222,128,.14);color:var(--ok);border-color:rgba(74,222,128,.5)}
-.dbtn.on.hold{background:rgba(232,193,74,.14);color:var(--warn);border-color:rgba(232,193,74,.5)}
-.dbtn.on.drop{background:rgba(240,85,107,.14);color:var(--risk);border-color:rgba(240,85,107,.5)}
-.dbtn.on.ask{background:rgba(90,209,240,.12);color:var(--cyan);border-color:rgba(90,209,240,.5)}
-.dclr{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--ink-faint);background:none;border:0;cursor:pointer;padding:4px 6px;margin-left:auto;visibility:hidden}
-.dclr.show{visibility:visible}
-.dclr:hover{color:var(--risk)}
-.prow.decided,.litem.decided{border-left:2px solid var(--cyan-dim);margin-left:-10px;padding-left:8px}
-
-/* project link menu — primary click opens the LIVE page (Pages URL or
+/* finance link menu — primary click opens the LIVE page (Pages URL or
    localhost app); the small gh suffix opens the repo. */
 .gitrow{display:flex;align-items:stretch}
 .gitlink{
@@ -396,15 +364,12 @@ body.live .deck{animation:deckin .5s ease}
 .readingbox .rnote{font-size:11.5px;color:var(--ink-mute)}
 .readingbox .rempty{font-size:12px;color:var(--ink-mute);line-height:1.6}
 .readingbox .rnext{font-family:var(--serif);font-style:italic;color:var(--cyan)}
+.uplist{display:grid;grid-template-columns:1fr 1fr;gap:6px 24px}
+@media (max-width:900px){.uplist{grid-template-columns:1fr}}
+.uprow{display:flex;align-items:baseline;gap:12px;padding:5px 0;border-bottom:1px solid var(--line-soft)}
+.uprow .upd{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--ink-faint);text-transform:uppercase;white-space:nowrap;min-width:96px}
+.uprow .upr{font-family:var(--serif);font-style:italic;font-size:13.5px;color:var(--ink)}
 
-/* gauge */
-.gauge{display:flex;align-items:center;gap:14px}
-.gauge svg{flex:none;overflow:visible}
-.gauge .grot{transform-origin:46px 46px;animation:rot 16s linear infinite}
-.gauge .read{font-family:var(--mono)}
-.gauge .read .big{font-family:var(--disp);font-size:26px;font-weight:600;color:var(--ink);line-height:1}
-.gauge .read .lbl{font-size:9.5px;letter-spacing:.14em;color:var(--ink-faint);text-transform:uppercase;margin-top:4px}
-.gauge .read .nt{font-size:9.5px;color:var(--ink-mute);margin-top:3px}
 
 /* compact stats row: sprint gauge + pipeline + formation, one panel */
 .statsrow{display:grid;grid-template-columns:auto 1fr 1fr;gap:18px;align-items:center}
@@ -794,17 +759,9 @@ body.conserve .ekg .b{animation:none}
         <button id="dmic" title="Voice dispatch" aria-label="Voice dispatch">◉</button>
       </div>
     </div>
-    <div class="decbar">
-      <div class="eyebrow" style="padding:0 0 8px">Decisions</div>
-      <div class="deccount" id="deccount">no decisions pending</div>
-      <div class="drow">
-        <button id="decpush" title="Send decisions to a Claude session for action">push →</button>
-        <button id="deccopy" title="Copy decisions as markdown">copy</button>
-      </div>
-    </div>
-    <div class="eyebrow">GitHub Projects</div>
+    <div class="eyebrow">Finance Links</div>
     <div id="gitlinks"><!-- links injected --></div>
-    <div class="keys"><b>0-9</b> scroll to section · <b>W</b> wallpaper · <b>/</b> dispatch · <b>B</b> boot</div>
+    <div class="keys"><b>W</b> wallpaper · <b>/</b> dispatch · <b>B</b> boot</div>
     <div class="capacity">
       <div class="k"><span>Capacity</span><b id="capval">3 / 5</b></div>
       <input type="range" id="capacity" min="1" max="5" step="1" value="3" aria-label="Energy capacity">
@@ -847,28 +804,24 @@ body.conserve .ekg .b{animation:none}
 
   <!-- TICKER -->
   <footer class="tick">
-    <div class="lead">Carry Forward</div>
+    <div class="lead">On The Wire</div>
     <div class="tickwrap"><div class="tickmove" id="ticker"></div></div>
   </footer>
 </div>
 
 <script>
 /* =====================================================================
-   DECK DATA START — sync protocol rewrites everything in this block.
+   DECK DATA START — essentials-only deck. Non-financial project trackers
+   were retired 2026-07-17; this block now carries just what the deck shows.
    Schema:
    - updated:       ISO date of last sync (shown in top bar)
-   - priorities:    tag is nofail | behind | decision | next.
-                    Any "nofail" entry flips the state pill to NO-FAIL ACTIVE.
-   - lines:         light is g | y | r | d (d = dormant/back-burnered) —
-                    still used for each project section's status dot.
-   - sprint:        score 0-100, or null when no sprint is running
-   - nav:           section order for the main stack; every non-overview
-                    id needs a pages entry. Also drives 0-9 scroll-to.
-   - githubProjects: [{ name, url, visibility:"public"|"private", desc }]
-                    — the left-nav link menu.
+   - rhythm:        one-word mode label, shown in the top bar
+   - verses:        [{ ref, txt }] — one is picked at random for the rail
    - bibleCalendar: [{ date:"YYYY-MM-DD", ref, note }] — daily reading
-                    prompt. Empty until Lance supplies his real schedule;
-                    the deck shows an honest "no calendar loaded" state.
+                    prompt keyed to today's date, plus the upcoming list.
+   - githubProjects: [{ name, live, url, kind, desc }] — the left-nav link
+                    menu (finance companions only: command-deck, ledger, vantage).
+   - carry:         ambient status lines for the footer ticker.
    ===================================================================== */
 window.DECK_DATA = {
 
@@ -940,193 +893,18 @@ window.DECK_DATA = {
   // or a localhost app for private tools); `url` = the repo, reachable
   // via the small gh suffix button. No `live` -> repo is the primary.
   githubProjects: [
-    { name:"cloud-and-fire",         live:"https://lancerossiconsulting.github.io/cloud-and-fire/",          url:"https://github.com/lancerossiconsulting/cloud-and-fire",          kind:"live",  desc:"Fellowship site" },
-    { name:"pratt-study",            live:"https://lancerossiconsulting.github.io/pratt-study/",             url:"https://github.com/lancerossiconsulting/pratt-study",             kind:"live",  desc:"Pratt study site" },
-    { name:"legacy-media-podsphere", live:"https://lancerossiconsulting.github.io/legacy-media-podsphere/",  url:"https://github.com/lancerossiconsulting/legacy-media-podsphere",  kind:"live",  desc:"Legacy media site" },
-    { name:"constitutive-rhetoric-study", live:"https://lancerossiconsulting.github.io/constitutive-rhetoric-study/", url:"https://github.com/lancerossiconsulting/constitutive-rhetoric-study", kind:"live", desc:"Rhetoric study site" },
-    { name:"once-and-future-people", live:"https://lancerossiconsulting.github.io/once-and-future-people/",  url:"https://github.com/lancerossiconsulting/once-and-future-people",  kind:"live",  desc:"Book project site" },
-    { name:"command-deck",           live:"https://lancerossiconsulting.github.io/command-deck/",            url:"https://github.com/lancerossiconsulting/command-deck",            kind:"live",  desc:"This deck, hosted" },
-    { name:"ledger",                 live:"http://localhost:5181/",                                          url:"https://github.com/lancerossiconsulting/ledger",                  kind:"local", desc:"Household budget app (this machine)" },
-    { name:"vantage",                live:"http://localhost:8765/",                                          url:"https://github.com/lancerossiconsulting/vantage",                  kind:"local", desc:"Prediction-market dashboard (this machine)" },
-    { name:"writings",               url:"https://github.com/lancerossiconsulting/writings",                 kind:"repo",  desc:"Corpus (repo only, no site)" }
+    { name:"command-deck", live:"https://lancerossiconsulting.github.io/command-deck/", url:"https://github.com/lancerossiconsulting/command-deck", kind:"live",  desc:"This deck, hosted" },
+    { name:"ledger",       live:"http://localhost:5181/",                               url:"https://github.com/lancerossiconsulting/ledger",       kind:"local", desc:"Household budget app (this machine)" },
+    { name:"vantage",      live:"http://localhost:8765/",                               url:"https://github.com/lancerossiconsulting/vantage",      kind:"local", desc:"Prediction-market dashboard (this machine)" }
   ],
 
-  priorities: [
-    { tag:"behind",   t:"Cloud & Fire — contact email", s:"Site is live but has no working contact path. Feedback and inquiries have nowhere to land.", when:"BLOCKING" },
-    { tag:"decision", t:"Pastor Brian site review", s:"Cloud & Fire site under review. Respond and revise when feedback lands.", when:"IN REVIEW" },
-    { tag:"decision", t:"Linear project-status reconciliation", s:"EPOCH + VANTAGE project status stuck at Backlog despite completed/active builds. Beyond the Pews 31-issue backlog needs a verdict — done-but-unlogged, or genuinely open?", when:"NEXT SYNC MON 7/6" },
-    { tag:"next",     t:"Email forwarding + anti-buildup rules", s:"Outlook inbox at zero (~80k cleared). Route the other three accounts in before buildup returns.", when:"THIS WEEK" },
-    { tag:"decision", t:"Wesley Seminary — MA Pastoral", s:"Fall 2026 onboarding. Sequence against ministry and consultancy load.", when:"FALL 2026" }
-  ],
-
-  lines: [
-    { name:"Cloud & Fire",         light:"y", note:"lead ministry · contact-email blocker" },
-    { name:"Rossi Communications", light:"g", note:"practice app on mock data" },
-    { name:"Writing Corpus",       light:"g", note:"3 pieces live, 2 in flight" },
-    { name:"Theology / Seminary",  light:"g", note:"Fall 2026 onboarding ahead" },
-    { name:"Bible Study",          light:"g", note:"Acts + Romans, In Progress" },
-    { name:"Ledger",               light:"g", note:"running at localhost:5181" },
-    { name:"The Stack",            light:"y", note:"Linear synced 2026-07-03 — 3 status mismatches flagged" },
-    { name:"FRGET",                light:"d", note:"back-burnered 2026-06-12" }
-  ],
-
-  sprint: { score:null, label:"Sprint Health", note:"board reset — no active sprint" },
-
-  pipeline: [
-    { nm:"Idea",      count:4, pct:35 },
-    { nm:"Outline",   count:2, pct:55 },
-    { nm:"Draft",     count:2, pct:70 },
-    { nm:"Edit",      count:1, pct:85 },
-    { nm:"Published", count:3, pct:100 }
-  ],
-
-  flags: [
-    { sev:"r", ttl:"Contact email down", dsc:"Cloud & Fire site has no working contact path. The site cannot convert interest into conversation until this is wired." },
-    { sev:"y", ttl:"Pastor Brian reviewing site", dsc:"Cloud & Fire site is in review. Expect feedback; hold major content changes until it lands." },
-    { sev:"y", ttl:"Linear: 3 status mismatches", dsc:"EPOCH + VANTAGE project status stuck at Backlog despite completed builds; Beyond the Pews 31-issue backlog needs a verdict. Dashboard: CODE\\ops\\linear-sync\\dashboard.html" },
-    { sev:"c", ttl:"Email forwarding next", dsc:"Three accounts still need forwarding into lance.rossi@outlook.com, plus anti-buildup rules." },
-    { sev:"c", ttl:"Pratt site open items", dsc:"Lance's bio, Substack URL, pptx notes check, journal-vs-paper typology flags." },
-    { sev:"c", ttl:"Romans 7 next", dsc:"Study sits at Romans 1–6. Romans 7 opens the law / flesh tension." }
-  ],
-
+  // Ambient status ticker — describes what the essentials deck still shows.
   carry: [
-    "FRGET back-burnered 2026-06-12 — facilitator network is the precondition",
-    "Outlook inbox zeroed — ~80k emails cleared 2026-06-10",
-    "Pratt Study live — Lighthouse 100/100, push-to-deploy",
-    "Acts 27 + Romans 1–6 logged — Romans 7 opens next",
-    "Ledger app — Next.js 16 + Prisma 7, household reconciliation, now on port 5181",
-    "Linear sync dashboard live — CODE\\ops\\linear-sync\\dashboard.html (144 issues, VANTAGE shipped M1 ingest pipeline 2026-07-03)"
-  ],
-
-  nav: [
-    { id:"cloudfire", label:"Cloud & Fire" },
-    { id:"rossi",     label:"Rossi Comms" },
-    { id:"writing",   label:"Writing Corpus" },
-    { id:"theology",  label:"Theology" },
-    { id:"bible",     label:"Bible Study" },
-    { id:"ledger",    label:"Ledger" },
-    { id:"stack",     label:"The Stack" },
-    { id:"frget",     label:"FRGET" }
-  ],
-
-  pages: {
-    cloudfire: {
-      title:"Cloud & Fire Fellowship", crumb:"Line · Lead Ministry", meta:"live site · brand voice on file · imprint split",
-      kv:[
-        ["Status","Lead ministry as of 2026-06-12"],
-        ["Site","Live — under Pastor Brian's review"],
-        ["Blocker","No working contact email"],
-        ["Voice","Brand voice rules on file; imprint split established"]
-      ],
-      items:[
-        { st:"active", t:"Contact email", d:"Wire a working contact path. The site's conversion blocker." },
-        { st:"active", t:"Pastor Brian review", d:"Site in review. Respond to feedback and revise." },
-        { st:"queued", t:"Facilitator network", d:"Precondition for reactivating FRGET programming." }
-      ]
-    },
-    rossi: {
-      title:"Rossi Communications", crumb:"Line · Consultancy", meta:"Manhattan, KS · sole principal",
-      kv:[
-        ["Lines","Dialogue facilitation · applied research · strategic deliberation · org comms · AI architecture"],
-        ["Practice app","7 screens on mock data"],
-        ["Roadmap","Vercel → Clerk → Supabase → Stripe"],
-        ["Public surface","X · LinkedIn · rossicomm.com · Substack"]
-      ],
-      items:[
-        { st:"active", t:"Practice management app", d:"React, seven screens, mock data. Next: deploy to Vercel, then auth." },
-        { st:"done",   t:"Rhetorical Ecosystem Database", d:"27 entries populated in Notion." },
-        { st:"done",   t:"Personal brand voice guide", d:"Delivered as .docx." },
-        { st:"queued", t:"System architecture review", d:"Several open infrastructure gaps surfaced; awaiting sequencing." }
-      ]
-    },
-    writing: {
-      title:"Writing Corpus", crumb:"Line · Substack + scholarship", meta:".docx delivery · no em-dashes · verdicts earned",
-      kv:[
-        ["Home","Substack — long-form, monetized"],
-        ["Register","Prosecutorial without snideness"],
-        ["Standing","No 'not X but Y' constructions"]
-      ],
-      items:[
-        { st:"done",   t:"The Jobs Will Survive. The Wages Will Not.", d:"Op-ed on AI wage compression." },
-        { st:"done",   t:"Joe Rogan apology — rhetorical analysis", d:"Ware/Linkugel + Benoit frameworks." },
-        { st:"done",   t:"Nolan Odyssey casting", d:"Critics defend a Hollywood-mediated myth, not Homer's text." },
-        { st:"active", t:"Grammar of Permissible Violence", d:"Cole Allen / WHCD case. Phase 2 done; Phase 3 responsibility scoring next." },
-        { st:"draft",  t:"Pope–president rhetorical relationship", d:"Commonweal-targeted. Draft + submission materials prepared." },
-        { st:"draft",  t:"Outlast: The Jungle", d:"Survival genre as argument disguised as documentation. Outline stage." },
-        { st:"done",   t:"Pratt Study", d:"Live at lancerossiconsulting.github.io/pratt-study. Open: bio, Substack URL, typology flags." }
-      ]
-    },
-    theology: {
-      title:"Theology / Seminary", crumb:"Line · Formation", meta:"Wesley Seminary (IWU) · MA Pastoral · Fall 2026",
-      kv:[
-        ["Thesis","Justice subordinate to holiness; a divine possession, not an autonomous human good"],
-        ["Frame","Wesleyan holiness × classical metaphysics × public witness"],
-        ["Tradition","Wesleyan convert, ~2 years"]
-      ],
-      items:[
-        { st:"active", t:"Constructive theological argument", d:"Holiness over justice, in preparation for seminary." },
-        { st:"queued", t:"Deliberative Congregation framework", d:"Catholic institutional forms translated to Protestant congregational idiom." },
-        { st:"queued", t:"Fall 2026 onboarding", d:"Sequence coursework against ministry and consultancy load." }
-      ]
-    },
-    bible: {
-      title:"Bible Study", crumb:"Line · Daily", meta:"NLT · Notion 'Bible Notes' · w/ Pastor Brian",
-      kv:[
-        ["Plan","Romans 5 → Revelation 22 · Jun 7 – Oct 28"],
-        ["Current","1 Corinthians (per calendar)"],
-        ["Prompt","Today's Reading panel at the top of the deck"],
-        ["Rule","Entries stay 'In Progress' until closed with Pastor Brian"]
-      ],
-      items:[
-        { st:"done",   t:"Acts — diaspora arc", d:"Acts 7–13, 18, 27 logged with historical + lexical notes." },
-        { st:"active", t:"Romans 1–6", d:"Grace, justification, union. Entries In Progress." },
-        { st:"queued", t:"Romans 7 onward", d:"The law / flesh tension opens next." }
-      ]
-    },
-    ledger: {
-      title:"Ledger", crumb:"Line · Household", meta:"CODE/ledger · localhost:5181 · live figures at right →",
-      kv:[
-        ["Purpose","Household budget reconciliation"],
-        ["Stack","Next.js 16 · Prisma 7 + libsql · Auth.js v5 · Recharts"],
-        ["Status","Running locally, auto-starts at Windows logon"]
-      ],
-      items:[
-        { st:"active", t:"Budget reconciliation app", d:"Live at localhost:5181. See Real Financials → for this month's numbers." },
-        { st:"done",   t:"Savings goal tracking", d:"$600/mo target now built into the app (lib/budget.ts) — surplus only counts once it clears the bar." }
-      ]
-    },
-    stack: {
-      title:"The Stack", crumb:"Line · Infrastructure", meta:"Notion + Linear · agentic skill system",
-      kv:[
-        ["Philosophy","The Spirit leads. The system follows."],
-        ["Planning","Notion (knowledge) + Linear (execution)"],
-        ["Agents","Patricia · Writing · Theological · Finance · Ops"],
-        ["Linear sync","semi-weekly (Mon + Thu) · dashboard: ops/linear-sync/dashboard.html"]
-      ],
-      items:[
-        { st:"done",   t:"Linear rebuild", d:"144 issues live post-reset. VANTAGE closed 5 issues 2026-07-03 building the M1 ingest→tag→resolve→settle pipeline — real, current work." },
-        { st:"active", t:"Linear sync dashboard", d:"Single-file HTML at CODE/ops/linear-sync/dashboard.html, regenerated via render_dashboard.py after each semi-weekly sync report." },
-        { st:"queued", t:"Project-status reconciliation", d:"EPOCH + VANTAGE project fields stuck at Backlog despite completed/active work; Beyond the Pews 31-issue backlog needs a done-vs-open verdict." },
-        { st:"active", t:"Command Deck MK III", d:"This deck. Single stacked column, GitHub link sidebar, live Ledger + Vantage finance rail." },
-        { st:"done",   t:"Weekly Bible synthesis skill", d:"Reads In Progress notes; you write the journal entry." },
-        { st:"draft",  t:"Notion / Linear alignment", d:"Re-audit once the fresh Linear structure exists." }
-      ]
-    },
-    frget: {
-      title:"FRGET", crumb:"Line · Nonprofit (back-burnered)", meta:"Foundation for Resilience and Grief Education and Training",
-      kv:[
-        ["Status","Back-burnered 2026-06-12 — Cloud & Fire is lead"],
-        ["Precondition","Facilitator network must exist first"],
-        ["Flagship","Champions! — six-week faith-integrated grief cohort"],
-        ["Theme song","'Grief Is Only Love' — Stephen Wilson Jr."]
-      ],
-      items:[
-        { st:"queued", t:"Facilitator network", d:"The gating asset. Builds through Cloud & Fire ministry relationships." },
-        { st:"queued", t:"Champions! cohort delivery", d:"Held until network exists. Program design retained." },
-        { st:"queued", t:"501(c)(3) financial prep", d:"Conservative-track modeling held by Finance & Risk." }
-      ]
-    }
-  }
+    "Finance rail live — Household Ledger \u00b7 Vantage \u00b7 Vincent & Kayla",
+    "Bible plan — Romans 5 \u2192 Revelation 22, daily reading keyed to today",
+    "Manhattan KS weather + local clock on the wire",
+    "Essentials deck — side projects archived 2026-07-17"
+  ]
 };
 /* ===================== DECK DATA END ===================== */
 </script>
@@ -1138,15 +916,7 @@ if(!DATA){
     '<div style="font-family:var(--mono);color:var(--risk);padding:30px;font-size:13px">Deck data block failed to parse. Check the DECK DATA section of this file for a syntax error.</div>';
   throw new Error('DECK_DATA not found');
 }
-const NAV = DATA.nav;
 const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-/* section id → line light, for the section status dot */
-const LINE_LIGHT = {};
-(DATA.lines||[]).forEach(l=>{
-  const nav = NAV.find(n=>n.label.toLowerCase().startsWith(l.name.toLowerCase().slice(0,5)) || l.name.toLowerCase().startsWith(n.label.toLowerCase().slice(0,5)));
-  if(nav) LINE_LIGHT[nav.id]=l.light;
-});
 
 /* ---------- safe persistence (works locally; no-op if blocked) ---------- */
 const store = {
@@ -1173,18 +943,6 @@ function decrypt(elm, final){
   },22);
 }
 
-/* eased count-up for displayed numbers */
-function tickNum(elm, target, dur, suffix){
-  if(!elm) return; suffix=suffix||'';
-  if(REDUCE){ elm.textContent=target+suffix; return; }
-  const t0=performance.now();
-  (function f(){
-    const k=Math.min(1,(performance.now()-t0)/(dur||700));
-    elm.textContent=Math.round(target*(1-Math.pow(1-k,3)))+suffix;
-    if(k<1) requestAnimationFrame(f);
-  })();
-}
-
 /* staggered panel entrance */
 function stagger(){
   if(REDUCE) return;
@@ -1193,33 +951,6 @@ function stagger(){
     p.style.animationDelay=(Math.min(i,14)*60)+'ms';
     requestAnimationFrame(()=>requestAnimationFrame(()=>p.classList.add('in')));
   });
-}
-
-/* ---------- gauge ---------- */
-function gauge(score){
-  const r=30, c=2*Math.PI*r;
-  const orbit=`<g class="grot"><circle cx="40" cy="40" r="37" fill="none" stroke="rgba(90,209,240,.3)" stroke-width="1" stroke-dasharray="2 6"/></g>`;
-  if(score==null){
-    return `<div class="gauge">
-      <svg width="80" height="80" viewBox="0 0 80 80">
-        ${orbit}
-        <circle cx="40" cy="40" r="${r}" fill="none" stroke="var(--line)" stroke-width="6" stroke-dasharray="3 5"/>
-      </svg>
-      <div class="read"><div class="big">—</div><div class="lbl">${DATA.sprint.label}</div>${DATA.sprint.note?`<div class="nt">${DATA.sprint.note}</div>`:''}</div>
-    </div>`;
-  }
-  const off=c*(1-score/100);
-  const col = score>=70?'var(--ok)':score>=45?'var(--warn)':'var(--risk)';
-  return `<div class="gauge">
-    <svg width="80" height="80" viewBox="0 0 80 80">
-      ${orbit}
-      <circle cx="40" cy="40" r="${r}" fill="none" stroke="var(--line)" stroke-width="6"/>
-      <circle cx="40" cy="40" r="${r}" fill="none" stroke="${col}" stroke-width="6"
-        stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${off}"
-        transform="rotate(-90 40 40)" style="transition:stroke-dashoffset .9s ease"/>
-    </svg>
-    <div class="read"><div class="big" id="sprintnum" data-score="${score}">0</div><div class="lbl">${DATA.sprint.label}</div>${DATA.sprint.note?`<div class="nt">${DATA.sprint.note}</div>`:''}</div>
-  </div>`;
 }
 
 /* ---------- today's reading (daily bible-study prompt) ---------- */
@@ -1264,204 +995,40 @@ function readingBox(){
   </div>`;
 }
 
-/* ---------- main stack: everything in one scrolling column ---------- */
-/* ---------- decisions ----------
-   Toggle a response (ACT / HOLD / DROP / ASK) on any priority item or
-   project task, add an optional note, then Push. Push POSTs the pending
-   set to the Ledger server's /api/deck-inbox route, which appends them
-   to CODE/ops/command-deck-inbox.md — a file a Claude session (or Chief
-   of Staff) reads to spin up the work. Copy is the phone/offline
-   fallback (markdown to clipboard). State persists in localStorage. */
-let DEC = {};
-try{ DEC = JSON.parse(store.get('deck.decisions','{}')) || {}; }catch(e){ DEC = {}; }
-function saveDecisions(){ store.set('deck.decisions', JSON.stringify(DEC)); }
-
-function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-function slug(s){ return String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,52); }
-
-function decisionControls(scope, title){
-  const id = scope+':'+slug(title);
-  return `<div class="dcontrols" data-did="${esc(id)}" data-scope="${esc(scope)}" data-title="${esc(title)}">
-    <div class="dseg">
-      <button type="button" class="dbtn act"  data-dec="ACT">act</button>
-      <button type="button" class="dbtn hold" data-dec="HOLD">hold</button>
-      <button type="button" class="dbtn drop" data-dec="DROP">drop</button>
-      <button type="button" class="dbtn ask"  data-dec="ASK">ask</button>
-    </div>
-    <input class="dnote" placeholder="note (optional)" aria-label="Decision note">
-    <button type="button" class="dclr" title="clear decision">clear</button>
+/* ---------- upcoming readings (next entries from the bible calendar) ---------- */
+function upcomingBox(){
+  const cal = DATA.bibleCalendar||[];
+  if(!cal.length) return '';
+  const today = todayISO();
+  const rows = cal.filter(c=>c.date>today).slice(0,12).map(c=>{
+    const [y,mo,da]=c.date.split('-').map(Number);
+    const d=new Date(y,mo-1,da).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+    return `<div class="uprow"><span class="upd">${d}</span><span class="upr">${c.ref}</span></div>`;
+  }).join('');
+  if(!rows) return '';
+  return `<div class="panel section" id="sec-upcoming">
+    <h3>Upcoming Readings <span class="tag">next 12</span></h3>
+    <div class="uplist">${rows}</div>
   </div>`;
 }
 
-function pendingDecisions(){
-  return Object.entries(DEC).filter(([,d])=>d.decision && !d.pushed)
-    .map(([id,d])=>({ id, scope:d.scope, title:d.title, decision:d.decision, note:d.note||'' }));
-}
-function refreshDecisionUI(){
-  document.querySelectorAll('.dcontrols').forEach(box=>{
-    const d = DEC[box.dataset.did];
-    box.querySelectorAll('.dbtn').forEach(b=> b.classList.toggle('on', !!d && d.decision===b.dataset.dec));
-    const note = box.querySelector('.dnote');
-    const clr  = box.querySelector('.dclr');
-    const item = box.closest('.prow, .litem');
-    if(d){
-      note.classList.add('show'); clr.classList.add('show');
-      if(document.activeElement!==note) note.value = d.note||'';
-      if(item) item.classList.add('decided');
-    } else {
-      note.classList.remove('show'); clr.classList.remove('show'); note.value='';
-      if(item) item.classList.remove('decided');
-    }
-  });
-}
-function renderDecTray(){
-  const n = pendingDecisions().length;
-  const c = document.getElementById('deccount');
-  if(c) c.innerHTML = n ? `<b>${n}</b> pending push` : 'no decisions pending';
-  const push = document.getElementById('decpush'); if(push) push.disabled = n===0;
-  const copy = document.getElementById('deccopy'); if(copy) copy.disabled = n===0;
-}
-function setDecision(id, scope, title, dec){
-  const cur = DEC[id];
-  if(cur && cur.decision===dec){ delete DEC[id]; }               /* click active = toggle off */
-  else { DEC[id] = { scope, title, decision:dec, note:(cur&&cur.note)||'', pushed:false }; }
-  saveDecisions(); refreshDecisionUI(); renderDecTray();
-}
-function decisionsMarkdown(list){
-  return `# Command Deck decisions — ${new Date().toLocaleString('en-US')}\n\n` +
-    list.map(d=>`- **${d.decision}** — ${d.title} _(${d.scope})_${d.note?`\n    note: ${d.note}`:''}`).join('\n');
-}
-async function pushDecisions(){
-  const pend = pendingDecisions(); if(!pend.length) return;
-  const btn = document.getElementById('decpush'); const orig='push →';
-  btn.textContent='pushing…';
-  try{
-    const r = await fetch('http://localhost:5181/api/deck-inbox', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({ decisions: pend })
-    });
-    if(!r.ok) throw new Error('bad status');
-    pend.forEach(p=>{ if(DEC[p.id]) DEC[p.id].pushed=true; });
-    saveDecisions(); renderDecTray();
-    btn.textContent='pushed ✓'; setTimeout(()=>btn.textContent=orig,1600);
-  }catch(e){
-    btn.textContent='ledger offline'; setTimeout(()=>btn.textContent=orig,2000);
-  }
-}
-function copyDecisions(){
-  const pend = pendingDecisions(); if(!pend.length) return;
-  const btn = document.getElementById('deccopy');
-  navigator.clipboard?.writeText(decisionsMarkdown(pend)).then(()=>{
-    pend.forEach(p=>{ if(DEC[p.id]) DEC[p.id].pushed=true; });
-    saveDecisions(); renderDecTray();
-    btn.textContent='copied'; setTimeout(()=>btn.textContent='copy',1400);
-  }).catch(()=>{ btn.textContent='blocked'; setTimeout(()=>btn.textContent='copy',1400); });
-}
-
-/* delegated handlers (survive re-render; #main content is replaced) */
-document.addEventListener('click', e=>{
-  const btn = e.target.closest && e.target.closest('.dbtn');
-  if(btn){ const box=btn.closest('.dcontrols'); setDecision(box.dataset.did, box.dataset.scope, box.dataset.title, btn.dataset.dec); return; }
-  const clr = e.target.closest && e.target.closest('.dclr');
-  if(clr){ const box=clr.closest('.dcontrols'); delete DEC[box.dataset.did]; saveDecisions(); refreshDecisionUI(); renderDecTray(); }
-});
-document.addEventListener('input', e=>{
-  const note = e.target.closest && e.target.closest('.dnote');
-  if(note){ const id=note.closest('.dcontrols').dataset.did;
-    if(!DEC[id]) return;                        /* note only editable once a decision is set */
-    DEC[id].note = note.value; DEC[id].pushed=false; saveDecisions(); renderDecTray(); }
-});
-document.getElementById('decpush').addEventListener('click', pushDecisions);
-document.getElementById('deccopy').addEventListener('click', copyDecisions);
-
+/* ---------- main stack: essentials only (daily + upcoming reading) ---------- */
 function renderMain(){
   const m = document.getElementById('main');
-  const priorityRows = DATA.priorities.map(p=>`
-    <div class="prow">
-      <span class="badge ${p.tag}">${p.tag.toUpperCase()}</span>
-      <div class="ptext"><div class="t">${p.t}</div><div class="s">${p.s}</div>${decisionControls('priority', p.t)}</div>
-      <span class="when">${p.when}</span>
-    </div>`).join('');
-
-  const pipeRows = DATA.pipeline.map(s=>`
-    <div class="seg">
-      <span class="nm">${s.nm}</span>
-      <span class="track"><span class="fill" data-w="${s.pct}" style="width:0"></span></span>
-      <span class="ct">${s.count}</span>
-    </div>`).join('');
-
-  const flagRows = DATA.flags.map(f=>`
-    <div class="flag ${f.sev==='r'?'r':''}">
-      <div class="top"><span class="sev ${f.sev}"></span><span class="ttl">${f.ttl}</span></div>
-      <div class="dsc">${f.dsc}</div>
-    </div>`).join('');
-
-  const sections = NAV.map(n=>{
-    const p = DATA.pages[n.id]; if(!p) return '';
-    const kv = p.kv.map(([k,v])=>`<div class="k">${k}</div><div class="v">${v}</div>`).join('');
-    const items = p.items.map(it=>`
-      <div class="litem">
-        <span class="st ${it.st}">${it.st.toUpperCase()}</span>
-        <div class="body"><div class="t">${it.t}</div><div class="d">${it.d}</div>${decisionControls(n.id, it.t)}</div>
-      </div>`).join('');
-    const light = LINE_LIGHT[n.id]||'d';
-    return `
-    <div class="panel section" id="sec-${n.id}">
-      <div class="sechead">
-        <div><div class="crumb2">${p.crumb}</div><h2>${p.title}</h2></div>
-        <div class="meta2"><span class="tl"><span class="light ${light}"></span></span> ${p.meta}</div>
-      </div>
-      <div class="secbody">
-        <div><div class="kv">${kv}</div></div>
-        <div class="list">${items}</div>
-      </div>
-    </div>`;
-  }).join('');
-
   m.innerHTML = `
     <div class="pagehead">
-      <div><div class="crumb">Command Deck</div><h1 data-title="All Systems">All Systems</h1></div>
-      <div class="meta">${NAV.length} project lines · synced ${DATA.updated}</div>
+      <div><div class="crumb">Command Deck · Essentials</div><h1 data-title="Daily Reading">Daily Reading</h1></div>
+      <div class="meta">synced ${DATA.updated}</div>
     </div>
     <div class="stack">
       ${readingBox()}
-      <div class="panel live section" id="sec-priority">
-        <h3>Priority Stack <span class="tag">triage</span></h3>
-        ${priorityRows}
-      </div>
-      <div class="panel section" id="sec-flags">
-        <h3>Live Flags <span class="tag" id="flagcount"></span></h3>
-        <div class="flaglist">${flagRows}</div>
-      </div>
-      <div class="panel section" id="sec-stats">
-        <h3>Sprint &amp; Formation</h3>
-        <div class="statsrow">
-          <div class="col">${gauge(DATA.sprint.score)}</div>
-          <div class="col"><h4>Writing Pipeline</h4><div class="pipe">${pipeRows}</div></div>
-          <div class="col"><h4>Formation &amp; Rhythm</h4>
-            <div class="kv">
-              <div class="k">Mode</div><div class="v">${DATA.rhythm} — focused execution</div>
-              <div class="k">Daily</div><div class="v">Acts + Romans · Notion Bible Notes</div>
-              <div class="k">Weekly</div><div class="v">Pastor Brian · synthesis review</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      ${sections}
+      ${upcomingBox()}
     </div>`;
 
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    document.querySelectorAll('.pipe .fill').forEach(f=>{ f.style.width=f.dataset.w+'%'; });
-  }));
-  const sn=document.getElementById('sprintnum');
-  if(sn) tickNum(sn, +sn.dataset.score, 900);
-  tickNum(document.getElementById('flagcount'), DATA.flags.length, 800, ' OPEN');
   stagger();
   const h1=document.querySelector('.pagehead h1');
   if(h1) decrypt(h1, h1.dataset.title||h1.textContent);
 
-  refreshDecisionUI();
-  renderDecTray();
   pollLedger();
   pollVantage();
   pollVKS();
@@ -1493,16 +1060,6 @@ function renderMain(){
   });
 })();
 
-/* number keys 0-9 scroll to a section (ignored while typing) */
-document.addEventListener('keydown',e=>{
-  if(e.target.matches && e.target.matches('input,textarea,select')) return;
-  if(e.key>='0' && e.key<='9'){
-    const n = NAV[+e.key];
-    const target = n ? document.getElementById('sec-'+n.id) : document.getElementById('sec-priority');
-    if(target) target.scrollIntoView({behavior: REDUCE?'auto':'smooth', block:'start'});
-  }
-});
-
 /* ---------- verse + ticker ---------- */
 (function buildSide(){
   const v = DATA.verses[Math.floor(Math.random()*DATA.verses.length)];
@@ -1513,13 +1070,9 @@ document.addEventListener('keydown',e=>{
     DATA.carry.map(c=>`<span class="item">${c.replace(/(\[VERIFY\]|404|no-fail|deploy|back-burnered|zeroed|reset)/gi,'<b>$1</b>')}</span>`).join('<span class="sep">◆</span>');
 })();
 
-/* ---------- state pill: hot if any NO-FAIL ---------- */
+/* ---------- state pill ---------- */
 (function stateline(){
-  const nofail = DATA.priorities.some(p=>p.tag==='nofail');
-  const pill = document.getElementById('statepill');
-  const txt = document.getElementById('statetxt');
-  if(nofail){ pill.classList.add('hot'); txt.textContent='NO-FAIL ACTIVE'; }
-  else { txt.textContent='SYSTEMS NOMINAL'; }
+  document.getElementById('statetxt').textContent='SYSTEMS NOMINAL';
   document.getElementById('rhythm').textContent = DATA.rhythm;
   document.getElementById('synced').textContent = DATA.updated;
 })();
@@ -1980,8 +1533,8 @@ const bootCtl = (function bootGlobe(){
   /* typed system log */
   const LOG_LINES=[
     '> CLOUD & FIRE OS · MK III',
-    '> mounting project sections ...... '+NAV.length+' OK',
-    '> weather wire [MHK] ............. LINKED',
+    '> clock + weather wire [MHK] ..... LINKED',
+    '> bible reading calendar ......... LOADED',
     '> dispatch queue ................. ARMED',
     '> finance rail (ledger+vantage) .. LIVE',
     '> all systems nominal'
