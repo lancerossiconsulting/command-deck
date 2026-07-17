@@ -481,6 +481,16 @@ body.live .deck{animation:deckin .5s ease}
 .pchip.off{background:rgba(111,126,146,.1);color:var(--ink-faint);border:1px solid var(--line)}
 .pchip.risk{background:rgba(240,85,107,.12);color:var(--risk);border:1px solid rgba(240,85,107,.4)}
 
+/* Vincent & Kayla status light — a real indicator LED, not a text chip */
+.vkslight{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:11px;color:var(--ink-mute)}
+.vkslight .led{width:9px;height:9px;border-radius:50%;flex:none;background:var(--ink-faint);color:var(--ink-faint);box-shadow:0 0 7px currentColor}
+.vkslight .led.g{background:var(--ok);color:var(--ok)}
+.vkslight .led.y{background:var(--warn);color:var(--warn)}
+.vkslight .led.r{background:var(--risk);color:var(--risk);animation:pulse 1.8s infinite}
+.vkslight .led.off{background:var(--ink-faint);color:transparent;box-shadow:none}
+.vkslight .lbl{color:var(--ink)}
+.vkslight .sub{color:var(--ink-faint);font-size:10px;margin-left:auto;white-space:nowrap}
+
 /* category expected vs actual (tiers) */
 .tiers{display:flex;flex-direction:column;gap:7px;margin-top:10px}
 .tierrow{display:flex;align-items:center;gap:8px}
@@ -1683,36 +1693,39 @@ setInterval(pollVantage, 90*1000);
    kids' data can't be reached at a localhost, so the worksheet PUTs to a
    shared Pantry basket and this fetches it. */
 const VKS_URL = 'https://getpantry.cloud/apiv1/pantry/3fce793c-17b9-4691-9376-3e334aefeae4/basket/vincentStatus';
-const VKS_COL = { green:'#5FB880', amber:'#D9A13B', red:'#C75048' };
+// Map the relay's level to an LED state + short human label. Never dump the
+// raw payload into the UI — parse it down to one indicator + one line.
+const VKS_STATE = {
+  green: { led:'g', tag:'live',  label:'All quiet' },
+  amber: { led:'y', tag:'watch', label:'Worth a call' },
+  red:   { led:'r', tag:'alert', label:'Needs attention' }
+};
+function paintVKS(led, tag, label, sub){
+  const tagEl = document.getElementById('vkstag');
+  const body  = document.getElementById('vksbody');
+  if(!tagEl || !body) return;
+  tagEl.textContent = tag;
+  body.innerHTML = `<div class="vkslight">`+
+    `<span class="led ${led}"></span>`+
+    `<span class="lbl">${label}</span>`+
+    (sub ? `<span class="sub">${sub}</span>` : '')+
+  `</div>`;
+}
 function renderVKS(d, ok){
-  const tag = document.getElementById('vkstag');
-  const body = document.getElementById('vksbody');
-  if(!tag || !body) return;
-  if(!ok || !d || !d.level){
-    tag.textContent = 'no report';
-    body.innerHTML = `<span style="font-family:var(--mono);font-size:11px;color:var(--ink-faint)">waiting for the kids to switch on their status light</span>`;
+  if(!ok || !d || !d.level || !VKS_STATE[d.level]){
+    paintVKS('off', 'no report', 'No signal', 'light is off');
     return;
   }
   const ageDays = d.updated ? (Date.now()-new Date(d.updated).getTime())/864e5 : null;
   const stale = ageDays!=null && ageDays > 40;
-  const col = VKS_COL[d.level] || 'var(--ink-faint)';
-  tag.textContent = d.level.toUpperCase() + (stale ? ' · STALE' : '');
-  const pct = d.pct;
-  const pctRow = pct ? `
-    <div class="pstat"><span class="pk">Plan / income</span><span class="pv">${pct.planned}%</span></div>
-    <div class="pstat"><span class="pk">Spent / income</span><span class="pv">${pct.spent}%</span></div>
-    <div class="pstat"><span class="pk">Savings share</span><span class="pv">${pct.savings}%</span></div>`
-    : `<div class="pstat"><span class="pk">Plan</span><span class="pv dim">still sketching</span></div>`;
-  const flags = (d.flags && d.flags.length)
-    ? `<div style="margin-top:6px;font-size:11px;line-height:1.5;color:var(--ink-mute)">`+
-        d.flags.map(f=>`• ${f.text}`).join('<br>')+`</div>`
-    : (d.level==='green' ? `<div style="margin-top:6px;font-size:11px;color:var(--ink-faint)">all quiet — nothing needs you</div>` : '');
-  const call = (d.level!=='green' && !stale)
-    ? `<div style="margin-top:6px;font-size:11px;color:${col};font-weight:600">worth a call this week</div>` : '';
-  body.innerHTML = `
-    <span class="pchip" style="background:${col};color:#0b0f14">${(d.monthLabel||d.month||'').toUpperCase()}</span>
-    ${pctRow}${flags}${call}
-    <div style="margin-top:5px;font-size:10px;color:var(--ink-faint)">${d.updated?('reported '+timeAgo(d.updated)):''}</div>`;
+  const s = VKS_STATE[d.level];
+  const month = d.monthLabel || d.month || '';
+  const when = d.updated ? timeAgo(d.updated) : null;
+  if(stale){
+    paintVKS('y', 'stale', 'Stale report', when ? month+' · '+when : month);
+    return;
+  }
+  paintVKS(s.led, s.tag, s.label, when ? month+' · '+when : month);
 }
 async function pollVKS(){
   try{
