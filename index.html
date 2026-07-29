@@ -647,7 +647,7 @@ body.conserve .ekg .b{animation:none}
 <div id="lock">
   <div class="lockcard" id="lockcard">
     <div class="lk-brand">Cloud &amp; Fire // Access</div>
-    <input type="password" id="lockpass" placeholder="passphrase" autocomplete="off" aria-label="Passphrase">
+    <input type="password" id="lockpass" placeholder="passphrase" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Passphrase">
     <button id="lockbtn" type="button">Unlock</button>
     <div class="lk-err" id="lockerr">incorrect passphrase</div>
   </div>
@@ -675,7 +675,11 @@ body.conserve .ekg .b{animation:none}
   else{
     input.focus();
     function tryUnlock(){
-      sha256hex(input.value).then(function(h){
+      /* trim + lowercase before hashing: guards against mobile keyboards
+         auto-capitalizing the first letter and stray whitespace from
+         autofill/paste. The real passphrase has no uppercase or spaces,
+         so this only ever helps, never weakens the check. */
+      sha256hex(input.value.trim().toLowerCase()).then(function(h){
         if(h === HASH){
           try{ localStorage.setItem(KEY, HASH); }catch(e){}
           unlock();
