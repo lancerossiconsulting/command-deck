@@ -269,6 +269,29 @@ button.mrow { cursor: pointer; }
 }
 .firmline svg { flex: none; }
 .firmline .chev { margin-left: auto; }
+.ditem { border-top: 1px solid var(--line-soft); padding: 8px 0 10px; }
+.ditem h3 { margin: 0 0 4px; font-size: 15px; font-weight: 600; }
+.dprompt { margin: 0 0 8px; color: var(--ink-mute); font-size: 13px; line-height: 1.4; }
+.opts { display: flex; flex-direction: column; gap: 6px; }
+.opt {
+  display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 8px 10px;
+  border: 1px solid var(--line); border-radius: 10px; font-size: 14px; cursor: pointer;
+}
+.opt input { width: 18px; height: 18px; margin: 0; accent-color: var(--cyan); flex: none; }
+.opt:has(input:checked) { border-color: var(--cyan-dim); background: rgba(90,209,240,.1); color: var(--cyan); }
+.dnote {
+  width: 100%; margin-top: 8px; min-height: 64px; resize: vertical;
+  background: rgba(7,10,16,.6); border: 1px solid var(--line); color: var(--ink);
+  border-radius: 10px; padding: 10px 12px; font-size: 16px; font-family: var(--sans);
+}
+.dnote:focus { outline: none; border-color: var(--cyan-dim); box-shadow: 0 0 0 1px var(--cyan-glow); }
+.dpublish {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; min-height: 44px; margin: 2px 0 8px;
+  border-radius: 10px; border: 1px solid var(--cyan-dim); background: rgba(90,209,240,.08);
+  color: var(--cyan); text-decoration: none;
+  font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+}
 
 .lanes { display: grid; grid-template-columns: 1fr 1fr; margin: 0 12px 4px; border-bottom: 1px solid var(--line); }
 .lanes button {
@@ -559,6 +582,16 @@ html.conserve .dimmable { opacity: .4; }
   <main id="views">
     <section id="view-home" class="view on" aria-label="Home">
       <div class="scroller">
+        <article class="card" id="card-decisions">
+          <div class="cardhead" style="cursor:default">
+            <span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14"><circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="1.6" fill="currentColor"/></svg></span>
+            <span class="name">Decisions</span>
+            <span class="aside mute" id="dec-aside">Checking</span>
+          </div>
+          <div id="dec-list"></div>
+          <a class="dpublish" id="dec-publish" href="mailto:lance_rossi_consulting@outlook.com?subject=Deck%20picks">Publish</a>
+        </article>
+
         <article class="card">
           <button type="button" class="cardhead" data-go="calendar">
             <span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14"><rect x="2" y="3" width="12" height="11" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M2 6.5h12M5 1.6v3M11 1.6v3" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
@@ -1680,6 +1713,152 @@ async function pollWeather(){
     ico.innerHTML = WX_ICON.cloud;
   }
 }
+/* Decisions — data/decisions.json is the record. Picks stay on this phone. */
+const PICKS_KEY = 'cf-deck-picks';
+let decisionItems = [];
+let decisionsState = 'loading';
+let decisionsRaw = '';
+let picksCache = null;
+function loadPicks(){
+  if (picksCache) return picksCache;
+  try {
+    const raw = localStorage.getItem(PICKS_KEY);
+    const data = raw ? JSON.parse(raw) : null;
+    if (data && Array.isArray(data.picks)) {
+      picksCache = {
+        updatedAt: typeof data.updatedAt === 'string' ? data.updatedAt : new Date().toISOString(),
+        picks: data.picks.filter((p) => p && typeof p.id === 'string').map((p) => ({
+          id: p.id,
+          choice: typeof p.choice === 'string' ? p.choice : '',
+          note: typeof p.note === 'string' ? p.note : '',
+          at: typeof p.at === 'string' ? p.at : ''
+        }))
+      };
+      return picksCache;
+    }
+  } catch (e) {}
+  picksCache = { updatedAt: new Date().toISOString(), picks: [] };
+  return picksCache;
+}
+function savePicks(){
+  const now = new Date().toISOString();
+  picksCache.updatedAt = now;
+  try { localStorage.setItem(PICKS_KEY, JSON.stringify(picksCache)); } catch (e) {}
+  updatePublish();
+}
+function upsertPick(id, patch){
+  const store = loadPicks();
+  let pick = store.picks.find((p) => p.id === id);
+  const now = new Date().toISOString();
+  if (!pick) {
+    pick = { id: id, choice: '', note: '', at: now };
+    store.picks.push(pick);
+  }
+  if (Object.prototype.hasOwnProperty.call(patch, 'choice')) pick.choice = String(patch.choice || '');
+  if (Object.prototype.hasOwnProperty.call(patch, 'note')) pick.note = String(patch.note || '').slice(0, 500);
+  pick.at = now;
+  savePicks();
+}
+function updatePublish(){
+  const a = document.getElementById('dec-publish');
+  if (!a) return;
+  const body = JSON.stringify(loadPicks(), null, 2);
+  a.href = 'mailto:lance_rossi_consulting@outlook.com?subject=' + encodeURIComponent('Deck picks') + '&body=' + encodeURIComponent(body);
+}
+function cleanDecisionItems(items){
+  if (!Array.isArray(items)) return [];
+  return items.filter((it) => it && typeof it.id === 'string' && it.id && typeof it.title === 'string' && (it.status === 'open' || it.status === 'closed') && Array.isArray(it.options)).map((it) => ({
+    id: it.id,
+    title: it.title,
+    prompt: typeof it.prompt === 'string' ? it.prompt : '',
+    allowNote: !!it.allowNote,
+    status: it.status,
+    options: it.options.filter((o) => o && typeof o.id === 'string' && o.id && typeof o.label === 'string').map((o) => ({ id: o.id, label: o.label }))
+  })).filter((it) => it.options.length);
+}
+function renderDecisions(){
+  const list = document.getElementById('dec-list');
+  const aside = document.getElementById('dec-aside');
+  if (!list || !aside) return;
+  clear(list);
+  if (decisionsState === 'loading') {
+    aside.textContent = 'CHECKING';
+    aside.classList.add('mute');
+    list.appendChild(el('p', 'empty', 'Checking decisions…'));
+    updatePublish();
+    return;
+  }
+  if (decisionsState === 'error') {
+    aside.textContent = 'OFFLINE';
+    aside.classList.add('mute');
+    list.appendChild(el('p', 'empty', "Decisions file didn't load."));
+    updatePublish();
+    return;
+  }
+  const open = decisionItems.filter((it) => it.status === 'open');
+  if (!open.length) {
+    aside.textContent = 'NONE';
+    aside.classList.add('mute');
+    list.appendChild(el('p', 'empty', 'Nothing waiting on you.'));
+    updatePublish();
+    return;
+  }
+  aside.textContent = open.length + ' OPEN';
+  aside.classList.remove('mute');
+  const picks = loadPicks();
+  open.forEach((item, index) => {
+    const pick = picks.picks.find((p) => p.id === item.id);
+    const card = el('article', 'ditem');
+    card.appendChild(el('h3', '', item.title));
+    if (item.prompt) card.appendChild(el('p', 'dprompt', item.prompt));
+    const group = el('div', 'opts');
+    group.setAttribute('role', 'radiogroup');
+    group.setAttribute('aria-label', item.title);
+    item.options.forEach((opt) => {
+      const label = el('label', 'opt');
+      const input = document.createElement('input');
+      input.type = 'radio';
+      input.name = 'decision-' + index;
+      input.value = opt.id;
+      input.checked = !!(pick && pick.choice === opt.id);
+      input.addEventListener('change', () => { if (input.checked) upsertPick(item.id, { choice: opt.id }); });
+      label.appendChild(input);
+      label.appendChild(el('span', '', opt.label));
+      group.appendChild(label);
+    });
+    card.appendChild(group);
+    if (item.allowNote) {
+      const note = document.createElement('textarea');
+      note.className = 'dnote';
+      note.maxLength = 500;
+      note.rows = 2;
+      note.placeholder = 'Note (optional)';
+      note.setAttribute('aria-label', 'Note for ' + item.title);
+      note.value = pick && pick.note ? pick.note : '';
+      note.addEventListener('input', () => upsertPick(item.id, { note: note.value }));
+      card.appendChild(note);
+    }
+    list.appendChild(card);
+  });
+  updatePublish();
+}
+async function loadDecisions(){
+  try {
+    const r = await fetchTimeout('./data/decisions.json', 5000);
+    if (!r.ok) throw new Error('status');
+    const text = await r.text();
+    if (text === decisionsRaw && decisionsState === 'ready') return;
+    decisionsRaw = text;
+    const data = JSON.parse(text);
+    decisionItems = cleanDecisionItems(data && data.items);
+    decisionsState = 'ready';
+  } catch (e) {
+    if (decisionsState === 'ready') return;
+    decisionsState = 'error';
+    decisionItems = [];
+  }
+  renderDecisions();
+}
 function normBase(v, fallback){
   v = (v || '').trim();
   if (!v) return fallback;
@@ -1829,7 +2008,7 @@ document.addEventListener('keydown', (e) => {
 window.addEventListener('hashchange', () => setTab(tabFromHash(), { silent: true }));
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) { timers.forEach(clearInterval); timers = []; return; }
-  tick(); pollWeather(); pollLedger(); pollVantage(); pollVKS(); startTimers();
+  tick(); pollWeather(); pollLedger(); pollVantage(); pollVKS(); loadDecisions(); startTimers();
 });
 
 buildProjects();
@@ -1848,11 +2027,13 @@ document.getElementById('ledger-host').value = state.ledgerBase;
 document.getElementById('vantage-host').value = state.vantageBase;
 applyCapacity(+(loadStr('deck.cap', '3')));
 setTab(tabFromHash(), { silent: true });
+updatePublish();
 tick();
 pollWeather();
 pollLedger();
 pollVantage();
 pollVKS();
+loadDecisions();
 startTimers();
 if ('serviceWorker' in navigator && location.protocol !== 'file:') {
   navigator.serviceWorker.register('./sw.js').catch(function(){});

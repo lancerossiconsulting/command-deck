@@ -55,6 +55,7 @@ a desktop browser to 393×852. Wider windows show the same UI in a phone column.
 | Firm deconflict | Personal is the default and the only owner unless `owner` is `"firm"`. The strip is “nothing double-owned” because each project has one owner. Set `firmOwner` when a real person owns firm work; the shipped slot is unassigned |
 | Capacity | Optional dimmer on More (1–2 dims projects and extras). Shares the `deck.cap` value with MK III |
 | Dispatch | Optional queue on More. Shares `deck.dq` with MK III |
+| Decisions | System of record in `data/decisions.json` (ships empty). Open items render on Home as single-select choices. Picks stay in this browser under `cf-deck-picks`. **Publish** opens a mailto to lance_rossi_consulting@outlook.com with that JSON. No backend |
 
 Sample names, meetings, and dollar figures in early layout mocks are not
 in the product. Empty and offline states are intentional.
@@ -78,7 +79,8 @@ this `index.html`.
 
 ## Files
 
-- `index.html` — Command Deck 2.0, one portable file (data is in the `DECK DATA` block)
+- `index.html` — Command Deck 2.0 phone surface
+- `data/decisions.json` — decisions waiting on a choice (empty until real items are added)
 - `deck-mk3.html` — desktop MK III
 - `deck-classic.html` — archived MK I
 - `manifest.webmanifest`, `sw.js`, `icon.svg`, `icon-180.png`, `icon-192.png`, `icon-512.png` — home-screen install
