@@ -676,7 +676,7 @@ html.conserve .dimmable { opacity: .45; }
     <section id="view-mail" class="view" aria-label="Mail" inert>
       <div class="scroller">
         <div class="viewhead"><h2>Mail</h2><span class="meta" id="mail-count">—</span></div>
-        <p class="stub calm">Only what needs you, and mail you just replied to. Everything else stays in Outlook.</p>
+        <p class="stub calm">Only what needs you, and mail you just replied to. Tap a row to open it in Mail.</p>
         <div id="mail-list" style="margin:0 16px"></div>
       </div>
     </section>
@@ -1035,15 +1035,31 @@ function cleanTodos(arr){
     id: String(t.id || uid()), text: String(t.text).slice(0, 140), done: !!t.done, ts: Number(t.ts) || 0
   }));
 }
-function safeMailLink(url){
-  if (typeof url !== 'string') return '';
-  const raw = url.trim();
-  if (!raw) return '';
-  try {
-    const u = new URL(raw);
-    if (u.protocol === 'ms-outlook:' || u.protocol === 'https:') return raw;
-  } catch (e) {}
-  return '';
+function messageLinkFromId(raw){
+  let id = String(raw || '').trim();
+  if (!id) return '';
+  if (/^message:/i.test(id)) return normalizeMessageLink(id);
+  id = id.replace(/^<|>$/g, '').trim();
+  if (!/^[^\s<>]+@[^\s<>]+$/.test(id)) return '';
+  return 'message://' + encodeURIComponent('<' + id + '>').replace(/%40/gi, '@');
+}
+function normalizeMessageLink(url){
+  const raw = String(url || '').trim();
+  if (!/^message:/i.test(raw)) return '';
+  if (/^message:\/\/?$/i.test(raw)) return 'message://';
+  let body = raw.replace(/^message:\/\//i, '').replace(/^message:/i, '');
+  try { body = decodeURIComponent(body); } catch (e) {}
+  body = body.replace(/^<|>$/g, '').trim();
+  if (!body) return 'message://';
+  if (!/^[^\s<>]+@[^\s<>]+$/.test(body)) return '';
+  return 'message://' + encodeURIComponent('<' + body + '>').replace(/%40/gi, '@');
+}
+function appleMailHref(item){
+  const fromId = messageLinkFromId(item && item.internetMessageId);
+  if (fromId && fromId !== 'message://') return fromId;
+  const fromLink = normalizeMessageLink(item && item.deepLink);
+  if (fromLink) return fromLink;
+  return 'message://';
 }
 function cleanMailItems(items){
   if (!Array.isArray(items)) return [];
@@ -1053,9 +1069,10 @@ function cleanMailItems(items){
     snippet: typeof it.snippet === 'string' ? it.snippet.slice(0, 240) : '',
     whyShown: it.whyShown === 'recent-reply' ? 'recent-reply' : (it.whyShown === 'attention' ? 'attention' : ''),
     mailbox: it.mailbox === 'consulting' ? 'consulting' : (it.mailbox === 'personal' ? 'personal' : ''),
-    deepLink: safeMailLink(it.deepLink),
+    deepLink: typeof it.deepLink === 'string' ? it.deepLink.trim() : '',
+    internetMessageId: typeof it.internetMessageId === 'string' ? it.internetMessageId.trim().slice(0, 400) : '',
     updatedAt: typeof it.updatedAt === 'string' ? it.updatedAt : ''
-  })).filter((it) => it.whyShown && it.mailbox && it.deepLink);
+  })).filter((it) => it.whyShown && it.mailbox);
 }
 function cleanAgenda(arr){
   if (!Array.isArray(arr)) return [];
@@ -1223,7 +1240,7 @@ function renderMail(){
 function mailRow(item){
   const row = document.createElement('a');
   row.className = 'mrow' + (item.whyShown === 'attention' ? ' urgent' : '');
-  row.href = item.deepLink;
+  row.href = appleMailHref(item);
   row.appendChild(el('span', 'mark', item.whyShown === 'attention' ? '!' : '↩'));
   const what = el('span', 'what');
   what.appendChild(el('span', 'title', item.title));
