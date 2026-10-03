@@ -11,15 +11,20 @@ The wide desktop HUD is unchanged in substance and now lives at
 Repo: https://github.com/lancerossiconsulting/command-deck
 Pages: https://lancerossiconsulting.github.io/command-deck/
 
-Chrome is the existing night HUD: background `#070a10`, cyan `#5ad1f0`,
-fire `#e8913a`. An access gate (the same passphrase as MK III, remembered
-in this browser) still sits in front of the page. It is not real security.
+The phone shell is an iOS-style utility in the Cloud & Fire palette:
+background `#070a10`, cyan `#5ad1f0`, fire `#e8913a`. It uses the system
+font, grouped cards, and a translucent navigation bar and tab bar. Lists
+scroll under that chrome, and the Dynamic Island and home indicator are
+insets from `safe-area-inset-*`. An access gate (the same passphrase as
+MK III, remembered in this browser) still sits in front of the page. It
+is not real security.
 
 ## Open it on an iPhone 15
 
 The layout targets Safari at about 393×852 CSS pixels, with
 `viewport-fit=cover` so the Dynamic Island and home indicator are padded
-via `safe-area-inset-*`. The tab bar sits in the thumb zone.
+via `safe-area-inset-*`. The tab bar sits in the thumb zone. A desktop
+window wider than the phone previews those insets inside a rounded frame.
 
 1. In Safari, open https://lancerossiconsulting.github.io/command-deck/
 2. Share → **Add to Home Screen** (name: Deck).
