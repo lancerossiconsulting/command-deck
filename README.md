@@ -50,7 +50,7 @@ a desktop browser to 393×852. Wider windows show the same UI in a phone column.
 | Clock | Live, this phone’s local time |
 | Manhattan, KS weather | Live from Open-Meteo (no key). “Wire down” if the request fails |
 | Bible plan | Live data, the Pastor Brian list already on MK III (Jun 7–Oct 28, 2026). One row on Home; the rest under More |
-| Mail | Curated list in `data/mail.json` (ships empty). Only `attention` and `recent-reply` rows. A row opens its Outlook `deepLink`. Empty copy is “Nothing needs you” |
+| Mail | Curated list in `data/mail.json`. Only `attention` and `recent-reply` rows. A row opens that message in Apple Mail (`message://`). Empty copy is “Nothing needs you” |
 | Agenda | **Local only.** No external calendar. Add items on the Calendar tab |
 | Todos | **Local only**, on this phone, including the Home checkboxes |
 | Household Ledger | Live `GET /api/deck-summary` when that host answers (default `http://localhost:5181`, every 60s). Otherwise an offline snapshot — no invented dollars. Change the host under Ledger → Sources |
@@ -86,7 +86,30 @@ this `index.html`.
 
 - `index.html` — Command Deck 2.0 phone surface
 - `data/decisions.json` — decisions waiting on a choice (empty until real items are added)
-- `data/mail.json` — curated mail (attention and recent replies only; empty until real items are added)
+- `data/mail.json` — curated mail (attention and recent replies only)
+
+## Curated mail (`data/mail.json`)
+
+The Mail tab is not an inbox. Chloe’s feed should include only mail that needs Lance and mail he just replied to. Tapping a row opens **Apple Mail** on iPhone. The deck never uses `ms-outlook://` and never sends him to outlook.office.com.
+
+Each item:
+
+| Field | Required | Meaning |
+| --- | --- | --- |
+| `id` | yes | Stable id. Keep the Exchange REST id here so the row can be matched later. This is not a Message-ID. |
+| `title` | yes | Subject |
+| `snippet` | no | One short line |
+| `whyShown` | yes | `attention` or `recent-reply` |
+| `mailbox` | yes | `personal` or `consulting` |
+| `internetMessageId` | for the specific message | RFC 5322 Message-ID (Graph `internetMessageId`, or the `Message-ID` header). Example: `<CABx2+user@mail.gmail.com>`. Angle brackets are optional. It must contain `@`. |
+| `deepLink` | no | Prefer leaving this to the deck. If set, it must already be an Apple Mail URL: `message://%3Clocal-part@domain%3E` (`<` and `>` percent-encoded, `@` left as `@`). `message://` alone opens the Mail app. |
+| `updatedAt` | no | ISO timestamp used for sort order |
+
+The deck builds the tap target from `internetMessageId`:
+
+`<local-part@domain>` → `message://%3Clocal-part@domain%3E`
+
+Until `internetMessageId` is filled in, the row still opens the Mail app (`message://`) and does not pick a message. Exchange REST ids (`AQMk…`) cannot be turned into that link. Do not put `ms-outlook://` or an `https://outlook.office.com` URL in `deepLink`; those are ignored.
 - `deck-mk3.html` — desktop MK III
 - `deck-classic.html` — archived MK I
 - `manifest.webmanifest`, `sw.js`, `icon.svg`, `icon-180.png`, `icon-192.png`, `icon-512.png` — home-screen install

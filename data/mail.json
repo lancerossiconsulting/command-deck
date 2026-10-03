@@ -7,7 +7,8 @@
       "snippet": "Attention required regarding your account status. Dear Lance Rossi, We want to make sure you're aware that your Credit One Bank, N.A. (American Express) account needs attention.",
       "whyShown": "attention",
       "mailbox": "personal",
-      "deepLink": "ms-outlook://emails/message/open?restID=AQMkADAwATMwMAItZDAwADYtMzY4MS0wMAItMDAKAEYAAAPloCSr0b5rSYXRQ3rrPqvvBwBk0clRLlXBQZv8Hgc6308hAAACAQwAAABk0clRLlXBQZv8Hgc6308hAAnC9mnDAAAA",
+      "internetMessageId": "",
+      "deepLink": "message://",
       "updatedAt": "2026-10-03T11:41:06-05:00"
     },
     {
@@ -16,7 +17,8 @@
       "snippet": "Rent Charges Have Been Posted to Your Account. Company Name: RKB Property Management. Rent Due Date: 10/01/2026. Amount: $875.00. Total Outstanding Balance: $475.00.",
       "whyShown": "attention",
       "mailbox": "personal",
-      "deepLink": "ms-outlook://emails/message/open?restID=AQMkADAwATMwMAItZDAwADYtMzY4MS0wMAItMDAKAEYAAAPloCSr0b5rSYXRQ3rrPqvvBwBk0clRLlXBQZv8Hgc6308hAAACAQwAAABk0clRLlXBQZv8Hgc6308hAAnC9mmqAAAA",
+      "internetMessageId": "",
+      "deepLink": "message://",
       "updatedAt": "2026-10-01T15:48:10-05:00"
     },
     {
@@ -25,7 +27,8 @@
       "snippet": "In-person appointment Wednesday October 07, 2026 03:00 PM Junction City Va Clinic. Clinic: Junction City In-person Pact Team 4 Doctor Caycedo. Phone number: 785-350-4670.",
       "whyShown": "attention",
       "mailbox": "personal",
-      "deepLink": "ms-outlook://emails/message/open?restID=AQMkADAwATMwMAItZDAwADYtMzY4MS0wMAItMDAKAEYAAAPloCSr0b5rSYXRQ3rrPqvvBwBk0clRLlXBQZv8Hgc6308hAAACAQwAAABk0clRLlXBQZv8Hgc6308hAAnC9mmkAAAA",
+      "internetMessageId": "",
+      "deepLink": "message://",
       "updatedAt": "2026-10-01T09:10:03-05:00"
     },
     {
@@ -34,7 +37,8 @@
       "snippet": "The card you have selected for AutoPay has expired. To continue with automatic payments, please log in to My WM and update your payment method.",
       "whyShown": "attention",
       "mailbox": "personal",
-      "deepLink": "ms-outlook://emails/message/open?restID=AQMkADAwATMwMAItZDAwADYtMzY4MS0wMAItMDAKAEYAAAPloCSr0b5rSYXRQ3rrPqvvBwBk0clRLlXBQZv8Hgc6308hAAACAQwAAABk0clRLlXBQZv8Hgc6308hAAnC9mmdAAAA",
+      "internetMessageId": "",
+      "deepLink": "message://",
       "updatedAt": "2026-10-01T02:07:07-05:00"
     },
     {
@@ -43,7 +47,8 @@
       "snippet": "Your appointment has been scheduled. Service Center Name: EKART AUTOMOTIVE INC. Date / Time: 10/5/2026 10:00:00 AM. Type: Installation.",
       "whyShown": "attention",
       "mailbox": "personal",
-      "deepLink": "ms-outlook://emails/message/open?restID=AQMkADAwATMwMAItZDAwADYtMzY4MS0wMAItMDAKAEYAAAPloCSr0b5rSYXRQ3rrPqvvBwBk0clRLlXBQZv8Hgc6308hAAACAQwAAABk0clRLlXBQZv8Hgc6308hAAnC9mmIAAAA",
+      "internetMessageId": "",
+      "deepLink": "message://",
       "updatedAt": "2026-09-29T12:21:50-05:00"
     },
     {
@@ -52,7 +57,8 @@
       "snippet": "You have an appointment with the driver's license office on Tuesday, October 27, 2026 at 11:00 AM. Please visit https://ksrevenue.gov/dovproof.html for required documents.",
       "whyShown": "attention",
       "mailbox": "personal",
-      "deepLink": "ms-outlook://emails/message/open?restID=AQMkADAwATMwMAItZDAwADYtMzY4MS0wMAItMDAKAEYAAAPloCSr0b5rSYXRQ3rrPqvvBwBk0clRLlXBQZv8Hgc6308hAAACAQwAAABk0clRLlXBQZv8Hgc6308hAAnC9ml3AAAA",
+      "internetMessageId": "",
+      "deepLink": "message://",
       "updatedAt": "2026-09-28T16:40:31-05:00"
     },
     {
@@ -61,7 +67,8 @@
       "snippet": "Good Monday morning all! I have attached the sermon notes from the first sermon in the new series \"Tangible Kingdom\". Looking forward to any feedback!",
       "whyShown": "attention",
       "mailbox": "personal",
-      "deepLink": "ms-outlook://emails/message/open?restID=AQMkADAwATMwMAItZDAwADYtMzY4MS0wMAItMDAKAEYAAAPloCSr0b5rSYXRQ3rrPqvvBwBk0clRLlXBQZv8Hgc6308hAAACAQwAAABk0clRLlXBQZv8Hgc6308hAAm6JAOYAAAA",
+      "internetMessageId": "",
+      "deepLink": "message://",
       "updatedAt": "2026-09-14T06:53:37-05:00"
     },
     {
@@ -70,16 +77,18 @@
       "snippet": "Replied with the phone number that was requested.",
       "whyShown": "recent-reply",
       "mailbox": "personal",
-      "deepLink": "ms-outlook://emails/message/open?restID=AQMkADAwATMwMAItZDAwADYtMzY4MS0wMAItMDAKAEYAAAPloCSr0b5rSYXRQ3rrPqvvBwBk0clRLlXBQZv8Hgc6308hAAACAQkAAABk0clRLlXBQZv8Hgc6308hAAnC90RHAAAA",
+      "internetMessageId": "",
+      "deepLink": "message://",
       "updatedAt": "2026-10-02T16:50:53-05:00"
     },
     {
       "id": "AQMkADAwATMwMAItZDAwADYtMzY4MS0wMAItMDAKAEYAAAPloCSr0b5rSYXRQ3rrPqvvBwBk0clRLlXBQZv8Hgc6308hAAACAQkAAABk0clRLlXBQZv8Hgc6308hAAnC90REAAAAAA==",
       "title": "Re: Lance Rossi - insurance",
-      "snippet": "Gabriel \u2014 signed and submitted the OneSpan insurance form. Let me know if the bank needs anything else. Thanks, Lance",
+      "snippet": "Gabriel — signed and submitted the OneSpan insurance form. Let me know if the bank needs anything else. Thanks, Lance",
       "whyShown": "recent-reply",
       "mailbox": "personal",
-      "deepLink": "ms-outlook://emails/message/open?restID=AQMkADAwATMwMAItZDAwADYtMzY4MS0wMAItMDAKAEYAAAPloCSr0b5rSYXRQ3rrPqvvBwBk0clRLlXBQZv8Hgc6308hAAACAQkAAABk0clRLlXBQZv8Hgc6308hAAnC90REAAAAAA%3D%3D",
+      "internetMessageId": "",
+      "deepLink": "message://",
       "updatedAt": "2026-09-30T12:44:16-05:00"
     },
     {
@@ -88,7 +97,8 @@
       "snippet": "Respectfully, Lance Rossi",
       "whyShown": "recent-reply",
       "mailbox": "personal",
-      "deepLink": "ms-outlook://emails/message/open?restID=AQMkADAwATMwMAItZDAwADYtMzY4MS0wMAItMDAKAEYAAAPloCSr0b5rSYXRQ3rrPqvvBwBk0clRLlXBQZv8Hgc6308hAAACAQkAAABk0clRLlXBQZv8Hgc6308hAAnC90RBAAAA",
+      "internetMessageId": "",
+      "deepLink": "message://",
       "updatedAt": "2026-09-28T14:03:08-05:00"
     },
     {
@@ -97,7 +107,8 @@
       "snippet": "Hi Gabe! Here are the documents you requested. Thanks again for all your help.",
       "whyShown": "recent-reply",
       "mailbox": "personal",
-      "deepLink": "ms-outlook://emails/message/open?restID=AQMkADAwATMwMAItZDAwADYtMzY4MS0wMAItMDAKAEYAAAPloCSr0b5rSYXRQ3rrPqvvBwBk0clRLlXBQZv8Hgc6308hAAACAQkAAABk0clRLlXBQZv8Hgc6308hAAm-3ekDAAAA",
+      "internetMessageId": "",
+      "deepLink": "message://",
       "updatedAt": "2026-09-22T23:26:08-05:00"
     }
   ]
