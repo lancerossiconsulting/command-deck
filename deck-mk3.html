@@ -1,0 +1,1627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#070a10">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Command Deck">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Cloud &amp; Fire // Command Deck MK III</title>
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   CLOUD & FIRE — COMMAND DECK · MK II
+   Single file — fully portable. Double-click to run, copy anywhere.
+   All content lives in the DECK DATA block (search "DECK DATA START").
+   A Claude session refreshes the deck by rewriting that block only;
+   the shell (everything else) should rarely change.
+
+   MK III layout (2026-07-07): left nav is a GitHub project link menu
+   (no more click-to-switch pages); main is one stacked single column
+   of all project content; right column is live Household Finances
+   (Ledger) + Vantage HUD. Controls: 0-9 scroll to a section · W cycles
+   wallpaper · / focuses dispatch · B replays the boot sequence.
+   The classic (MK I) shell is preserved at deck-classic.html.
+   Phone-first Command Deck 2.0 lives at index.html. This file is the
+   desktop MK III HUD, kept on its own path so the wide layout still opens.
+   ===================================================================== */
+
+:root{
+  /* night base */
+  --bg:#070a10;
+  --bg2:#0a0e16;
+  --panel:rgba(15,21,32,0.72);
+  --panel-solid:#101622;
+  --line:#1c2637;
+  --line-soft:#151f2d;
+
+  /* cloud (cool / structural) → holographic cyan */
+  --cloud:#7d9bbd;
+  --cloud-dim:#56708c;
+  --cyan:#5ad1f0;
+  --cyan-dim:rgba(90,209,240,.35);
+  --cyan-glow:rgba(90,209,240,.14);
+
+  /* fire (live / load-bearing) → ember + stark gold */
+  --fire:#e8913a;
+  --fire-hot:#ff6b35;
+  --gold:#ffb84d;
+  --fire-glow:rgba(232,145,58,0.18);
+
+  /* text */
+  --ink:#cdd6e3;
+  --ink-mute:#6f7e92;
+  --ink-faint:#465468;
+
+  /* state */
+  --ok:#4ade80;
+  --warn:#e8c14a;
+  --risk:#f0556b;
+
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --sans:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;
+  --disp:'Rajdhani',var(--sans);
+  --serif:Georgia,'Times New Roman',serif;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background:
+    radial-gradient(1200px 700px at 78% -8%, rgba(232,145,58,0.06), transparent 60%),
+    radial-gradient(1000px 800px at 0% 110%, rgba(90,209,240,0.05), transparent 55%),
+    var(--bg);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:14px;
+  overflow:hidden;
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;
+  box-shadow:inset 0 0 260px rgba(0,0,0,0.6);
+  z-index:5;
+}
+
+/* living shader wallpaper — behind everything, shows through panels.
+   Subdued at rest, flares on transition. W cycles the five fields. */
+#bgfx{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
+#bgname{position:fixed;right:16px;bottom:46px;z-index:7;font-family:var(--mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan-dim);opacity:0;transition:opacity .4s;pointer-events:none}
+
+/* HUD chrome layer — faint grid + periodic scan sweep */
+#hudgrid{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    linear-gradient(rgba(90,209,240,.022) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(90,209,240,.022) 1px,transparent 1px);
+  background-size:44px 44px;
+  -webkit-mask-image:radial-gradient(ellipse at center,black 28%,transparent 80%);
+  mask-image:radial-gradient(ellipse at center,black 28%,transparent 80%);
+}
+#hudsweep{
+  position:fixed;left:0;right:0;top:-12%;height:9%;z-index:8;pointer-events:none;
+  background:linear-gradient(180deg,transparent,rgba(90,209,240,.05),transparent);
+  animation:sweep 14s linear infinite;
+}
+@keyframes sweep{0%{top:-12%}55%{top:112%}100%{top:112%}}
+
+/* ---------- access gate ----------
+   Client-side passphrase screen. This is NOT real security — the page
+   source (including DECK_DATA) ships to the browser regardless of
+   whether this is showing; it only stops casual visitors and search
+   engines, which is all it's meant to do on a public Pages URL. */
+#lock{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;background:#05080d;transition:opacity .4s ease}
+#lock.gone{opacity:0;pointer-events:none;display:none}
+.lockcard{width:280px;text-align:center}
+.lockcard .lk-brand{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--cyan-dim);text-transform:uppercase;margin-bottom:18px}
+.lockcard input{width:100%;box-sizing:border-box;background:rgba(13,18,27,.7);border:1px solid var(--line);color:var(--ink);font-family:var(--mono);font-size:13px;padding:10px 12px;border-radius:2px;outline:none;text-align:center;letter-spacing:.12em}
+.lockcard input:focus{border-color:var(--cyan-dim);box-shadow:0 0 0 1px var(--cyan-glow)}
+.lockcard button{margin-top:10px;width:100%;background:none;border:1px solid var(--cyan-dim);color:var(--cyan);font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;padding:9px;cursor:pointer;border-radius:2px}
+.lockcard button:hover{background:rgba(90,209,240,.08)}
+.lockcard .lk-err{font-family:var(--mono);font-size:10px;color:var(--risk);margin-top:10px;min-height:14px;opacity:0;transition:opacity .2s}
+.lockcard .lk-err.show{opacity:1}
+.lockcard.shake{animation:lkshake .35s}
+@keyframes lkshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+
+/* ---------- boot: arc reactor + globe + system log ---------- */
+#boot{
+  position:fixed;inset:0;z-index:20;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(5,8,13,.9);
+  transition:opacity .55s ease;
+}
+#boot.gone{opacity:0;pointer-events:none}
+.bootstack{display:flex;flex-direction:column;align-items:center;gap:26px}
+.reactor{position:relative;width:264px;height:264px;filter:drop-shadow(0 0 18px rgba(90,209,240,.35))}
+.reactor svg{position:absolute;inset:0;overflow:visible}
+.reactor .rings circle{fill:none}
+.reactor .g1 circle{stroke:var(--cyan);stroke-width:1.4;stroke-dasharray:4 10;opacity:.75}
+.reactor .g2 circle{stroke:var(--gold);stroke-width:1.2;stroke-dasharray:58 10 14 10;opacity:.65}
+.reactor .g3 circle{stroke:var(--cyan);stroke-width:.8;stroke-dasharray:1 6;opacity:.4}
+.reactor .g1{transform-origin:132px 132px;animation:rot 9s linear infinite}
+.reactor .g2{transform-origin:132px 132px;animation:rotr 6s linear infinite}
+.reactor .g3{transform-origin:132px 132px;animation:rot 22s linear infinite}
+.reactor .rprog circle{
+  fill:none;stroke:var(--cyan);stroke-width:2;stroke-linecap:round;opacity:.9;
+  transform:rotate(-90deg);transform-origin:132px 132px;
+}
+#bootglobe{position:absolute;left:32px;top:32px;width:200px;height:200px}
+@keyframes rot{to{transform:rotate(360deg)}}
+@keyframes rotr{to{transform:rotate(-360deg)}}
+.bootlog{min-height:118px;width:340px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--cyan-dim);line-height:1.8}
+.bootlog .bl{white-space:pre}
+.bootlog .bl.gold{color:var(--gold)}
+.boothint{font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:var(--ink-faint);text-transform:uppercase}
+
+body.live .deck{animation:deckin .5s ease}
+@keyframes deckin{from{opacity:.35;transform:scale(.992)}to{opacity:1;transform:none}}
+
+/* ---------- shell grid ---------- */
+.deck{
+  position:relative;z-index:1;
+  height:100vh;
+  display:grid;
+  grid-template-columns: 224px 1fr 340px;
+  grid-template-rows: 58px 1fr 34px;
+  grid-template-areas:
+    "top  top  top"
+    "nav  main finance"
+    "tick tick tick";
+  gap:1px;
+  padding:10px;
+}
+
+/* ---------- top bar ---------- */
+.top{
+  grid-area:top;
+  display:flex;align-items:center;gap:22px;
+  padding:0 16px;
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(18,25,38,0.88),rgba(11,16,25,0.88));
+  position:relative;
+}
+.top::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--cyan-dim) 30%,var(--fire-glow) 70%,transparent)}
+.brand{display:flex;align-items:center;gap:11px;white-space:nowrap}
+.brandreactor{position:relative;width:17px;height:17px;border-radius:50%;
+  border:1px solid var(--cyan-dim);border-top-color:var(--gold);
+  animation:rot 2.6s linear infinite;flex:none}
+.brandreactor::after{content:"";position:absolute;left:50%;top:50%;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;
+  border-radius:50%;background:var(--fire);box-shadow:0 0 6px var(--fire-hot);animation:rotr 2.6s linear infinite}
+.brand .mark{font-family:var(--mono);font-weight:700;letter-spacing:.14em;font-size:13px;color:var(--ink)}
+.brand .mark b{color:var(--fire)}
+.brand .sub{font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:var(--ink-faint);text-transform:uppercase}
+
+.clockwrap{display:flex;align-items:center;gap:10px}
+.secring{transform:rotate(-90deg)}
+.secring .bgc{fill:none;stroke:var(--line);stroke-width:2}
+.secring #secarc{fill:none;stroke:var(--cyan);stroke-width:2;stroke-linecap:round;transition:stroke-dashoffset .3s linear}
+.top .clock{font-family:var(--disp);font-size:23px;font-weight:600;letter-spacing:.08em;color:var(--ink)}
+.top .clock .sec{color:var(--fire)}
+.top .date{font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--ink-mute);text-transform:uppercase;margin-top:1px}
+
+.top .spacer{flex:1}
+
+.metric{display:flex;flex-direction:column;gap:2px;min-width:64px}
+.metric .k{font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--ink-faint);text-transform:uppercase}
+.metric .v{font-family:var(--mono);font-size:12.5px;color:var(--cyan);display:flex;align-items:center;gap:7px}
+.ekg{flex:none}
+.ekg .g{fill:none;stroke:var(--cyan);stroke-width:1;opacity:.18}
+.ekg .b{fill:none;stroke:var(--cyan);stroke-width:1.2;stroke-dasharray:12 68;animation:ekg 2.2s linear infinite}
+@keyframes ekg{from{stroke-dashoffset:80}to{stroke-dashoffset:0}}
+
+.statepill{
+  font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  padding:7px 13px;border:1px solid var(--line);color:var(--ink-mute);
+  display:flex;align-items:center;gap:9px;
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+  background:rgba(13,18,27,.6);
+}
+.dotwrap{position:relative;width:15px;height:15px;flex:none}
+.statepill .dot{position:absolute;left:4px;top:4px;width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok)}
+.statepill .orbit{position:absolute;inset:0;border-radius:50%;border:1px solid transparent;border-top-color:var(--cyan-dim);animation:rot 2s linear infinite}
+.statepill.hot{border-color:var(--fire);color:var(--fire)}
+.statepill.hot .dot{background:var(--fire-hot);box-shadow:0 0 10px var(--fire-hot);animation:pulse 1.8s infinite}
+.statepill.hot .orbit{border-top-color:var(--fire)}
+.phonev2{
+  font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--cyan);text-decoration:none;border:1px solid var(--cyan-dim);
+  padding:6px 8px;white-space:nowrap;
+}
+.phonev2:hover{background:rgba(90,209,240,.08)}
+.phonev2:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* ---------- left nav ---------- */
+.nav{
+  grid-area:nav;
+  border:1px solid var(--line);
+  background:var(--panel);
+  display:flex;flex-direction:column;
+  padding:12px 0;
+  overflow:auto;
+}
+.nav .eyebrow{padding:0 16px 10px;font-family:var(--mono);font-size:9px;letter-spacing:.22em;color:var(--ink-faint);text-transform:uppercase}
+
+/* dispatch capture */
+.dispatchbar{padding:0 14px 12px;border-bottom:1px solid var(--line-soft);margin-bottom:10px}
+.dispatchbar .row{display:flex;gap:6px}
+.dispatchbar input{flex:1;min-width:0;background:rgba(13,18,27,.7);border:1px solid var(--line);color:var(--ink);font-family:var(--mono);font-size:11px;padding:7px 8px;border-radius:2px;outline:none;transition:border-color .2s,box-shadow .2s}
+.dispatchbar input::placeholder{color:var(--ink-faint)}
+.dispatchbar input:focus{border-color:var(--cyan-dim);box-shadow:0 0 0 1px var(--cyan-glow),0 0 14px var(--cyan-glow)}
+.dispatchbar button{position:relative;background:none;border:1px solid var(--line);color:var(--ink-mute);width:30px;cursor:pointer;border-radius:2px;font-size:12px;line-height:1;transition:color .2s,border-color .2s}
+.dispatchbar button:hover{color:var(--cyan);border-color:var(--cyan-dim)}
+.dispatchbar button.listening{color:var(--fire);border-color:var(--fire);animation:pulse 1.2s infinite}
+.dispatchbar button.listening::after{content:"";position:absolute;inset:-1px;border:1px solid var(--fire);border-radius:2px;animation:sonar 1.4s ease-out infinite}
+@keyframes sonar{from{transform:scale(1);opacity:.7}to{transform:scale(1.9);opacity:0}}
+
+/* finance link menu — primary click opens the LIVE page (Pages URL or
+   localhost app); the small gh suffix opens the repo. */
+.gitrow{display:flex;align-items:stretch}
+.gitlink{
+  flex:1;min-width:0;
+  display:flex;align-items:center;gap:9px;
+  padding:9px 0 9px 16px;cursor:pointer;border-left:2px solid transparent;
+  color:var(--ink-mute);text-decoration:none;
+  transition:background .15s,color .15s,border-color .15s,transform .15s;
+  user-select:none;
+}
+.gitlink:hover{background:rgba(90,209,240,0.05);color:var(--ink);transform:translateX(2px);border-left-color:var(--cyan-dim)}
+.gitlink:focus-visible{outline:2px solid var(--cyan);outline-offset:-2px}
+.gitlink .gi{font-family:var(--mono);font-size:11px;color:var(--ink-faint);flex:none}
+.gitlink .gn{font-size:12.5px;letter-spacing:.02em;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gitlink .gv{font-family:var(--mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;padding:2px 5px;border:1px solid var(--line);color:var(--ink-faint);flex:none}
+.gitlink .gv.live{color:var(--ok);border-color:rgba(74,222,128,.3)}
+.gitlink .gv.local{color:var(--cyan);border-color:rgba(90,209,240,.3)}
+.gitlink .gv.repo{color:var(--ink-faint);border-color:var(--line)}
+.gitgh{
+  display:flex;align-items:center;padding:0 10px;flex:none;
+  font-family:var(--mono);font-size:9px;letter-spacing:.06em;
+  color:var(--ink-faint);text-decoration:none;
+  transition:color .15s,background .15s;
+}
+.gitgh:hover{color:var(--cyan);background:rgba(90,209,240,.06)}
+.gitgh:focus-visible{outline:2px solid var(--cyan);outline-offset:-2px}
+
+.nav .keys{margin-top:auto;padding:10px 16px 4px;font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;color:var(--ink-faint);text-transform:uppercase;line-height:2;border-top:1px solid var(--line-soft)}
+.nav .keys b{color:var(--cyan-dim);font-weight:500}
+.nav .capacity{padding:10px 16px 6px}
+.capacity .k{font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--ink-faint);text-transform:uppercase;display:flex;justify-content:space-between}
+.capacity .k b{color:var(--cyan);font-weight:500}
+.capacity input[type=range]{width:100%;margin-top:8px;accent-color:var(--fire)}
+.capacity .hint{font-size:10px;color:var(--ink-faint);margin-top:6px;min-height:14px}
+
+/* ---------- main panel (single stacked column) ---------- */
+.main{
+  grid-area:main;
+  border:1px solid var(--line);
+  background:var(--panel);
+  overflow:auto;
+  padding:18px 20px 24px;
+  position:relative;
+}
+.stack{display:flex;flex-direction:column;gap:12px}
+.pagehead{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:4px;border-bottom:1px solid var(--line-soft);padding-bottom:12px;flex-wrap:wrap;gap:10px}
+.pagehead h1{
+  margin:0;font-family:var(--disp);font-size:22px;font-weight:600;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--ink);
+  text-shadow:0 0 14px rgba(90,209,240,.22);
+}
+.pagehead .crumb{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:6px}
+.pagehead .crumb::before{content:"◢ ";color:var(--cyan-dim)}
+.pagehead .meta{font-family:var(--mono);font-size:11px;color:var(--cloud-dim);text-align:right}
+
+/* section head — one per project, inside the stacked column */
+.sechead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:2px}
+.sechead h2{margin:0;font-family:var(--disp);font-size:16px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ink)}
+.sechead .crumb2{font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--ink-faint);text-transform:uppercase}
+.sechead .meta2{font-family:var(--mono);font-size:10.5px;color:var(--cloud-dim)}
+.section{scroll-margin-top:14px}
+
+/* HUD panel */
+.grid{display:grid;gap:12px}
+.panel{
+  position:relative;
+  border:1px solid var(--line);
+  background:rgba(12,17,26,0.55);
+  padding:13px 14px;
+  transition:border-color .25s;
+}
+.panel:hover{border-color:rgba(90,209,240,.3)}
+.panel::before,.panel::after{
+  content:"";position:absolute;width:9px;height:9px;border-color:var(--cyan-dim);opacity:.6;
+  transition:border-color .25s,opacity .25s;
+}
+.panel::before{top:-1px;left:-1px;border-top:1px solid;border-left:1px solid}
+.panel::after{bottom:-1px;right:-1px;border-bottom:1px solid;border-right:1px solid}
+.panel:hover::before,.panel:hover::after{border-color:var(--cyan);opacity:1}
+.panel.live{border-color:rgba(232,145,58,0.4);background:linear-gradient(180deg,var(--fire-glow),rgba(12,17,26,0.55))}
+.panel.live::before,.panel.live::after{border-color:var(--fire)}
+.panel h3{margin:0 0 10px;font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--ink-faint);text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.panel h3::before{content:"//";color:var(--cyan-dim);font-size:9px}
+.panel h3 .tag{margin-left:auto;font-size:9px;padding:2px 7px;border:1px solid var(--line);color:var(--cyan-dim);
+  clip-path:polygon(5px 0,100% 0,100% calc(100% - 5px),calc(100% - 5px) 100%,0 100%,0 5px)}
+
+/* entrance animation (JS adds .pre then .in; reduced-motion skips) */
+.panel.pre{opacity:0}
+.panel.pre.in{animation:panelin .5s cubic-bezier(.2,.85,.25,1) forwards}
+@keyframes panelin{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
+
+/* priority stack rows */
+.prow{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--line-soft);transition:background .15s}
+.prow:hover{background:rgba(90,209,240,.03)}
+.prow:last-child{border-bottom:0}
+.prow .badge{font-family:var(--mono);font-size:9px;letter-spacing:.12em;padding:4px 8px;white-space:nowrap;min-width:76px;text-align:center;
+  clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px)}
+.badge.nofail{background:rgba(240,85,107,0.14);color:var(--risk);border:1px solid rgba(240,85,107,0.5)}
+.badge.behind{background:rgba(232,193,74,0.12);color:var(--warn);border:1px solid rgba(232,193,74,0.4)}
+.badge.decision{background:rgba(90,209,240,0.10);color:var(--cyan);border:1px solid rgba(90,209,240,0.35)}
+.badge.next{background:rgba(74,222,128,0.1);color:var(--ok);border:1px solid rgba(74,222,128,0.35)}
+.prow .ptext{flex:1}
+.prow .ptext .t{font-size:13px;color:var(--ink)}
+.prow .ptext .s{font-size:11px;color:var(--ink-mute);margin-top:2px}
+.prow .when{font-family:var(--mono);font-size:11px;color:var(--cloud-dim);white-space:nowrap}
+
+/* today's reading — daily bible-study prompt */
+.readingbox{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.readingbox .rday{font-family:var(--disp);font-size:15px;font-weight:600;color:var(--gold);letter-spacing:.04em;white-space:nowrap}
+.readingbox .rref{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--ink)}
+.readingbox .rnote{font-size:11.5px;color:var(--ink-mute)}
+.readingbox .rempty{font-size:12px;color:var(--ink-mute);line-height:1.6}
+.readingbox .rnext{font-family:var(--serif);font-style:italic;color:var(--cyan)}
+.uplist{display:grid;grid-template-columns:1fr 1fr;gap:6px 24px}
+@media (max-width:900px){.uplist{grid-template-columns:1fr}}
+.uprow{display:flex;align-items:baseline;gap:12px;padding:5px 0;border-bottom:1px solid var(--line-soft)}
+.uprow .upd{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--ink-faint);text-transform:uppercase;white-space:nowrap;min-width:96px}
+.uprow .upr{font-family:var(--serif);font-style:italic;font-size:13.5px;color:var(--ink)}
+
+
+/* compact stats row: sprint gauge + pipeline + formation, one panel */
+.statsrow{display:grid;grid-template-columns:auto 1fr 1fr;gap:18px;align-items:center}
+@media (max-width:1200px){.statsrow{grid-template-columns:1fr;gap:14px}}
+.statsrow .col h4{margin:0 0 8px;font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--ink-faint);text-transform:uppercase}
+
+/* pipeline bars */
+.pipe{display:flex;flex-direction:column;gap:7px}
+.pipe .seg{display:flex;align-items:center;gap:10px}
+.pipe .seg .nm{color:var(--ink-mute);width:80px;font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase}
+.pipe .seg .track{flex:1;height:6px;background:var(--line-soft);position:relative;overflow:hidden}
+.pipe .seg .fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--cloud-dim),var(--cyan));transition:width .9s cubic-bezier(.2,.8,.25,1)}
+.pipe .seg .ct{font-family:var(--mono);font-size:10.5px;color:var(--cyan);width:20px;text-align:right}
+
+/* item lists */
+.list{display:flex;flex-direction:column}
+.litem{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--line-soft);align-items:flex-start}
+.litem:last-child{border-bottom:0}
+.litem .st{font-family:var(--mono);font-size:9px;letter-spacing:.1em;padding:3px 7px;white-space:nowrap;margin-top:1px;border:1px solid var(--line);color:var(--ink-mute);
+  clip-path:polygon(5px 0,100% 0,100% calc(100% - 5px),calc(100% - 5px) 100%,0 100%,0 5px)}
+.st.done{color:var(--ok);border-color:rgba(74,222,128,.3)}
+.st.active{color:var(--fire);border-color:rgba(232,145,58,.4)}
+.st.draft{color:var(--cyan);border-color:rgba(90,209,240,.3)}
+.st.queued{color:var(--ink-faint)}
+.litem .body .t{font-size:13px;color:var(--ink)}
+.litem .body .d{font-size:11.5px;color:var(--ink-mute);margin-top:3px;line-height:1.5}
+
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:12.5px}
+.kv .k{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--ink-faint);text-transform:uppercase;white-space:nowrap;padding-top:1px}
+.kv .v{color:var(--ink)}
+
+/* project section: brief + items side by side, single column overall */
+.secbody{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+@media (max-width:1200px){.secbody{grid-template-columns:1fr}}
+
+/* traffic lights (still used inline for section status) */
+.tl{display:flex;align-items:center;gap:8px}
+.tl .light{width:8px;height:8px;border-radius:50%;flex:none}
+.tl .light.g{background:var(--ok);box-shadow:0 0 6px rgba(74,222,128,.6)}
+.tl .light.y{background:var(--warn);box-shadow:0 0 6px rgba(232,193,74,.5)}
+.tl .light.r{background:var(--risk);box-shadow:0 0 6px rgba(240,85,107,.5)}
+.tl .light.d{background:var(--ink-faint)}
+
+/* ---------- right finance column ---------- */
+.finance{
+  grid-area:finance;
+  border:1px solid var(--line);
+  background:var(--panel);
+  display:flex;flex-direction:column;
+  overflow:hidden;
+}
+.finance .fhead{padding:12px 14px;border-bottom:1px solid var(--line-soft);font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--ink-faint);text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.finance .fhead::before{content:"//";color:var(--cyan-dim);font-size:9px}
+.finance .fscroll{flex:1;overflow:auto;padding:12px 14px}
+.fsection{margin-bottom:16px}
+.fsection:last-child{margin-bottom:0}
+.fsection h4{margin:0 0 8px;font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--ink-faint);text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.fsection h4 .tag{margin-left:auto;font-size:8.5px;padding:2px 6px;border:1px solid var(--line);color:var(--cyan-dim)}
+
+/* ledger pulse — read-only HUD strip fed by the Ledger app's
+   /api/deck-summary route. No inputs; display only. */
+.pulse{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:baseline}
+.pulse .pstat{display:flex;flex-direction:column;gap:3px;min-width:74px}
+.pulse .pstat .pk{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;color:var(--ink-faint);text-transform:uppercase}
+.pulse .pstat .pv{font-family:var(--mono);font-size:13.5px;color:var(--ink)}
+.pulse .pstat .pv.ok{color:var(--ok)}
+.pulse .pstat .pv.risk{color:var(--risk)}
+.pulse .pstat .pv.dim{color:var(--ink-faint);font-size:11px}
+.pulse .spacer{flex:1;min-width:0}
+.pulse .pchip{font-family:var(--mono);font-size:9px;letter-spacing:.12em;padding:4px 9px;white-space:nowrap;text-transform:uppercase;align-self:center;
+  clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px)}
+.pchip.locked{background:rgba(74,222,128,0.1);color:var(--ok);border:1px solid rgba(74,222,128,.35)}
+.pchip.open{background:rgba(90,209,240,0.1);color:var(--cyan);border:1px solid rgba(90,209,240,.35)}
+.pchip.off{background:rgba(111,126,146,.1);color:var(--ink-faint);border:1px solid var(--line)}
+.pchip.risk{background:rgba(240,85,107,.12);color:var(--risk);border:1px solid rgba(240,85,107,.4)}
+
+/* Vincent & Kayla status light — a real indicator LED, not a text chip */
+.vkslight{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:11px;color:var(--ink-mute)}
+.vkslight .led{width:9px;height:9px;border-radius:50%;flex:none;background:var(--ink-faint);color:var(--ink-faint);box-shadow:0 0 7px currentColor}
+.vkslight .led.g{background:var(--ok);color:var(--ok)}
+.vkslight .led.y{background:var(--warn);color:var(--warn)}
+.vkslight .led.r{background:var(--risk);color:var(--risk);animation:pulse 1.8s infinite}
+.vkslight .led.off{background:var(--ink-faint);color:transparent;box-shadow:none}
+.vkslight .lbl{color:var(--ink)}
+.vkslight .sub{color:var(--ink-faint);font-size:10px;margin-left:auto;white-space:nowrap}
+
+/* category expected vs actual (tiers) */
+.tiers{display:flex;flex-direction:column;gap:7px;margin-top:10px}
+.tierrow{display:flex;align-items:center;gap:8px}
+.tierrow .tn{font-size:11px;color:var(--ink-mute);width:96px;flex:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tierrow .track{flex:1;height:6px;background:var(--line-soft);position:relative;overflow:hidden}
+.tierrow .track .exp{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--ink-faint)}
+.tierrow .track .act{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--cloud-dim),var(--cyan))}
+.tierrow .track .act.over{background:linear-gradient(90deg,#a85a3a,var(--fire))}
+.tierrow .tv{font-family:var(--mono);font-size:10px;color:var(--ink-mute);width:98px;text-align:right;flex:none}
+.tierrow .tv b{color:var(--ink)}
+
+/* vantage hot markets — row click opens the Vantage dashboard;
+   the small ↗ suffix opens the market on Kalshi/Polymarket */
+.hotmkt{display:flex;flex-direction:column}
+.hotmkt .mrow{display:flex;align-items:flex-start;border-bottom:1px solid var(--line-soft)}
+.hotmkt .mrow:last-child{border-bottom:0}
+.hotmkt a.mk{flex:1;min-width:0;display:block;color:inherit;text-decoration:none;padding:8px 0}
+.hotmkt a.mk:hover .mq{color:var(--cyan)}
+.hotmkt .mq{font-size:12px;color:var(--ink);line-height:1.4;transition:color .15s}
+.hotmkt .mmeta{display:flex;gap:8px;margin-top:4px;font-family:var(--mono);font-size:9.5px;color:var(--ink-faint)}
+.hotmkt .madv{color:var(--gold)}
+.hotmkt a.mext{flex:none;padding:8px 2px 0 8px;color:var(--ink-faint);text-decoration:none;font-size:11px;transition:color .15s}
+.hotmkt a.mext:hover{color:var(--cyan)}
+.vempty{font-size:11.5px;color:var(--ink-mute);line-height:1.6}
+
+/* contemplative line — the serif signature */
+.verse{padding:13px 14px;border-top:1px solid var(--line)}
+.verse .ref{font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--fire);text-transform:uppercase;margin-bottom:6px}
+.verse .txt{font-family:var(--serif);font-size:13px;font-style:italic;color:var(--cloud);line-height:1.55}
+
+/* live flags — now a section inside the main stack */
+.flaglist{display:flex;flex-direction:column}
+.flag{padding:11px 0;border-bottom:1px solid var(--line-soft)}
+.flag:last-child{border-bottom:0}
+.flag .top{display:flex;align-items:center;gap:8px;padding:0;border:0;background:none}
+.flag .sev{width:7px;height:7px;border-radius:50%;flex:none}
+.sev.r{background:var(--risk);box-shadow:0 0 6px rgba(240,85,107,.6);animation:pulse 1.6s infinite}
+.sev.y{background:var(--warn)}.sev.c{background:var(--cyan)}
+.flag .ttl{font-size:12.5px;color:var(--ink);flex:1}
+.flag .dsc{font-size:11px;color:var(--ink-mute);margin-top:5px;line-height:1.5;padding-left:15px}
+
+/* dispatch queue — now lives at the bottom of the finance column */
+.dqpanel{border-top:1px solid var(--line);padding:10px 14px;display:none;max-height:170px;overflow:auto}
+.dqpanel.has{display:block}
+.dqhead{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--ink-faint);text-transform:uppercase;display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.dqhead .act{margin-left:auto;display:flex;gap:6px}
+.dqhead button{background:none;border:1px solid var(--line);color:var(--ink-mute);font-family:var(--mono);font-size:8px;letter-spacing:.1em;padding:2px 6px;cursor:pointer;text-transform:uppercase}
+.dqhead button:hover{color:var(--cyan);border-color:var(--cyan-dim)}
+.dqitem{display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--line-soft);align-items:flex-start}
+.dqitem:last-child{border-bottom:0}
+.dqitem .tm{font-family:var(--mono);font-size:9px;color:var(--fire);white-space:nowrap;padding-top:2px}
+.dqitem .tx{flex:1;font-size:11.5px;color:var(--ink);line-height:1.45}
+.dqitem .rm{background:none;border:0;color:var(--ink-faint);cursor:pointer;font-size:11px;padding:0 2px}
+.dqitem .rm:hover{color:var(--risk)}
+
+/* ---------- ticker ---------- */
+.tick{
+  grid-area:tick;
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(16,22,34,0.9),rgba(9,13,21,0.9));
+  display:flex;align-items:center;overflow:hidden;
+}
+.tick .lead{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--bg);background:var(--cyan);padding:0 16px 0 12px;height:100%;display:flex;align-items:center;text-transform:uppercase;white-space:nowrap;
+  clip-path:polygon(0 0,100% 0,calc(100% - 10px) 100%,0 100%)}
+.tickwrap{flex:1;overflow:hidden;white-space:nowrap;
+  -webkit-mask-image:linear-gradient(90deg,transparent,black 4%,black 96%,transparent);
+  mask-image:linear-gradient(90deg,transparent,black 4%,black 96%,transparent)}
+.tickmove{display:inline-block;padding-left:100%;animation:scroll 46s linear infinite;font-family:var(--mono);font-size:12px;color:var(--ink-mute);letter-spacing:.04em}
+.tickmove span.item{margin:0 8px}
+.tickmove .sep{color:var(--gold);font-size:9px;margin:0 8px;vertical-align:1px}
+.tickmove b{color:var(--fire);font-weight:500}
+@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+
+/* ---------- the Pillar (far-right signature) ---------- */
+.pillar{
+  position:fixed;top:0;right:0;width:5px;height:100%;z-index:6;pointer-events:none;
+  background:linear-gradient(180deg,#243042 0%,var(--cloud-dim) 20%,#1d2837 50%,var(--fire) 86%,var(--fire-hot) 100%);
+  filter:blur(.3px);opacity:.85;
+}
+.pillar::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent,rgba(255,255,255,0.5),transparent);
+  height:32%;animation:shimmer 6.5s ease-in-out infinite;
+}
+@keyframes shimmer{0%{transform:translateY(-40%);opacity:0}50%{opacity:.5}100%{transform:translateY(320%);opacity:0}}
+
+/* low-capacity dimming */
+body.conserve .panel:not(.live){opacity:.5}
+body.conserve .finance .flag:not(.r){opacity:.55}
+body.conserve #hudsweep{display:none}
+body.conserve .ekg .b{animation:none}
+
+/* scrollbars */
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
+::-webkit-scrollbar-track{background:transparent}
+
+@media (prefers-reduced-motion: reduce){
+  .tickmove{animation:none;padding-left:0}
+  .pillar::after,#hudsweep{animation:none;opacity:0}
+  .statepill.hot .dot,.sev.r{animation:none}
+  .brandreactor,.brandreactor::after,.statepill .orbit,.gauge .grot,
+  .reactor .g1,.reactor .g2,.reactor .g3,.ekg .b{animation:none}
+  .panel.pre{opacity:1}
+  .panel.pre.in{animation:none}
+  body.live .deck{animation:none}
+}
+
+@media (max-width:1100px){
+  .deck{grid-template-columns:184px 1fr;grid-template-areas:"top top" "nav main" "tick tick"}
+  .finance{display:none}
+}
+
+/* readability guards — no infinite line lengths on wide panels */
+.prow .ptext .s,.litem .body .d,.flag .dsc{max-width:78ch}
+
+/* ---------- ultrawide / second-screen tier (21:9 boards) ----------
+   Tuned for a ~2560x1080-class display used as a glance board. */
+@media (min-width:1800px){
+  body{font-size:15px}
+  .deck{grid-template-columns:260px 1fr 400px;grid-template-rows:64px 1fr 38px;gap:2px;padding:12px}
+  .main{padding:24px 30px 30px}
+  .panel{padding:16px 18px}
+  .pagehead h1{font-size:27px}
+  .pagehead .meta{font-size:12px}
+  .sechead h2{font-size:18px}
+  .top .clock{font-size:27px}
+  .top .date{font-size:10px}
+  .metric .v{font-size:13.5px}
+  .brand .mark{font-size:14px}
+  .gitlink{padding:11px 18px}
+  .gitlink .gn{font-size:13.5px}
+  .dispatchbar input{font-size:12px}
+  .prow .ptext .t{font-size:14px}
+  .prow .ptext .s{font-size:12px}
+  .prow .when{font-size:12px}
+  .litem .body .t{font-size:14px}
+  .litem .body .d{font-size:12.5px}
+  .kv{font-size:13.5px}
+  .panel h3{font-size:11px}
+  .flag .ttl{font-size:13.5px}
+  .flag .dsc{font-size:12px}
+  .verse .txt{font-size:14.5px}
+  .tickmove{font-size:13px}
+  .gauge .read .big{font-size:30px}
+}
+
+/* ---------- mobile / phone tier ----------
+   The deck reflows to a scrolling column: wrapped top bar, nav as
+   tappable chips, full-width panels, finance column restored below main.
+   Wallpaper + HUD chrome stay fixed behind the scroll. */
+@media (max-width:700px){
+  html,body{height:auto}
+  body{overflow:auto;-webkit-overflow-scrolling:touch}
+  .deck{display:flex;flex-direction:column;height:auto;min-height:100vh;min-height:100dvh;padding:8px;gap:8px}
+  .top{flex-wrap:wrap;height:auto;padding:10px 12px;gap:8px 14px}
+  .top .spacer{display:none}
+  .brand{width:100%}
+  .brand .sub{margin-left:auto}
+  .metric{min-width:0}
+  .statepill{margin-left:auto}
+  .nav{display:block;padding:12px 12px 10px;overflow:visible}
+  .nav .eyebrow{padding:0 0 8px}
+  .dispatchbar{padding:0 0 12px}
+  .dispatchbar input{font-size:16px}   /* prevents iOS focus zoom */
+  .gitrow{display:inline-flex;border:1px solid var(--line);margin:0 6px 6px 0;width:auto}
+  .gitlink{display:inline-flex;border-left:2px solid transparent;padding:8px 4px 8px 11px;margin:0;flex:none}
+  .gitlink:hover{transform:none}
+  .gitlink .gn{white-space:normal}
+  .gitgh{padding:0 8px}
+  .nav .keys{display:none}
+  .nav .capacity{margin-top:4px;padding:10px 0 0;border-top:1px solid var(--line-soft)}
+  .main{padding:14px;overflow:visible}
+  .secbody{grid-template-columns:1fr}
+  .statsrow{grid-template-columns:1fr}
+  .pagehead .meta{text-align:left}
+  .prow{flex-wrap:wrap}
+  .finance{display:flex;overflow:visible}
+  .finance .fscroll{flex:none;overflow:visible}
+  .dqpanel{max-height:none}
+  .bootstack{gap:14px}
+  .reactor{transform:scale(.82)}
+  .bootlog{width:min(340px,86vw);font-size:9.5px}
+  #bgname{bottom:52px}
+}
+</style>
+</head>
+<body>
+<div id="lock">
+  <div class="lockcard" id="lockcard">
+    <div class="lk-brand">Cloud &amp; Fire // Access</div>
+    <input type="password" id="lockpass" placeholder="passphrase" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Passphrase">
+    <button id="lockbtn" type="button">Unlock</button>
+    <div class="lk-err" id="lockerr">incorrect passphrase</div>
+  </div>
+</div>
+<script>
+(function accessGate(){
+  var HASH = 'd23417db6da0be1e7337a5f649a6bdf222c7604ee3dc3f4ad138a989a232d6e4';
+  var KEY = 'deck.unlocked';
+  var lock = document.getElementById('lock');
+  var input = document.getElementById('lockpass');
+  var btn = document.getElementById('lockbtn');
+  var err = document.getElementById('lockerr');
+  var card = document.getElementById('lockcard');
+
+  function sha256hex(msg){
+    return crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg)).then(function(buf){
+      return Array.prototype.map.call(new Uint8Array(buf), function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+    });
+  }
+  function unlock(){ lock.classList.add('gone'); }
+
+  var stored = null;
+  try{ stored = localStorage.getItem(KEY); }catch(e){}
+  if(stored === HASH){ unlock(); }
+  else{
+    input.focus();
+    function tryUnlock(){
+      /* trim + lowercase before hashing: guards against mobile keyboards
+         auto-capitalizing the first letter and stray whitespace from
+         autofill/paste. The real passphrase has no uppercase or spaces,
+         so this only ever helps, never weakens the check. */
+      sha256hex(input.value.trim().toLowerCase()).then(function(h){
+        if(h === HASH){
+          try{ localStorage.setItem(KEY, HASH); }catch(e){}
+          unlock();
+        } else {
+          err.classList.add('show');
+          card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+          input.value=''; input.focus();
+        }
+      });
+    }
+    btn.addEventListener('click', tryUnlock);
+    input.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); tryUnlock(); } });
+  }
+})();
+</script>
+<canvas id="bgfx" aria-hidden="true"></canvas>
+<div id="hudgrid" aria-hidden="true"></div>
+<div id="hudsweep" aria-hidden="true"></div>
+<div id="bgname"></div>
+
+<!-- BOOT: arc reactor · globe · system log -->
+<div id="boot">
+  <div class="bootstack">
+    <div class="reactor">
+      <svg class="rings" viewBox="0 0 264 264" aria-hidden="true">
+        <g class="g1"><circle cx="132" cy="132" r="112"/></g>
+        <g class="g2"><circle cx="132" cy="132" r="99"/></g>
+        <g class="g3"><circle cx="132" cy="132" r="122"/></g>
+      </svg>
+      <svg class="rprog" viewBox="0 0 264 264" aria-hidden="true">
+        <circle id="bootprog" cx="132" cy="132" r="126"/>
+      </svg>
+      <canvas id="bootglobe" width="200" height="200" role="img" aria-label="Loading"></canvas>
+    </div>
+    <div class="bootlog" id="bootlog" aria-hidden="true"></div>
+    <div class="boothint">any key to skip · B replays</div>
+  </div>
+</div>
+
+<div class="pillar" id="pillar"></div>
+<div class="deck">
+
+  <!-- TOP BAR -->
+  <header class="top">
+    <div class="brand">
+      <span class="brandreactor" aria-hidden="true"></span>
+      <span class="mark">CLOUD &amp; <b>FIRE</b></span>
+      <span class="sub">Command Deck · MK III</span>
+    </div>
+    <div class="clockwrap">
+      <svg class="secring" width="34" height="34" viewBox="0 0 34 34" aria-hidden="true">
+        <circle class="bgc" cx="17" cy="17" r="14"/>
+        <circle id="secarc" cx="17" cy="17" r="14" stroke-dasharray="87.96" stroke-dashoffset="87.96"/>
+      </svg>
+      <div>
+        <div class="clock" id="clock">--:--:--</div>
+        <div class="date" id="date">—</div>
+      </div>
+    </div>
+    <div class="spacer"></div>
+    <div class="metric"><span class="k">Manhattan KS</span><span class="v" id="wx">— wiring…</span></div>
+    <div class="metric"><span class="k">Rhythm</span><span class="v">
+      <svg class="ekg" width="46" height="16" viewBox="0 0 46 16" aria-hidden="true">
+        <polyline class="g" points="0,8 10,8 13,3 17,13 20,8 30,8 33,5 36,11 39,8 46,8"/>
+        <polyline class="b" points="0,8 10,8 13,3 17,13 20,8 30,8 33,5 36,11 39,8 46,8"/>
+      </svg>
+      <span id="rhythm">—</span></span></div>
+    <div class="metric"><span class="k">Synced</span><span class="v" id="synced">—</span></div>
+    <a class="phonev2" href="./index.html">Phone v2</a>
+    <div class="statepill" id="statepill">
+      <span class="dotwrap"><span class="dot"></span><span class="orbit"></span></span>
+      <span id="statetxt">SYSTEMS NOMINAL</span>
+    </div>
+  </header>
+
+  <!-- LEFT NAV: dispatch + GitHub project links + capacity -->
+  <nav class="nav" id="nav">
+    <div class="dispatchbar">
+      <div class="eyebrow" style="padding:0 0 8px">Dispatch</div>
+      <div class="row">
+        <input id="dinput" placeholder="dispatch… ( / )" aria-label="Dispatch input">
+        <button id="dmic" title="Voice dispatch" aria-label="Voice dispatch">◉</button>
+      </div>
+    </div>
+    <div class="eyebrow">Finance Links</div>
+    <div id="gitlinks"><!-- links injected --></div>
+    <div class="keys"><b>W</b> wallpaper · <b>/</b> dispatch · <b>B</b> boot</div>
+    <div class="capacity">
+      <div class="k"><span>Capacity</span><b id="capval">3 / 5</b></div>
+      <input type="range" id="capacity" min="1" max="5" step="1" value="3" aria-label="Energy capacity">
+      <div class="hint" id="caphint"></div>
+    </div>
+  </nav>
+
+  <!-- MAIN: single stacked column, all content -->
+  <main class="main" id="main"><!-- stack injected --></main>
+
+  <!-- RIGHT: household finances + vantage -->
+  <aside class="finance">
+    <div class="fhead"><span>Real Financials</span><span style="margin-left:auto;font-size:9px" id="financesynced"></span></div>
+    <div class="fscroll" id="financescroll">
+      <div class="fsection">
+        <h4>Household Ledger <span class="tag" id="ledgertag">connecting</span></h4>
+        <div class="pulse" id="pulse"><span style="font-family:var(--mono);font-size:11px;color:var(--ink-faint)">reaching localhost:5181…</span></div>
+        <div class="tiers" id="tiers"></div>
+      </div>
+      <div class="fsection">
+        <h4>Vantage <span class="tag" id="vantagetag">connecting</span></h4>
+        <div id="vantagebody"><span style="font-family:var(--mono);font-size:11px;color:var(--ink-faint)">reaching localhost:8765…</span></div>
+      </div>
+      <div class="fsection">
+        <h4>Vincent &amp; Kayla <span class="tag" id="vkstag">connecting</span></h4>
+        <div id="vksbody"><span style="font-family:var(--mono);font-size:11px;color:var(--ink-faint)">checking status light…</span></div>
+      </div>
+    </div>
+    <div class="dqpanel" id="dqpanel">
+      <div class="dqhead"><span>Dispatch Queue</span><span id="dqn"></span>
+        <span class="act"><button id="dqcopy">copy</button><button id="dqclear">clear</button></span>
+      </div>
+      <div id="dqlist"></div>
+    </div>
+    <div class="verse">
+      <div class="ref" id="verseref">—</div>
+      <div class="txt" id="versetxt">—</div>
+    </div>
+  </aside>
+
+  <!-- TICKER -->
+  <footer class="tick">
+    <div class="lead">On The Wire</div>
+    <div class="tickwrap"><div class="tickmove" id="ticker"></div></div>
+  </footer>
+</div>
+
+<script>
+/* =====================================================================
+   DECK DATA START — essentials-only deck. Non-financial project trackers
+   were retired 2026-07-17; this block now carries just what the deck shows.
+   Schema:
+   - updated:       ISO date of last sync (shown in top bar)
+   - rhythm:        one-word mode label, shown in the top bar
+   - verses:        [{ ref, txt }] — one is picked at random for the rail
+   - bibleCalendar: [{ date:"YYYY-MM-DD", ref, note }] — daily reading
+                    prompt keyed to today's date, plus the upcoming list.
+   - githubProjects: [{ name, live, url, kind, desc }] — the left-nav link
+                    menu (finance companions only: command-deck, ledger, vantage).
+   - carry:         ambient status lines for the footer ticker.
+   ===================================================================== */
+window.DECK_DATA = {
+
+  updated: "2026-07-07",
+  rhythm: "Productive",
+
+  verses: [
+    { ref:"Exodus 13:21", txt:"By day in a pillar of cloud, by night in a pillar of fire — so they could travel by day or night." },
+    { ref:"Romans 5:3-4", txt:"Problems and trials… help us develop endurance, and endurance develops strength of character." },
+    { ref:"Acts 27:25", txt:"Take courage. For I believe God. It will be just as he said." }
+  ],
+
+  // Daily Bible-reading prompt, transcribed from Lance's printed plan
+  // (biblereadingplangenerator.com checkbox grid, photographed 2026-07-08).
+  // Spans Jun 7 - Oct 28, 2026: Romans 5 -> Revelation 22, NLT, for the
+  // Pastor Brian meetings. Days absent from this list are rest days.
+  bibleCalendar: [
+    { date:"2026-06-07", ref:"Romans 5" },  { date:"2026-06-08", ref:"Romans 6" },  { date:"2026-06-09", ref:"Romans 7" },
+    { date:"2026-06-11", ref:"Romans 8" },  { date:"2026-06-13", ref:"Romans 9" },
+    { date:"2026-06-14", ref:"Romans 10" }, { date:"2026-06-15", ref:"Romans 11" }, { date:"2026-06-16", ref:"Romans 12" },
+    { date:"2026-06-17", ref:"Romans 13" }, { date:"2026-06-18", ref:"Romans 14" }, { date:"2026-06-19", ref:"Romans 15" },
+    { date:"2026-06-21", ref:"Romans 16" }, { date:"2026-06-22", ref:"1 Corinthians 1" }, { date:"2026-06-23", ref:"1 Corinthians 2" },
+    { date:"2026-06-24", ref:"1 Corinthians 3" }, { date:"2026-06-25", ref:"1 Corinthians 4" }, { date:"2026-06-26", ref:"1 Corinthians 5-6" },
+    { date:"2026-06-28", ref:"1 Corinthians 7" }, { date:"2026-06-29", ref:"1 Corinthians 8" }, { date:"2026-06-30", ref:"1 Corinthians 9" },
+    { date:"2026-07-02", ref:"1 Corinthians 10" }, { date:"2026-07-03", ref:"1 Corinthians 11" }, { date:"2026-07-04", ref:"1 Corinthians 12" },
+    { date:"2026-07-05", ref:"1 Corinthians 13" }, { date:"2026-07-06", ref:"1 Corinthians 14" },
+    { date:"2026-07-09", ref:"1 Corinthians 15" }, { date:"2026-07-10", ref:"1 Corinthians 16" }, { date:"2026-07-11", ref:"2 Corinthians 1" },
+    { date:"2026-07-12", ref:"2 Corinthians 2" }, { date:"2026-07-13", ref:"2 Corinthians 3" }, { date:"2026-07-14", ref:"2 Corinthians 4" },
+    { date:"2026-07-15", ref:"2 Corinthians 5" }, { date:"2026-07-16", ref:"2 Corinthians 6" }, { date:"2026-07-17", ref:"2 Corinthians 7" },
+    { date:"2026-07-18", ref:"2 Corinthians 8" },
+    { date:"2026-07-19", ref:"2 Corinthians 9-10" }, { date:"2026-07-21", ref:"2 Corinthians 11" }, { date:"2026-07-22", ref:"2 Corinthians 12" },
+    { date:"2026-07-23", ref:"2 Corinthians 13" }, { date:"2026-07-24", ref:"Galatians 1" }, { date:"2026-07-25", ref:"Galatians 2" },
+    { date:"2026-07-26", ref:"Galatians 3" }, { date:"2026-07-27", ref:"Galatians 4" }, { date:"2026-07-29", ref:"Galatians 5-6" },
+    { date:"2026-07-30", ref:"Ephesians 1" }, { date:"2026-07-31", ref:"Ephesians 2" }, { date:"2026-08-01", ref:"Ephesians 3" },
+    { date:"2026-08-02", ref:"Ephesians 4" }, { date:"2026-08-04", ref:"Ephesians 5" }, { date:"2026-08-05", ref:"Ephesians 6" },
+    { date:"2026-08-06", ref:"Philippians 1" }, { date:"2026-08-07", ref:"Philippians 2" }, { date:"2026-08-08", ref:"Philippians 3" },
+    { date:"2026-08-09", ref:"Philippians 4" }, { date:"2026-08-11", ref:"Colossians 1" }, { date:"2026-08-12", ref:"Colossians 2" },
+    { date:"2026-08-13", ref:"Colossians 3" }, { date:"2026-08-14", ref:"Colossians 4; 1 Thessalonians 1" }, { date:"2026-08-15", ref:"1 Thessalonians 2" },
+    { date:"2026-08-16", ref:"1 Thessalonians 3" }, { date:"2026-08-17", ref:"1 Thessalonians 4-5" }, { date:"2026-08-18", ref:"2 Thessalonians 1" },
+    { date:"2026-08-19", ref:"2 Thessalonians 2" }, { date:"2026-08-20", ref:"2 Thessalonians 3; 1 Timothy 1" }, { date:"2026-08-21", ref:"1 Timothy 2" },
+    { date:"2026-08-22", ref:"1 Timothy 3-4" },
+    { date:"2026-08-23", ref:"1 Timothy 5" }, { date:"2026-08-24", ref:"1 Timothy 6" }, { date:"2026-08-25", ref:"2 Timothy 1" },
+    { date:"2026-08-26", ref:"2 Timothy 2" }, { date:"2026-08-27", ref:"2 Timothy 3" }, { date:"2026-08-28", ref:"2 Timothy 4; Titus 1" },
+    { date:"2026-08-29", ref:"Titus 2" },
+    { date:"2026-08-30", ref:"Titus 3; Philemon" }, { date:"2026-08-31", ref:"Hebrews 1" }, { date:"2026-09-01", ref:"Hebrews 2" },
+    { date:"2026-09-02", ref:"Hebrews 3" }, { date:"2026-09-03", ref:"Hebrews 4-5" }, { date:"2026-09-04", ref:"Hebrews 6" },
+    { date:"2026-09-05", ref:"Hebrews 7" },
+    { date:"2026-09-06", ref:"Hebrews 8" }, { date:"2026-09-07", ref:"Hebrews 9" }, { date:"2026-09-09", ref:"Hebrews 10" },
+    { date:"2026-09-11", ref:"Hebrews 11" }, { date:"2026-09-12", ref:"Hebrews 12" },
+    { date:"2026-09-14", ref:"Hebrews 13" }, { date:"2026-09-15", ref:"James 1" }, { date:"2026-09-16", ref:"James 2" },
+    { date:"2026-09-17", ref:"James 3" }, { date:"2026-09-18", ref:"James 4-5" },
+    { date:"2026-09-20", ref:"1 Peter 1" }, { date:"2026-09-21", ref:"1 Peter 2" }, { date:"2026-09-22", ref:"1 Peter 3" },
+    { date:"2026-09-23", ref:"1 Peter 4" }, { date:"2026-09-24", ref:"1 Peter 5; 2 Peter 1" }, { date:"2026-09-26", ref:"2 Peter 2" },
+    { date:"2026-09-27", ref:"2 Peter 3; 1 John 1" }, { date:"2026-09-28", ref:"1 John 2" }, { date:"2026-09-30", ref:"1 John 3" },
+    { date:"2026-10-01", ref:"1 John 4" }, { date:"2026-10-02", ref:"1 John 5" }, { date:"2026-10-03", ref:"2 John; 3 John" },
+    { date:"2026-10-04", ref:"Jude" }, { date:"2026-10-05", ref:"Revelation 1" }, { date:"2026-10-07", ref:"Revelation 2" },
+    { date:"2026-10-08", ref:"Revelation 3" }, { date:"2026-10-09", ref:"Revelation 4" }, { date:"2026-10-10", ref:"Revelation 5" },
+    { date:"2026-10-11", ref:"Revelation 6" }, { date:"2026-10-12", ref:"Revelation 7" }, { date:"2026-10-13", ref:"Revelation 8" },
+    { date:"2026-10-14", ref:"Revelation 9" }, { date:"2026-10-15", ref:"Revelation 10" }, { date:"2026-10-16", ref:"Revelation 11" },
+    { date:"2026-10-17", ref:"Revelation 12" },
+    { date:"2026-10-18", ref:"Revelation 13" }, { date:"2026-10-19", ref:"Revelation 14" }, { date:"2026-10-20", ref:"Revelation 15" },
+    { date:"2026-10-21", ref:"Revelation 16" }, { date:"2026-10-22", ref:"Revelation 17" }, { date:"2026-10-23", ref:"Revelation 18" },
+    { date:"2026-10-24", ref:"Revelation 19" },
+    { date:"2026-10-25", ref:"Revelation 20" }, { date:"2026-10-27", ref:"Revelation 21" },
+    { date:"2026-10-28", ref:"Revelation 22", note:"Plan complete — Romans 5 to Revelation 22 with Pastor Brian." }
+  ],
+
+  // Sidebar link menu. `live` = the page you land on (GitHub Pages URL,
+  // or a localhost app for private tools); `url` = the repo, reachable
+  // via the small gh suffix button. No `live` -> repo is the primary.
+  githubProjects: [
+    { name:"command-deck", live:"./deck-mk3.html", url:"https://github.com/lancerossiconsulting/command-deck", kind:"live",  desc:"Desktop MK III — this HUD" },
+    { name:"ledger",       live:"http://localhost:5181/",                               url:"https://github.com/lancerossiconsulting/ledger",       kind:"local", desc:"Household budget app (this machine)" },
+    { name:"vantage",      live:"http://localhost:8765/",                               url:"https://github.com/lancerossiconsulting/vantage",      kind:"local", desc:"Prediction-market dashboard (this machine)" }
+  ],
+
+  // Ambient status ticker — describes what the essentials deck still shows.
+  carry: [
+    "Finance rail live — Household Ledger \u00b7 Vantage \u00b7 Vincent & Kayla",
+    "Bible plan — Romans 5 \u2192 Revelation 22, daily reading keyed to today",
+    "Manhattan KS weather + local clock on the wire",
+    "Essentials deck — side projects archived 2026-07-17"
+  ]
+};
+/* ===================== DECK DATA END ===================== */
+</script>
+<script>
+/* ---------- data guard (only trips if the data block above is broken) ---------- */
+const DATA = window.DECK_DATA;
+if(!DATA){
+  document.getElementById('main').innerHTML =
+    '<div style="font-family:var(--mono);color:var(--risk);padding:30px;font-size:13px">Deck data block failed to parse. Check the DECK DATA section of this file for a syntax error.</div>';
+  throw new Error('DECK_DATA not found');
+}
+const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- safe persistence (works locally; no-op if blocked) ---------- */
+const store = {
+  get(k,d){ try{ const v=localStorage.getItem(k); return v===null?d:v; }catch(e){ return d; } },
+  set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+};
+
+/* ---------- helpers ---------- */
+function el(tag,cls,html){ const e=document.createElement(tag); if(cls)e.className=cls; if(html!=null)e.innerHTML=html; return e; }
+
+/* character-scramble title resolve */
+let DECRYPT_IV=null;
+function decrypt(elm, final){
+  if(!elm) return;
+  if(REDUCE){ elm.textContent=final; return; }
+  clearInterval(DECRYPT_IV);
+  const chars='ABCDEFGHIKLMNOPRSTUVXYZ0123456789#$/<>*';
+  let i=0; const n=final.length;
+  DECRYPT_IV=setInterval(()=>{
+    elm.textContent = final.slice(0,i) +
+      Array.from({length:Math.max(0,n-i)},()=>chars[Math.random()*chars.length|0]).join('');
+    i+=1;
+    if(i>n){ clearInterval(DECRYPT_IV); elm.textContent=final; }
+  },22);
+}
+
+/* staggered panel entrance */
+function stagger(){
+  if(REDUCE) return;
+  document.querySelectorAll('.main .panel').forEach((p,i)=>{
+    p.classList.add('pre');
+    p.style.animationDelay=(Math.min(i,14)*60)+'ms';
+    requestAnimationFrame(()=>requestAnimationFrame(()=>p.classList.add('in')));
+  });
+}
+
+/* ---------- today's reading (daily bible-study prompt) ---------- */
+function todayISO(){
+  const d=new Date(); const p=n=>String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;
+}
+function readingBox(){
+  const cal = DATA.bibleCalendar||[];
+  const today = todayISO();
+  const entry = cal.find(c=>c.date===today);
+  const dayLbl = new Date().toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
+  if(!cal.length){
+    return `<div class="panel live section" id="sec-reading">
+      <h3>Today's Reading <span class="tag">bible calendar</span></h3>
+      <div class="readingbox"><div class="rempty">No calendar loaded yet — send the reading schedule from your Pastor Brian meetings and this becomes a daily prompt keyed to today's date.</div></div>
+    </div>`;
+  }
+  if(!entry){
+    /* rest day (or outside the plan window) — point at what's next */
+    const next = cal.find(c=>c.date>today);   /* cal is date-sorted; ISO strings compare correctly */
+    let msg;
+    if(next){
+      const [y,mo,da]=next.date.split('-').map(Number);
+      const nd=new Date(y,mo-1,da).toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
+      msg=`Rest day — no assigned chapter. Next: <span class="rnext">${next.ref}</span> on ${nd}.`;
+    } else {
+      msg=`Plan complete — Romans 5 through Revelation 22, finished Oct 28. Bring the next calendar from Pastor Brian.`;
+    }
+    return `<div class="panel live section" id="sec-reading">
+      <h3>Today's Reading <span class="tag">bible calendar</span></h3>
+      <div class="readingbox"><div class="rday">${dayLbl}</div><div class="rempty">${msg}</div></div>
+    </div>`;
+  }
+  return `<div class="panel live section" id="sec-reading">
+    <h3>Today's Reading <span class="tag">bible calendar</span></h3>
+    <div class="readingbox">
+      <div class="rday">${dayLbl}</div>
+      <div class="rref">${entry.ref}</div>
+      ${entry.note?`<div class="rnote">${entry.note}</div>`:''}
+    </div>
+  </div>`;
+}
+
+/* ---------- upcoming readings (next entries from the bible calendar) ---------- */
+function upcomingBox(){
+  const cal = DATA.bibleCalendar||[];
+  if(!cal.length) return '';
+  const today = todayISO();
+  const rows = cal.filter(c=>c.date>today).slice(0,12).map(c=>{
+    const [y,mo,da]=c.date.split('-').map(Number);
+    const d=new Date(y,mo-1,da).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+    return `<div class="uprow"><span class="upd">${d}</span><span class="upr">${c.ref}</span></div>`;
+  }).join('');
+  if(!rows) return '';
+  return `<div class="panel section" id="sec-upcoming">
+    <h3>Upcoming Readings <span class="tag">next 12</span></h3>
+    <div class="uplist">${rows}</div>
+  </div>`;
+}
+
+/* ---------- main stack: essentials only (daily + upcoming reading) ---------- */
+function renderMain(){
+  const m = document.getElementById('main');
+  m.innerHTML = `
+    <div class="pagehead">
+      <div><div class="crumb">Command Deck · Essentials</div><h1 data-title="Daily Reading">Daily Reading</h1></div>
+      <div class="meta">synced ${DATA.updated}</div>
+    </div>
+    <div class="stack">
+      ${readingBox()}
+      ${upcomingBox()}
+    </div>`;
+
+  stagger();
+  const h1=document.querySelector('.pagehead h1');
+  if(h1) decrypt(h1, h1.dataset.title||h1.textContent);
+
+  pollLedger();
+  pollVantage();
+  pollVKS();
+}
+
+/* ---------- project link menu ----------
+   Primary click = the live page (Pages site, or localhost app for
+   private tools). Small gh suffix = the repo. Repo-only projects
+   link straight to GitHub. */
+(function buildGitLinks(){
+  const box = document.getElementById('gitlinks');
+  (DATA.githubProjects||[]).forEach(p=>{
+    const primary = p.live || p.url;
+    const kind = p.kind || (p.live ? 'live' : 'repo');
+    const row = document.createElement('div');
+    row.className = 'gitrow';
+    const a = document.createElement('a');
+    a.className='gitlink'; a.href=primary; a.target='_blank'; a.rel='noopener noreferrer';
+    a.title=p.desc||'';
+    a.innerHTML = `<span class="gi">◈</span><span class="gn">${p.name}</span><span class="gv ${kind}">${kind}</span>`;
+    row.appendChild(a);
+    if(p.live && p.url){
+      const gh = document.createElement('a');
+      gh.className='gitgh'; gh.href=p.url; gh.target='_blank'; gh.rel='noopener noreferrer';
+      gh.title='repo · '+p.name; gh.textContent='gh';
+      row.appendChild(gh);
+    }
+    box.appendChild(row);
+  });
+})();
+
+/* ---------- verse + ticker ---------- */
+(function buildSide(){
+  const v = DATA.verses[Math.floor(Math.random()*DATA.verses.length)];
+  document.getElementById('verseref').textContent = v.ref;
+  document.getElementById('versetxt').textContent = '“'+v.txt+'”';
+
+  document.getElementById('ticker').innerHTML =
+    DATA.carry.map(c=>`<span class="item">${c.replace(/(\[VERIFY\]|404|no-fail|deploy|back-burnered|zeroed|reset)/gi,'<b>$1</b>')}</span>`).join('<span class="sep">◆</span>');
+})();
+
+/* ---------- state pill ---------- */
+(function stateline(){
+  document.getElementById('statetxt').textContent='SYSTEMS NOMINAL';
+  document.getElementById('rhythm').textContent = DATA.rhythm;
+  document.getElementById('synced').textContent = DATA.updated;
+})();
+
+/* ---------- clock + seconds ring ---------- */
+const SEC_C = 2*Math.PI*14;
+function tick(){
+  const d=new Date();
+  const p=n=>String(n).padStart(2,'0');
+  document.getElementById('clock').innerHTML =
+    `${p(d.getHours())}:${p(d.getMinutes())}<span class="sec">:${p(d.getSeconds())}</span>`;
+  document.getElementById('date').textContent =
+    d.toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric',year:'numeric'}).toUpperCase();
+  const arc=document.getElementById('secarc');
+  if(arc) arc.style.strokeDashoffset = SEC_C*(1-(d.getSeconds()+1)/60);
+}
+setInterval(tick,1000); tick();
+
+/* ---------- live weather: Open-Meteo, no key, refresh 15 min ---------- */
+const WX_CODES = {0:'Clear',1:'Mostly clear',2:'Partly cloudy',3:'Overcast',45:'Fog',48:'Rime fog',
+  51:'Drizzle',53:'Drizzle',55:'Drizzle',56:'Frz drizzle',57:'Frz drizzle',
+  61:'Rain',63:'Rain',65:'Heavy rain',66:'Frz rain',67:'Frz rain',
+  71:'Snow',73:'Snow',75:'Heavy snow',77:'Snow grains',
+  80:'Showers',81:'Showers',82:'Heavy showers',85:'Snow showers',86:'Snow showers',
+  95:'Storm',96:'Storm + hail',99:'Storm + hail'};
+async function weather(){
+  const elWx = document.getElementById('wx');
+  try{
+    const r = await fetch('https://api.open-meteo.com/v1/forecast?latitude=39.18&longitude=-96.57&current=temperature_2m,weather_code,wind_speed_10m&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=America%2FChicago');
+    const j = await r.json();
+    const c = j.current;
+    elWx.textContent = `${Math.round(c.temperature_2m)}°F · ${WX_CODES[c.weather_code]||'—'} · ${Math.round(c.wind_speed_10m)} mph`;
+  }catch(e){
+    elWx.textContent = 'wire down';
+  }
+}
+weather(); setInterval(weather, 15*60*1000);
+
+/* ---------- household ledger pulse ----------
+   Read-only current-month summary fetched from the Ledger app's
+   /api/deck-summary route (localhost:5181). Display only — no inputs,
+   no writes back to Ledger. Shows an offline chip if it isn't running. */
+const LEDGER_URL = 'http://localhost:5181/api/deck-summary';
+function timeAgo(iso){
+  if(!iso) return null;
+  const s = Math.max(0, (Date.now()-new Date(iso).getTime())/1000);
+  if(s<60) return 'just now';
+  const m=Math.floor(s/60); if(m<60) return m+'m ago';
+  const h=Math.floor(m/60); if(h<24) return h+'h ago';
+  return Math.floor(h/24)+'d ago';
+}
+function money2(n){
+  return n==null ? '—' : '$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function moneyShort(n){
+  return n==null ? '—' : '$'+n.toLocaleString('en-US',{maximumFractionDigits:0});
+}
+function renderPulse(data,ok){
+  const tag = document.getElementById('ledgertag');
+  const pulse = document.getElementById('pulse');
+  const tiersEl = document.getElementById('tiers');
+  if(!tag || !pulse) return;
+  if(!ok || !data || data.hasUser===false){
+    tag.textContent='offline';
+    pulse.innerHTML = `<span class="pchip off">NOT RUNNING</span>
+      <span style="font-family:var(--mono);font-size:11px;color:var(--ink-mute)">start Ledger on port 5181 to see this month's figures</span>`;
+    if(tiersEl) tiersEl.innerHTML='';
+    document.getElementById('financesynced').textContent='';
+    return;
+  }
+  tag.textContent = data.locked ? 'locked' : 'in progress';
+  // "Surplus" only means something once real income is entered, and even
+  // then it isn't true surplus unless it clears the savings goal -- a
+  // positive-but-under-goal number is a miss, not neutral, so it's red.
+  const projected = data.surplusIsProjected !== false;
+  let surplusClass, surplusLabel;
+  if(data.surplus==null){ surplusClass=''; surplusLabel='Surplus'; }
+  else if(projected){ surplusClass='dim'; surplusLabel='Surplus (proj.)'; }
+  else if(data.metSavingsGoal){ surplusClass='ok'; surplusLabel='Surplus'; }
+  else { surplusClass='risk'; surplusLabel='Below goal'; }
+  pulse.innerHTML = `
+    <span class="pchip ${data.locked?'locked':'open'}">${data.locked?'LOCKED':'OPEN'}</span>
+    <div class="pstat"><span class="pk">${data.monthLabel}</span><span class="pv">${data.entriesLogged}/${data.budgetItemCount} logged</span></div>
+    <div class="pstat"><span class="pk">Income</span><span class="pv ${data.incomeActual==null?'dim':''}">${data.incomeActual!=null?money2(data.incomeActual):'not entered'}</span></div>
+    <div class="pstat"><span class="pk">Outflow</span><span class="pv ${data.totalOutflow==null?'dim':''}">${data.totalOutflow!=null?money2(data.totalOutflow):'not entered'}</span></div>
+    <div class="pstat"><span class="pk">${surplusLabel}</span><span class="pv ${surplusClass}">${data.surplus!=null?money2(data.surplus):'—'}</span></div>`;
+
+  if(tiersEl){
+    if(Array.isArray(data.tiers) && data.tiers.length){
+      tiersEl.innerHTML = data.tiers.map(t=>{
+        const exp = t.expected||0, act = t.actual;
+        const maxV = Math.max(exp, act||0, 1);
+        const expPct = Math.min(100, exp/maxV*100);
+        const actPct = act!=null ? Math.min(100, act/maxV*100) : 0;
+        const over = act!=null && act>exp;
+        return `<div class="tierrow">
+          <span class="tn">${t.name}</span>
+          <span class="track"><span class="exp" style="left:${expPct}%"></span>${act!=null?`<span class="act ${over?'over':''}" style="width:${actPct}%"></span>`:''}</span>
+          <span class="tv">${act!=null?`<b>${moneyShort(act)}</b> / ${moneyShort(exp)}`:`— / ${moneyShort(exp)}`}</span>
+        </div>`;
+      }).join('');
+    } else tiersEl.innerHTML='';
+  }
+  document.getElementById('financesynced').textContent = timeAgo(data.lastUpdated)||'';
+}
+async function pollLedger(){
+  try{
+    const r = await fetch(LEDGER_URL, { cache:'no-store' });
+    if(!r.ok) throw new Error('bad status');
+    renderPulse(await r.json(), true);
+  }catch(e){
+    renderPulse(null, false);
+  }
+}
+setInterval(pollLedger, 60*1000);
+
+/* ---------- vantage HUD ----------
+   Read-only feed from the Vantage app's /api/deck-summary route
+   (localhost:8765). Top hot markets + mock-portfolio progress.
+   No trading, no writes -- pure glance widget. */
+const VANTAGE_URL = 'http://localhost:8765/api/deck-summary';
+function renderVantage(data,ok){
+  const tag = document.getElementById('vantagetag');
+  const body = document.getElementById('vantagebody');
+  if(!tag || !body) return;
+  if(!ok || !data || !data.connected){
+    tag.textContent='offline';
+    body.innerHTML = `<span style="font-family:var(--mono);font-size:11px;color:var(--ink-mute)">start Vantage on port 8765 to see hot markets</span>`;
+    return;
+  }
+  tag.textContent = data.neutralProfile ? 'cold start' : 'live';
+  const port = data.portfolio||{};
+  const pnl = (port.realizedPnl||0)+(port.unrealizedPnl||0);
+  const pnlClass = pnl>0?'ok':(pnl<0?'risk':'');
+  const VANTAGE_HOME = 'http://localhost:8765/';
+  const markets = (data.hotMarkets||[]).slice(0,5);
+  const marketsHtml = markets.length
+    ? markets.map(m=>`
+        <div class="mrow">
+          <a class="mk" href="${VANTAGE_HOME}" target="_blank" rel="noopener noreferrer" title="open in Vantage">
+            <div class="mq">${m.question}</div>
+            <div class="mmeta"><span class="madv">adv ${(m.advantage*100).toFixed(0)}%</span><span>${m.subject}</span><span>${m.verdict}</span></div>
+          </a>
+          <a class="mext" href="${m.url}" target="_blank" rel="noopener noreferrer" title="source market (Kalshi/Polymarket)">↗</a>
+        </div>`).join('')
+    : `<div class="vempty">${data.neutralProfile?'Cold start — no calibrated opinions logged yet, so nothing clears the advantage bar honestly.':'No markets clear the advantage threshold right now.'}</div>`;
+  body.innerHTML = `
+    <div class="pulse" style="margin-bottom:10px">
+      <div class="pstat"><span class="pk">Equity</span><span class="pv">${moneyShort(port.equity)}</span></div>
+      <div class="pstat"><span class="pk">P&amp;L</span><span class="pv ${pnlClass}">${moneyShort(pnl)}</span></div>
+      <div class="pstat"><span class="pk">Positions</span><span class="pv">${port.nOpen||0} open · ${port.nClosed||0} closed</span></div>
+      <div class="pstat"><span class="pk">Markets</span><span class="pv dim">${(data.marketCount||0).toLocaleString()}</span></div>
+    </div>
+    <div class="hotmkt">${marketsHtml}</div>`;
+}
+async function pollVantage(){
+  try{
+    const r = await fetch(VANTAGE_URL, { cache:'no-store' });
+    if(!r.ok) throw new Error('bad status');
+    renderVantage(await r.json(), true);
+  }catch(e){
+    renderVantage(null, false);
+  }
+}
+setInterval(pollVantage, 90*1000);
+
+/* ---------- Vincent & Kayla status light ----------
+   Read-only poll of the status slot their budget worksheet publishes to
+   (opt-in on their side, percentages only — never dollar amounts).
+   Same pattern as the Ledger/Vantage pollers, different transport: the
+   kids' data can't be reached at a localhost, so the worksheet PUTs to a
+   shared Pantry basket and this fetches it. */
+const VKS_URL = 'https://getpantry.cloud/apiv1/pantry/3fce793c-17b9-4691-9376-3e334aefeae4/basket/vincentStatus';
+// Map the relay's level to an LED state + short human label. Never dump the
+// raw payload into the UI — parse it down to one indicator + one line.
+const VKS_STATE = {
+  green: { led:'g', tag:'live',  label:'All quiet' },
+  amber: { led:'y', tag:'watch', label:'Worth a call' },
+  red:   { led:'r', tag:'alert', label:'Needs attention' }
+};
+function paintVKS(led, tag, label, sub){
+  const tagEl = document.getElementById('vkstag');
+  const body  = document.getElementById('vksbody');
+  if(!tagEl || !body) return;
+  tagEl.textContent = tag;
+  body.innerHTML = `<div class="vkslight">`+
+    `<span class="led ${led}"></span>`+
+    `<span class="lbl">${label}</span>`+
+    (sub ? `<span class="sub">${sub}</span>` : '')+
+  `</div>`;
+}
+function renderVKS(d, ok){
+  if(!ok || !d || !d.level || !VKS_STATE[d.level]){
+    paintVKS('off', 'no report', 'No signal', 'light is off');
+    return;
+  }
+  const ageDays = d.updated ? (Date.now()-new Date(d.updated).getTime())/864e5 : null;
+  const stale = ageDays!=null && ageDays > 40;
+  const s = VKS_STATE[d.level];
+  const month = d.monthLabel || d.month || '';
+  const when = d.updated ? timeAgo(d.updated) : null;
+  if(stale){
+    paintVKS('y', 'stale', 'Stale report', when ? month+' · '+when : month);
+    return;
+  }
+  paintVKS(s.led, s.tag, s.label, when ? month+' · '+when : month);
+}
+async function pollVKS(){
+  try{
+    const r = await fetch(VKS_URL, { cache:'no-store' });
+    if(!r.ok) throw new Error('no status yet');
+    renderVKS(await r.json(), true);
+  }catch(e){
+    renderVKS(null, false);
+  }
+}
+setInterval(pollVKS, 5*60*1000);
+
+/* ---------- capacity ---------- */
+const capInput=document.getElementById('capacity');
+const capHints={
+  1:"Low. Deck dims to no-fail and red flags only.",
+  2:"Reduced. Secondary panels muted.",
+  3:"Steady.",
+  4:"Strong. Full field visible.",
+  5:"Peak. Full field visible."
+};
+function applyCapacity(v){
+  document.getElementById('capval').textContent=v+' / 5';
+  document.getElementById('caphint').textContent=capHints[v]||'';
+  document.body.classList.toggle('conserve', v<=2);
+  store.set('deck.cap', v);
+}
+capInput.addEventListener('input',e=>applyCapacity(+e.target.value));
+
+/* ---------- dispatch + voice ----------
+   Captures quick dispatches (typed or spoken) into a local queue you
+   can copy out at session start. Voice uses the Web Speech API
+   (Chrome/Edge). Queue persists in localStorage. "/" focuses input. */
+const dInput  = document.getElementById('dinput');
+const dMic    = document.getElementById('dmic');
+const dqPanel = document.getElementById('dqpanel');
+const dqList  = document.getElementById('dqlist');
+const dqN     = document.getElementById('dqn');
+
+let DQ = [];
+try{ DQ = JSON.parse(store.get('deck.dq','[]')) || []; }catch(e){ DQ = []; }
+
+function dqSave(){ store.set('deck.dq', JSON.stringify(DQ)); }
+function fmtTime(ts){ const d=new Date(ts); const p=n=>String(n).padStart(2,'0'); return p(d.getHours())+':'+p(d.getMinutes()); }
+
+function renderDQ(){
+  dqPanel.classList.toggle('has', DQ.length>0);
+  dqN.textContent = DQ.length ? DQ.length+' QUEUED' : '';
+  dqList.innerHTML = '';
+  DQ.slice().reverse().forEach((d)=>{
+    const row = el('div','dqitem',
+      `<span class="tm">${fmtTime(d.ts)}</span><span class="tx"></span><button class="rm" aria-label="Remove">×</button>`);
+    row.querySelector('.tx').textContent = d.text;
+    row.querySelector('.rm').addEventListener('click',()=>{ DQ = DQ.filter(x=>x.id!==d.id); dqSave(); renderDQ(); });
+    dqList.appendChild(row);
+  });
+}
+function dispatch(text){
+  text = (text||'').trim(); if(!text) return;
+  DQ.push({ id:Date.now()+''+Math.random().toString(36).slice(2,6), ts:Date.now(), text });
+  dqSave(); renderDQ();
+  dInput.value=''; dInput.focus();
+}
+
+dInput.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); dispatch(dInput.value); } });
+document.addEventListener('keydown',e=>{
+  if(e.key==='/' && !(e.target.matches && e.target.matches('input,textarea,select'))){ e.preventDefault(); dInput.focus(); }
+});
+
+document.getElementById('dqcopy').addEventListener('click',()=>{
+  if(!DQ.length) return;
+  const txt = DQ.map(d=>`- [${fmtTime(d.ts)}] ${d.text}`).join('\n');
+  const btn = document.getElementById('dqcopy');
+  navigator.clipboard?.writeText(txt).then(()=>{ btn.textContent='copied'; setTimeout(()=>btn.textContent='copy',1200); })
+    .catch(()=>{ btn.textContent='blocked'; setTimeout(()=>btn.textContent='copy',1200); });
+});
+document.getElementById('dqclear').addEventListener('click',()=>{ DQ=[]; dqSave(); renderDQ(); });
+
+/* voice — Web Speech API; mic hidden if unsupported */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+if(SR){
+  const rec = new SR();
+  rec.lang='en-US'; rec.interimResults=true; rec.continuous=false;
+  let listening=false, finalText='';
+  dMic.addEventListener('click',()=>{ try{ listening ? rec.stop() : rec.start(); }catch(e){} });
+  rec.onstart = ()=>{ listening=true; dMic.classList.add('listening'); finalText=''; dInput.placeholder='listening…'; };
+  rec.onerror = ()=>{ dInput.placeholder='mic unavailable'; setTimeout(()=>dInput.placeholder='dispatch… ( / )',1500); };
+  rec.onend = ()=>{ listening=false; dMic.classList.remove('listening'); dInput.placeholder='dispatch… ( / )';
+    if(finalText.trim()) dispatch(finalText); };
+  rec.onresult = (ev)=>{
+    let interim='';
+    for(let i=ev.resultIndex;i<ev.results.length;i++){
+      const r=ev.results[i];
+      if(r.isFinal) finalText += r[0].transcript;
+      else interim += r[0].transcript;
+    }
+    dInput.value = (finalText+interim).trim();
+  };
+} else {
+  dMic.style.display='none';
+  dMic.title='Voice not supported in this browser';
+}
+
+renderDQ();
+
+/* ---------- living background ----------
+   Five WebGL shader fields (retuned from wallpapers.html for
+   legibility). Low rest intensity, cursor-reactive, flares on every
+   `deck:transition`, eases back. W cycles; choice persists.
+   Conserve dims further; reduced-motion renders a static frame. */
+const bgPulse = (function bgfx(){
+  const cv = document.getElementById('bgfx');
+  const gl = cv.getContext('webgl') || cv.getContext('experimental-webgl');
+  if(!gl){ cv.style.display='none'; return function(){}; }
+  const reduce = REDUCE;
+
+  function size(){ const d=Math.min(1.5,devicePixelRatio||1); cv.width=innerWidth*d; cv.height=innerHeight*d; gl.viewport(0,0,cv.width,cv.height); }
+  size(); addEventListener('resize',size);
+
+  const VS='attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+  const HDR='precision highp float;uniform vec2 u_res;uniform float u_time;uniform vec2 u_mouse;uniform float u_int;\n';
+  const LIB='float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}\n'
+    +'float n(vec2 p){vec2 i=floor(p);vec2 f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1.,0.)),f.x),mix(h(i+vec2(0.,1.)),h(i+vec2(1.,1.)),f.x),f.y);}\n'
+    +'float fbm(vec2 p){float v=0.;float a=.5;for(int i=0;i<5;i++){v+=a*n(p);p*=2.03;a*=.5;}return v;}\n';
+
+  const BG=[
+  {name:'Ember Flow',src:`void main(){vec2 uv=(gl_FragCoord.xy-.5*u_res)/u_res.y;vec2 m=(u_mouse-.5*u_res)/u_res.y;float dm=length(uv-m);vec2 q=uv*1.6+vec2(0.,u_time*.05);q+=(uv-m)*.32/(dm+.6);float f=fbm(q+1.2*fbm(q+u_time*.03));vec3 base=mix(vec3(.016,.027,.05),vec3(.05,.09,.15),f);float emb=smoothstep(.55,.95,f);vec3 col=base+vec3(.91,.45,.18)*emb*(.10+1.20*u_int);col+=vec3(.30,.42,.58)*exp(-dm*3.5)*(.03+.55*u_int);col*=(.82+1.30*u_int);col*=1.0-0.22*length(uv*vec2(.55,1.));gl_FragColor=vec4(col,1.);}`},
+  {name:'Liquid Orbs',src:`float bl(vec2 d,float s){return s/(length(d)+.02);}void main(){vec2 uv=(gl_FragCoord.xy-.5*u_res)/u_res.y;vec2 m=(u_mouse-.5*u_res)/u_res.y;float t=u_time*.5;float v=0.;v+=bl(uv-m,.05);v+=bl(uv-vec2(sin(t*.7)*.6,cos(t*.9)*.34),.05);v+=bl(uv-vec2(sin(t*1.1+2.)*.5,sin(t*.6)*.42),.045);v+=bl(uv-vec2(cos(t*.5)*.55,sin(t*1.3+1.)*.3),.05);float field=smoothstep(.7,1.8,v);vec3 base=mix(vec3(.014,.024,.045),vec3(.06,.10,.16),field);vec3 col=base+vec3(.91,.45,.18)*smoothstep(1.7,2.7,v)*(.08+1.1*u_int);col*=(.82+1.2*u_int);col*=1.-0.22*length(uv*vec2(.55,1.));gl_FragColor=vec4(col,1.);}`},
+  {name:'Warp Field',src:`void main(){vec2 uv=(gl_FragCoord.xy-.5*u_res)/u_res.y;vec2 mm=(u_mouse-.5*u_res)/u_res.y;uv-=mm*.3;vec3 col=vec3(.012,.02,.04);float sp=.4+u_int*2.5;for(int i=0;i<4;i++){float fi=float(i);float t=fract(u_time*.05*sp+fi*.25);float sc=mix(9.,.6,t);vec2 gv=fract(uv*sc)-.5;vec2 id=floor(uv*sc)+fi*119.;vec2 off=(vec2(h(id),h(id+7.))-.5)*.8;float star=smoothstep(.05,.0,length(gv-off));col+=star*t*t*(.4+u_int)*mix(vec3(.30,.42,.58),vec3(.91,.45,.18),step(.82,h(id+11.)));}col*=1.-0.2*length(uv*vec2(.55,1.));gl_FragColor=vec4(col,1.);}`},
+  {name:'Circuit Cells',src:`vec2 h2(vec2 p){return fract(sin(vec2(dot(p,vec2(127.1,311.7)),dot(p,vec2(269.5,183.3))))*43758.5453);}void main(){vec2 uv=(gl_FragCoord.xy-.5*u_res)/u_res.y;vec2 m=(u_mouse-.5*u_res)/u_res.y;vec2 p=uv*4.5;vec2 ip=floor(p);vec2 fp=fract(p);float f1=8.,f2=8.;for(int y=-1;y<=1;y++){for(int x=-1;x<=1;x++){vec2 g=vec2(float(x),float(y));vec2 o=h2(ip+g);o=.5+.45*sin(u_time*.4+6.28*o);float d=length(g+o-fp);if(d<f1){f2=f1;f1=d;}else if(d<f2){f2=d;}}}float glow=exp(-(f2-f1)*9.);float boost=exp(-length(uv-m)*2.5);vec3 col=vec3(.013,.022,.045);col+=vec3(.18,.28,.42)*glow*(.12+.5*boost+.6*u_int);col+=vec3(.91,.45,.18)*glow*(.05+boost*.5)*u_int*1.4;col*=1.-0.2*length(uv*vec2(.55,1.));gl_FragColor=vec4(col,1.);}`},
+  {name:'Ripple Pool',src:`void main(){vec2 uv=(gl_FragCoord.xy-.5*u_res)/u_res.y;vec2 m=(u_mouse-.5*u_res)/u_res.y;float dm=length(uv-m);float w=sin(dm*26.-u_time*4.)*exp(-dm*3.)*.5;float fr=length(uv);w+=sin(fr*22.-u_time*6.)*exp(-fr*2.)*u_int*1.2;vec3 base=mix(vec3(.016,.028,.052),vec3(.06,.10,.16),.5+.5*w);vec3 col=base+vec3(.91,.45,.18)*smoothstep(.5,1.,w)*(.1+.8*u_int);col*=(.85+.9*u_int);col*=1.-0.2*length(uv*vec2(.55,1.));gl_FragColor=vec4(col,1.);}`}
+  ];
+
+  function sh(t,s){ const o=gl.createShader(t); gl.shaderSource(o,s); gl.compileShader(o); if(!gl.getShaderParameter(o,gl.COMPILE_STATUS)) console.error('bg shader:',gl.getShaderInfoLog(o)); return o; }
+  const vs=sh(gl.VERTEX_SHADER,VS);
+  gl.bindBuffer(gl.ARRAY_BUFFER,gl.createBuffer());
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+  const progs=[];
+  function build(i){
+    const p=gl.createProgram();
+    gl.attachShader(p,vs); gl.attachShader(p,sh(gl.FRAGMENT_SHADER,HDR+LIB+BG[i].src));
+    gl.linkProgram(p);
+    return {p,a:gl.getAttribLocation(p,'p'),res:gl.getUniformLocation(p,'u_res'),time:gl.getUniformLocation(p,'u_time'),mouse:gl.getUniformLocation(p,'u_mouse'),int:gl.getUniformLocation(p,'u_int')};
+  }
+  let cur=Math.min(BG.length-1,Math.max(0,+store.get('deck.bg',0)));
+  function activate(i){
+    cur=i; if(!progs[i]) progs[i]=build(i);
+    const P=progs[i]; gl.useProgram(P.p);
+    gl.enableVertexAttribArray(P.a); gl.vertexAttribPointer(P.a,2,gl.FLOAT,false,0,0);
+    store.set('deck.bg',i);
+  }
+  activate(cur);
+
+  const nameEl=document.getElementById('bgname'); let nameT;
+  function showName(){ nameEl.textContent=(cur+1)+' · '+BG[cur].name; nameEl.style.opacity=1; clearTimeout(nameT); nameT=setTimeout(()=>nameEl.style.opacity=0,1500); }
+
+  let tx=cv.width*.5, ty=cv.height*.5, mx=tx, my=ty, pulse=0;
+  const rest=()=> document.body.classList.contains('conserve') ? 0.04 : 0.12;
+  const flare=()=>{ pulse=1; };
+  addEventListener('pointermove',e=>{ tx=e.clientX*(cv.width/innerWidth); ty=cv.height-e.clientY*(cv.height/innerHeight); });
+  document.addEventListener('deck:transition',flare);
+  document.addEventListener('keydown',e=>{
+    if(e.target.matches && e.target.matches('input,textarea,select')) return;
+    if(e.key==='w'||e.key==='W'){ activate((cur+1)%BG.length); pulse=1; showName(); if(reduce) draw(); }
+  });
+
+  const t0=performance.now();
+  function render(intensity){
+    const P=progs[cur];
+    gl.uniform2f(P.res,cv.width,cv.height);
+    gl.uniform1f(P.time,(performance.now()-t0)/1000);
+    gl.uniform2f(P.mouse,mx,my);
+    gl.uniform1f(P.int,intensity);
+    gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+  }
+  function draw(){ mx+=(tx-mx)*.12; my+=(ty-my)*.12; render(rest()); }
+  if(reduce){
+    draw(); addEventListener('resize',draw); document.addEventListener('deck:transition',()=>setTimeout(draw,16));
+    return flare;
+  }
+  (function loop(){
+    mx+=(tx-mx)*.06; my+=(ty-my)*.06; pulse*=0.955;
+    render(rest()+pulse*1.05);
+    requestAnimationFrame(loop);
+  })();
+  return flare;
+})();
+
+/* ---------- arc-reactor boot ----------
+   HUD-cyan wireframe globe (real country outlines via world-atlas,
+   decoded inline) spinning inside rotating reactor rings, with a
+   typed system log and a progress arc. Auto-dismisses on a timer
+   regardless of network/visibility (never hangs). Any key or click
+   skips; B replays after dismissal.
+   Set BOOT_GLOBE_THEME='mono' for the original off-white monochrome. */
+const BOOT_GLOBE_THEME='hud';
+const bootCtl = (function bootGlobe(){
+  const BOOT_MS = 2600;
+  const boot=document.getElementById('boot');
+  const logEl=document.getElementById('bootlog');
+  const prog=document.getElementById('bootprog');
+  const PROG_C=2*Math.PI*126;
+  prog.style.strokeDasharray=PROG_C;
+  prog.style.strokeDashoffset=PROG_C;
+
+  const THEMES={
+    hud:{ card:null, sphere:'rgba(90,209,240,.06)', line:'#5ad1f0', grat:'rgba(90,209,240,.22)', whirlA:'rgba(90,209,240,', horizon:'#7de0ff', glow:6 },
+    mono:{ card:'#f2f0ea', sphere:'#faf9f5', line:'#2b2b2b', grat:'rgba(43,43,43,.18)', whirlA:'rgba(40,40,40,', horizon:'#2b2b2b', glow:0 }
+  };
+  const TH=THEMES[BOOT_GLOBE_THEME]||THEMES.hud;
+
+  const cv=document.getElementById('bootglobe');
+  const dpr=Math.min(2,devicePixelRatio||1);
+  cv.width=200*dpr; cv.height=200*dpr;
+  const ctx=cv.getContext('2d'); ctx.scale(dpr,dpr);
+  const R=62,CX=100,CY=100,T=-0.32,sT=Math.sin(T),cT=Math.cos(T);
+  let rings=null;
+  function ringify(topo){
+    const tr=topo.transform;
+    const arcs=topo.arcs.map(a=>{let x=0,y=0;return a.map(d=>{x+=d[0];y+=d[1];return[x*tr.scale[0]+tr.translate[0],y*tr.scale[1]+tr.translate[1]];});});
+    const out=[]; const add=r=>{let pts=[];r.forEach(i=>{let a=i<0?arcs[~i].slice().reverse():arcs[i].slice();if(pts.length)a=a.slice(1);pts=pts.concat(a);});out.push(pts);};
+    topo.objects.countries.geometries.forEach(g=>{ if(g.type==='Polygon')g.arcs.forEach(add); else if(g.type==='MultiPolygon')g.arcs.forEach(p=>p.forEach(add)); });
+    return out;
+  }
+  fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(r=>r.json()).then(t=>{rings=ringify(t);}).catch(()=>{});
+  function proj(lon,lat,rot){ const L=(lon-rot)*Math.PI/180,P=lat*Math.PI/180,sP=Math.sin(P),cP=Math.cos(P),cL=Math.cos(L); return [CX+R*cP*Math.sin(L),CY-R*(cT*sP-sT*cP*cL),sT*sP+cT*cP*cL>0]; }
+  function strokeRings(list,rot){ ctx.beginPath(); for(const ring of list){let pen=false;for(const pt of ring){const[x,y,v]=proj(pt[0],pt[1],rot);if(v){if(pen)ctx.lineTo(x,y);else{ctx.moveTo(x,y);pen=true;}}else pen=false;}} ctx.stroke(); }
+  const grat=[];
+  for(let lon=-180;lon<180;lon+=30){const r=[];for(let lat=-85;lat<=85;lat+=5)r.push([lon,lat]);grat.push(r);}
+  for(let lat=-60;lat<=60;lat+=30){const r=[];for(let lon=-180;lon<=180;lon+=5)r.push([lon,lat]);grat.push(r);}
+
+  let visible=true;
+  function frame(now){
+    if(!visible) return;
+    const t=now/1000,rot=t*42;
+    ctx.clearRect(0,0,200,200);
+    if(TH.card){ ctx.fillStyle=TH.card; ctx.fillRect(0,0,200,200); }
+    ctx.lineCap='round';
+    for(let i=0;i<22;i++){const a=-t*1.5+i*2.4,r2=80+9*Math.sin(t*1.7+i*1.3),len=0.18+0.12*Math.sin(i*2.1+t);ctx.beginPath();ctx.strokeStyle=TH.whirlA+(0.06+0.10*((i*37)%10)/10).toFixed(2)+')';ctx.lineWidth=1+((i*13)%3)*0.5;ctx.arc(CX,CY,r2,a,a+len);ctx.stroke();}
+    ctx.setLineDash([1,7]);ctx.lineDashOffset=-t*14;ctx.beginPath();ctx.strokeStyle=TH.whirlA+'0.25)';ctx.lineWidth=1;ctx.arc(CX,CY,72,0,7);ctx.stroke();ctx.setLineDash([]);
+    ctx.beginPath();ctx.fillStyle=TH.sphere;ctx.arc(CX,CY,R,0,7);ctx.fill();
+    ctx.shadowColor=TH.glow?TH.line:'transparent'; ctx.shadowBlur=TH.glow;
+    ctx.beginPath();ctx.lineWidth=1.4;ctx.strokeStyle=TH.horizon;ctx.arc(CX,CY,R,0,7);ctx.stroke();
+    ctx.shadowBlur=0;
+    ctx.lineWidth=0.5;ctx.strokeStyle=TH.grat;strokeRings(grat,rot);
+    if(rings){ ctx.shadowColor=TH.glow?TH.line:'transparent'; ctx.shadowBlur=TH.glow*0.6;
+      ctx.lineWidth=0.7;ctx.strokeStyle=TH.line;strokeRings(rings,rot); ctx.shadowBlur=0; }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  /* typed system log */
+  const LOG_LINES=[
+    '> CLOUD & FIRE OS · MK III',
+    '> clock + weather wire [MHK] ..... LINKED',
+    '> bible reading calendar ......... LOADED',
+    '> dispatch queue ................. ARMED',
+    '> finance rail (ledger+vantage) .. LIVE',
+    '> all systems nominal'
+  ];
+  let logTimers=[];
+  function clearLog(){ logTimers.forEach(t=>clearTimeout(t)); logTimers=[]; logEl.innerHTML=''; }
+  function runLog(){
+    clearLog();
+    if(REDUCE){ LOG_LINES.forEach((s,i)=>{ const d=el('div','bl'+(i===LOG_LINES.length-1?' gold':'')); d.textContent=s; logEl.appendChild(d); }); return; }
+    let li=0;
+    function next(){
+      if(!visible||li>=LOG_LINES.length) return;
+      const isLast=li===LOG_LINES.length-1;
+      const div=el('div','bl'+(isLast?' gold':'')); logEl.appendChild(div);
+      const s=LOG_LINES[li++]; let ci=0;
+      const iv=setInterval(()=>{
+        if(!visible){ clearInterval(iv); return; }
+        div.textContent=s.slice(0,++ci);
+        if(ci>=s.length){ clearInterval(iv); logTimers.push(setTimeout(next,70)); }
+      },8);
+      logTimers.push(iv);
+    }
+    next();
+  }
+
+  let autoT=null;
+  function dismiss(){
+    if(!visible) return;
+    visible=false;
+    clearTimeout(autoT);
+    boot.classList.add('gone');
+    document.body.classList.add('live');
+    document.dispatchEvent(new CustomEvent('deck:transition'));  /* reveal flare */
+    setTimeout(()=>{ boot.style.display='none'; },600);
+  }
+  function show(){
+    if(visible) return;
+    visible=true;
+    boot.style.display='flex';
+    void boot.offsetWidth;                       /* reflow so transition re-arms */
+    boot.classList.remove('gone');
+    document.body.classList.remove('live');
+    prog.style.transition='none'; prog.style.strokeDashoffset=PROG_C; void prog.offsetWidth;
+    arm();
+    requestAnimationFrame(frame);
+  }
+  function arm(){
+    runLog();
+    const ms=REDUCE?900:BOOT_MS;
+    prog.style.transition='stroke-dashoffset '+ms+'ms linear';
+    requestAnimationFrame(()=>{ prog.style.strokeDashoffset=0; });
+    autoT=setTimeout(dismiss, ms);
+  }
+  arm();
+  boot.addEventListener('click',dismiss);
+  window.__dismissBoot=dismiss;                  /* kept for compatibility */
+  window.__showBoot=show;
+  return { dismiss, show, visible:()=>visible };
+})();
+
+/* any key skips boot; B replays it once dismissed */
+document.addEventListener('keydown',e=>{
+  if(e.target.matches && e.target.matches('input,textarea,select')) return;
+  if(bootCtl.visible()){ bootCtl.dismiss(); return; }
+  if(e.key==='b'||e.key==='B') bootCtl.show();
+});
+
+/* ---------- boot ---------- */
+(function boot(){
+  const cap=+store.get('deck.cap',3); capInput.value=cap; applyCapacity(cap);
+  renderMain();
+})();
+</script>
+</body>
+</html>
