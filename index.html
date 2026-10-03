@@ -196,7 +196,9 @@ h1.mark b { color: var(--fire); font-weight: 600; }
   border-top: 0.5px solid var(--sep); padding: 8px 0;
 }
 .mrow { grid-template-columns: 22px minmax(0,1fr) auto; width: 100%; text-align: left; }
-button.mrow { cursor: pointer; }
+button.mrow, a.mrow { cursor: pointer; color: inherit; text-decoration: none; }
+.mailsec { margin: 16px 0 0; font-size: 13px; font-weight: 600; color: var(--ink-faint); letter-spacing: -0.01em; }
+.mailsec:first-child { margin-top: 0; }
 .when, .tm { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--cyan); letter-spacing: 0; }
 .readrow .when { color: var(--gold); }
 .what { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
@@ -211,6 +213,7 @@ button.mrow { cursor: pointer; }
   background: rgba(255,255,255,.06);
 }
 .pill.urgent { color: var(--fire); background: rgba(232,145,58,.16); }
+.pill.reply { color: var(--cyan); background: rgba(90,209,240,.14); }
 .x {
   width: 36px; height: 36px; border-radius: 18px; color: var(--ink-faint); font-size: 20px; line-height: 1;
 }
@@ -621,7 +624,7 @@ html.conserve .dimmable { opacity: .45; }
         <article class="card attn">
           <button type="button" class="cardhead" data-go="mail">
             <span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14"><rect x="1.6" y="3.4" width="12.8" height="9.2" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M2 4.4 8 8.6 14 4.4" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></span>
-            <span class="idx">(2)</span><span class="name">Inbox</span>
+            <span class="idx">(2)</span><span class="name">Mail</span>
             <span class="aside mute" id="inbox-aside">Quiet</span><span class="chev" aria-hidden="true">›</span>
           </button>
           <div id="inbox-list"></div>
@@ -672,26 +675,10 @@ html.conserve .dimmable { opacity: .45; }
 
     <section id="view-mail" class="view" aria-label="Mail" inert>
       <div class="scroller">
-        <div class="viewhead"><h2>Inbox</h2><span class="meta" id="mail-count">Local</span></div>
-        <p class="stub"><b>Stub.</b> No mailbox is connected. Notes you pin here stay on this phone. Urgent counts as attention. Noise does not.</p>
-        <div class="lanes" role="tablist" aria-label="Inbox lane">
-          <button type="button" id="lane-personal" class="on" role="tab" aria-selected="true">Personal</button>
-          <button type="button" id="lane-consulting" role="tab" aria-selected="false">Consulting</button>
-        </div>
+        <div class="viewhead"><h2>Mail</h2><span class="meta" id="mail-count">—</span></div>
+        <p class="stub calm">Only what needs you, and mail you just replied to. Everything else stays in Outlook.</p>
         <div id="mail-list" style="margin:0 16px"></div>
       </div>
-      <form class="composer" id="mail-form">
-        <input id="mail-title" maxlength="140" placeholder="Note title" aria-label="Note title" autocomplete="off">
-        <input id="mail-detail" maxlength="180" placeholder="Detail (optional)" aria-label="Note detail" autocomplete="off">
-        <div class="row2">
-          <div class="seg" role="group" aria-label="Tag">
-            <button type="button" id="tag-urgent" class="on" aria-pressed="true">Urgent</button>
-            <button type="button" id="tag-noise" aria-pressed="false">Noise</button>
-          </div>
-          <button type="submit" class="primary hot" id="pin-btn">Pin</button>
-        </div>
-        <p class="pinlane" id="pin-lane">Pins to Personal</p>
-      </form>
     </section>
 
     <section id="view-calendar" class="view" aria-label="Calendar" inert>
@@ -809,7 +796,7 @@ html.conserve .dimmable { opacity: .45; }
             <li>Share, then Add to Home Screen.</li>
             <li>Launch Deck. The passphrase is remembered on this phone.</li>
           </ol>
-          <p>Weather and the Bible plan are live. Mail, todos, and the agenda stay on this device. Ledger and Vantage fill in only when their hosts answer.</p>
+          <p>Weather and the Bible plan are live. Mail is the curated list in data/mail.json. Todos and the agenda stay on this device. Ledger and Vantage fill in only when their hosts answer.</p>
           <a class="alink" href="./deck-mk3.html">Desktop MK III</a>
         </article>
       </div>
@@ -949,8 +936,9 @@ const WX_ICON = {
 };
 
 const TABS = ['home','mail','calendar','ledger','more'];
-let mailLane = 'personal';
-let mailTag = 'urgent';
+let mailItems = [];
+let mailState = 'loading';
+let mailRaw = '';
 let calMode = 'today';
 let bibleAll = false;
 let DQ = [];
@@ -1047,16 +1035,27 @@ function cleanTodos(arr){
     id: String(t.id || uid()), text: String(t.text).slice(0, 140), done: !!t.done, ts: Number(t.ts) || 0
   }));
 }
-function cleanInbox(arr){
-  if (!Array.isArray(arr)) return [];
-  return arr.filter((t) => t && typeof t.title === 'string').map((t) => ({
-    id: String(t.id || uid()),
-    lane: t.lane === 'consulting' ? 'consulting' : 'personal',
-    tag: t.tag === 'noise' ? 'noise' : 'urgent',
-    title: String(t.title).slice(0, 140),
-    detail: String(t.detail || '').slice(0, 180),
-    ts: Number(t.ts) || 0
-  }));
+function safeMailLink(url){
+  if (typeof url !== 'string') return '';
+  const raw = url.trim();
+  if (!raw) return '';
+  try {
+    const u = new URL(raw);
+    if (u.protocol === 'ms-outlook:' || u.protocol === 'https:') return raw;
+  } catch (e) {}
+  return '';
+}
+function cleanMailItems(items){
+  if (!Array.isArray(items)) return [];
+  return items.filter((it) => it && typeof it.id === 'string' && it.id && typeof it.title === 'string' && it.title).map((it) => ({
+    id: it.id,
+    title: it.title.slice(0, 180),
+    snippet: typeof it.snippet === 'string' ? it.snippet.slice(0, 240) : '',
+    whyShown: it.whyShown === 'recent-reply' ? 'recent-reply' : (it.whyShown === 'attention' ? 'attention' : ''),
+    mailbox: it.mailbox === 'consulting' ? 'consulting' : (it.mailbox === 'personal' ? 'personal' : ''),
+    deepLink: safeMailLink(it.deepLink),
+    updatedAt: typeof it.updatedAt === 'string' ? it.updatedAt : ''
+  })).filter((it) => it.whyShown && it.mailbox && it.deepLink);
 }
 function cleanAgenda(arr){
   if (!Array.isArray(arr)) return [];
@@ -1077,7 +1076,6 @@ function cleanDQ(arr){
 
 const state = {
   todos: cleanTodos(load('deck.v2.todos', [])),
-  inbox: cleanInbox(load('deck.v2.inbox', [])),
   agenda: cleanAgenda(load('deck.v2.agenda', [])),
   ledgerBase: loadStr('deck.v2.ledgerBase', DEFAULT_LEDGER),
   vantageBase: loadStr('deck.v2.vantageBase', DEFAULT_VANTAGE)
@@ -1169,93 +1167,92 @@ function agendaRow(item, home){
 }
 function renderAgenda(){ renderToday(); renderCal(); }
 
-function renderInboxHome(){
-  const urgent = state.inbox.filter((i) => i.tag === 'urgent').sort((a, b) => b.ts - a.ts);
+function byUpdated(a, b){ return (b.updatedAt || '').localeCompare(a.updatedAt || ''); }
+function renderMail(){
+  const attention = mailItems.filter((i) => i.whyShown === 'attention').sort(byUpdated);
+  const replied = mailItems.filter((i) => i.whyShown === 'recent-reply').sort(byUpdated);
   const aside = document.getElementById('inbox-aside');
-  if (!state.inbox.length) { aside.textContent = 'Quiet'; aside.classList.add('mute'); }
-  else if (!urgent.length) { aside.textContent = '0 urgent'; aside.classList.add('mute'); }
-  else { aside.textContent = urgent.length + ' attention'; aside.classList.remove('mute'); }
-  const list = document.getElementById('inbox-list');
-  clear(list);
-  if (!urgent.length) {
-    list.appendChild(el('p', 'empty', state.inbox.length
-      ? 'Nothing marked urgent. Noise stays on the Mail tab.'
-      : 'No mailbox is connected. Pin a note on Mail if you want it on this phone.'));
-    return;
-  }
-  urgent.slice(0, 3).forEach((item) => list.appendChild(mailRow(item, true)));
-}
-function renderMailList(){
-  const rows = state.inbox.filter((i) => i.lane === mailLane).sort((a, b) => b.ts - a.ts);
+  const home = document.getElementById('inbox-list');
   const count = document.getElementById('mail-count');
-  const urgentHere = rows.filter((i) => i.tag === 'urgent').length;
-  count.textContent = rows.length ? (urgentHere + ' URGENT') : 'LOCAL';
   const list = document.getElementById('mail-list');
+  clear(home);
   clear(list);
-  if (!rows.length) {
-    list.appendChild(el('p', 'empty', mailLane === 'consulting'
-      ? 'Consulting lane is empty. Nothing is imported from a client mailbox.'
-      : 'Personal lane is empty. Nothing is imported from a mailbox.'));
-    return;
+  if (mailState === 'loading') {
+    aside.textContent = 'Checking';
+    aside.classList.add('mute');
+    home.appendChild(el('p', 'empty', 'Checking mail…'));
+    count.textContent = 'Checking';
+    list.appendChild(el('p', 'empty', 'Checking mail…'));
+  } else if (mailState === 'error') {
+    aside.textContent = 'Offline';
+    aside.classList.add('mute');
+    home.appendChild(el('p', 'empty', "Mail file didn't load."));
+    count.textContent = 'Offline';
+    list.appendChild(el('p', 'empty', "Mail file didn't load."));
+  } else {
+    if (!attention.length) {
+      aside.textContent = 'None';
+      aside.classList.add('mute');
+      home.appendChild(el('p', 'empty', 'Nothing needs you'));
+    } else {
+      aside.textContent = attention.length + (attention.length === 1 ? ' needs you' : ' need you');
+      aside.classList.remove('mute');
+      attention.slice(0, 3).forEach((item) => home.appendChild(mailRow(item)));
+    }
+    if (!mailItems.length) {
+      count.textContent = 'None';
+      list.appendChild(el('p', 'empty', 'Nothing needs you'));
+    } else {
+      count.textContent = String(mailItems.length);
+      if (attention.length) {
+        list.appendChild(el('h3', 'mailsec', 'Needs you'));
+        attention.forEach((item) => list.appendChild(mailRow(item)));
+      }
+      if (replied.length) {
+        list.appendChild(el('h3', 'mailsec', 'Replied'));
+        replied.forEach((item) => list.appendChild(mailRow(item)));
+      }
+    }
   }
-  rows.forEach((item) => list.appendChild(mailRow(item, false)));
-}
-function mailRow(item, compact){
-  const row = document.createElement(compact ? 'button' : 'div');
-  row.className = 'mrow' + (item.tag === 'urgent' ? ' urgent' : '');
-  if (compact) {
-    row.type = 'button';
-    row.addEventListener('click', () => { setLane(item.lane); setTab('mail'); });
-  }
-  row.appendChild(el('span', 'mark', item.tag === 'urgent' ? '!' : '·'));
-  const what = el('span', 'what');
-  what.appendChild(el('span', 'title', item.title));
-  const bits = [];
-  if (compact) bits.push(item.lane === 'consulting' ? 'Consulting' : 'Personal');
-  if (item.detail) bits.push(item.detail);
-  if (bits.length) what.appendChild(el('span', 'sub', bits.join(' · ')));
-  row.appendChild(what);
-  const side = el('span', 'side');
-  side.appendChild(el('span', 'pill ' + (item.tag === 'urgent' ? 'urgent' : 'noise'), item.tag === 'urgent' ? 'URGENT' : 'NOISE'));
-  if (!compact) {
-    side.appendChild(el('span', 'tm', fmtTs(item.ts)));
-    const x = el('button', 'x', '×');
-    x.type = 'button';
-    x.setAttribute('aria-label', 'Dismiss ' + item.title);
-    x.addEventListener('click', () => {
-      state.inbox = state.inbox.filter((i) => i.id !== item.id);
-      save('deck.v2.inbox', state.inbox);
-      renderInbox();
-    });
-    side.appendChild(x);
-  }
-  row.appendChild(side);
-  return row;
-}
-function renderBadge(){
-  const n = state.inbox.filter((i) => i.tag === 'urgent').length;
+  const n = mailState === 'ready' ? attention.length : 0;
   const b = document.getElementById('mail-badge');
   b.hidden = !n;
   b.textContent = n > 9 ? '9+' : String(n);
-  document.getElementById('tab-mail').setAttribute('aria-label', n ? 'Mail, ' + n + ' urgent' : 'Mail');
+  document.getElementById('tab-mail').setAttribute('aria-label', n ? 'Mail, ' + n + ' need you' : 'Mail');
 }
-function renderInbox(){ renderInboxHome(); renderMailList(); renderBadge(); }
-function setLane(lane){
-  mailLane = lane === 'consulting' ? 'consulting' : 'personal';
-  document.getElementById('lane-personal').classList.toggle('on', mailLane === 'personal');
-  document.getElementById('lane-consulting').classList.toggle('on', mailLane === 'consulting');
-  document.getElementById('lane-personal').setAttribute('aria-selected', mailLane === 'personal' ? 'true' : 'false');
-  document.getElementById('lane-consulting').setAttribute('aria-selected', mailLane === 'consulting' ? 'true' : 'false');
-  document.getElementById('pin-lane').textContent = mailLane === 'consulting' ? 'Pins to Consulting' : 'Pins to Personal';
-  renderMailList();
+function mailRow(item){
+  const row = document.createElement('a');
+  row.className = 'mrow' + (item.whyShown === 'attention' ? ' urgent' : '');
+  row.href = item.deepLink;
+  row.appendChild(el('span', 'mark', item.whyShown === 'attention' ? '!' : '↩'));
+  const what = el('span', 'what');
+  what.appendChild(el('span', 'title', item.title));
+  const bits = [item.mailbox === 'consulting' ? 'Consulting' : 'Personal'];
+  if (item.snippet) bits.push(item.snippet);
+  what.appendChild(el('span', 'sub', bits.join(' · ')));
+  row.appendChild(what);
+  const side = el('span', 'side');
+  const needs = item.whyShown === 'attention';
+  side.appendChild(el('span', 'pill ' + (needs ? 'urgent' : 'reply'), needs ? 'Needs you' : 'Replied'));
+  row.appendChild(side);
+  return row;
 }
-function setTag(tag){
-  mailTag = tag === 'noise' ? 'noise' : 'urgent';
-  document.getElementById('tag-urgent').classList.toggle('on', mailTag === 'urgent');
-  document.getElementById('tag-noise').classList.toggle('on', mailTag === 'noise');
-  document.getElementById('tag-urgent').setAttribute('aria-pressed', mailTag === 'urgent' ? 'true' : 'false');
-  document.getElementById('tag-noise').setAttribute('aria-pressed', mailTag === 'noise' ? 'true' : 'false');
-  document.getElementById('pin-btn').classList.toggle('hot', mailTag === 'urgent');
+async function loadMail(){
+  try {
+    const r = await fetchTimeout('./data/mail.json', 5000);
+    if (!r.ok) throw new Error('status');
+    const text = await r.text();
+    if (text === mailRaw && mailState === 'ready') return;
+    mailRaw = text;
+    const data = JSON.parse(text);
+    mailItems = cleanMailItems(data && data.items);
+    mailState = 'ready';
+  } catch (e) {
+    if (mailState === 'ready') return;
+    mailState = 'error';
+    mailItems = [];
+  }
+  renderMail();
 }
 
 function renderTodos(){
@@ -1907,10 +1904,6 @@ document.body.addEventListener('click', (e) => {
   const go = e.target.closest('[data-go]');
   if (go) setTab(go.dataset.go, { anchor: go.dataset.anchor || '' });
 });
-document.getElementById('lane-personal').addEventListener('click', () => setLane('personal'));
-document.getElementById('lane-consulting').addEventListener('click', () => setLane('consulting'));
-document.getElementById('tag-urgent').addEventListener('click', () => setTag('urgent'));
-document.getElementById('tag-noise').addEventListener('click', () => setTag('noise'));
 document.getElementById('cal-today').addEventListener('click', () => { calMode = 'today'; renderCal(); });
 document.getElementById('cal-week').addEventListener('click', () => { calMode = 'week'; renderCal(); });
 document.getElementById('todo-form').addEventListener('submit', (e) => {
@@ -1922,17 +1915,6 @@ document.getElementById('todo-form').addEventListener('submit', (e) => {
   save('deck.v2.todos', state.todos);
   input.value = '';
   renderTodos();
-});
-document.getElementById('mail-form').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const title = document.getElementById('mail-title').value.trim().slice(0, 140);
-  const detail = document.getElementById('mail-detail').value.trim().slice(0, 180);
-  if (!title) return;
-  state.inbox.unshift({ id: uid(), lane: mailLane, tag: mailTag, title: title, detail: detail, ts: Date.now() });
-  save('deck.v2.inbox', state.inbox);
-  document.getElementById('mail-title').value = '';
-  document.getElementById('mail-detail').value = '';
-  renderInbox();
 });
 document.getElementById('cal-form').addEventListener('submit', (e) => {
   e.preventDefault();
@@ -2027,12 +2009,12 @@ document.addEventListener('keydown', (e) => {
 window.addEventListener('hashchange', () => setTab(tabFromHash(), { silent: true }));
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) { timers.forEach(clearInterval); timers = []; return; }
-  tick(); pollWeather(); pollLedger(); pollVantage(); pollVKS(); loadDecisions(); startTimers();
+  tick(); pollWeather(); pollLedger(); pollVantage(); pollVKS(); loadDecisions(); loadMail(); startTimers();
 });
 
 buildProjects();
 renderTodos();
-renderInbox();
+renderMail();
 renderAgenda();
 renderBible();
 renderDQ();
@@ -2053,6 +2035,7 @@ pollLedger();
 pollVantage();
 pollVKS();
 loadDecisions();
+loadMail();
 startTimers();
 if ('serviceWorker' in navigator && location.protocol !== 'file:') {
   navigator.serviceWorker.register('./sw.js').catch(function(){});

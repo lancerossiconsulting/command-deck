@@ -50,7 +50,7 @@ a desktop browser to 393×852. Wider windows show the same UI in a phone column.
 | Clock | Live, this phone’s local time |
 | Manhattan, KS weather | Live from Open-Meteo (no key). “Wire down” if the request fails |
 | Bible plan | Live data, the Pastor Brian list already on MK III (Jun 7–Oct 28, 2026). One row on Home; the rest under More |
-| Inbox | **Stub.** Nothing is fetched from a mailbox. Personal and Consulting are local lanes. Urgent counts as attention; Noise does not. Notes stay in this browser |
+| Mail | Curated list in `data/mail.json` (ships empty). Only `attention` and `recent-reply` rows. A row opens its Outlook `deepLink`. Empty copy is “Nothing needs you” |
 | Agenda | **Local only.** No external calendar. Add items on the Calendar tab |
 | Todos | **Local only**, on this phone, including the Home checkboxes |
 | Household Ledger | Live `GET /api/deck-summary` when that host answers (default `http://localhost:5181`, every 60s). Otherwise an offline snapshot — no invented dollars. Change the host under Ledger → Sources |
@@ -86,6 +86,7 @@ this `index.html`.
 
 - `index.html` — Command Deck 2.0 phone surface
 - `data/decisions.json` — decisions waiting on a choice (empty until real items are added)
+- `data/mail.json` — curated mail (attention and recent replies only; empty until real items are added)
 - `deck-mk3.html` — desktop MK III
 - `deck-classic.html` — archived MK I
 - `manifest.webmanifest`, `sw.js`, `icon.svg`, `icon-180.png`, `icon-192.png`, `icon-512.png` — home-screen install
