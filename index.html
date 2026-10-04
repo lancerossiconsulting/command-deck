@@ -126,15 +126,9 @@ h1.mark b { color: var(--fire); font-weight: 600; }
   flex: 1; min-height: 0; overflow: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
-  padding: calc(var(--nav-h) + var(--safe-top) + 6px) 0 24px;
+  padding: calc(var(--nav-h) + var(--safe-top) + 6px) 0 calc(var(--tab-h) + var(--safe-bot) + 24px);
   scroll-padding-top: calc(var(--nav-h) + var(--safe-top) + 8px);
   scroll-padding-bottom: calc(var(--tab-h) + var(--safe-bot) + 12px);
-}
-.view.on:not(:has(.composer)) .scroller {
-  padding-bottom: calc(var(--tab-h) + var(--safe-bot) + 24px);
-}
-.view.on:has(.composer) {
-  padding-bottom: calc(var(--tab-h) + var(--safe-bot));
 }
 #deconflict, #proj-cards, #dispatch-block, #bible-block, #cap-block, #install-block, #vantage-block {
   scroll-margin-top: calc(var(--nav-h) + var(--safe-top) + 12px);
@@ -227,23 +221,22 @@ a.arow { width: 100%; }
 .tt { font-size: 17px; letter-spacing: -0.03em; overflow-wrap: anywhere; }
 
 .addrow { display: flex; gap: 8px; padding: 4px 0 10px; }
-.addrow input, .composer input, .src input, .dqrow input, .dnote {
+.addrow input, .src input, .dqrow input, .dnote {
   flex: 1; width: 100%; min-width: 0;
   background: rgba(255,255,255,.06);
   border: 0.5px solid var(--line);
   color: var(--ink);
   border-radius: 12px; padding: 11px 12px; font-size: 17px;
 }
-.addrow input:focus, .composer input:focus, .src input:focus, .dqrow input:focus, .dnote:focus {
+.addrow input:focus, .src input:focus, .dqrow input:focus, .dnote:focus {
   outline: none; border-color: var(--cyan-dim); box-shadow: 0 0 0 3px var(--cyan-soft);
 }
-.primary, .addrow button, .dqrow button, .dqacts button, #host-form button, #bible-more, .dpublish {
+.addrow button, .dqrow button, .dqacts button, #host-form button, #bible-more, .dpublish {
   flex: none; min-height: 44px; min-width: 64px; padding: 0 14px; border-radius: 12px;
   border: 0; background: var(--cyan-soft); color: var(--cyan);
   font-size: 17px; font-weight: 600; letter-spacing: -0.02em;
   text-decoration: none;
 }
-.primary.hot { background: rgba(232,145,58,.18); color: var(--fire); }
 .dpublish {
   display: flex; align-items: center; justify-content: center;
   width: 100%; margin: 4px 0 12px;
@@ -307,16 +300,6 @@ a.arow { width: 100%; }
 }
 .lanes button.on { background: var(--raised); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.35); }
 
-.composer {
-  flex: none; display: flex; flex-direction: column; gap: 8px;
-  padding: 10px 16px 12px;
-  background: rgba(7,10,16,.82);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  backdrop-filter: saturate(180%) blur(20px);
-  border-top: 0.5px solid var(--line);
-}
-.row2 { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
-#cal-form .row2 { grid-template-columns: minmax(0,1.15fr) minmax(0,.85fr) auto; }
 .seg {
   display: flex; padding: 2px; gap: 2px; min-width: 0;
   background: rgba(255,255,255,.08); border-radius: 10px;
@@ -692,14 +675,6 @@ html.conserve .dimmable { opacity: .45; }
         </div>
         <div id="cal-list" style="margin:0 16px"></div>
       </div>
-      <form class="composer" id="cal-form">
-        <input id="cal-title" maxlength="140" placeholder="Hold on this phone" aria-label="Hold title" autocomplete="off">
-        <div class="row2">
-          <input id="cal-date" type="date" aria-label="Date" required>
-          <input id="cal-time" type="time" aria-label="Time">
-          <button type="submit" class="primary">Add</button>
-        </div>
-      </form>
     </section>
 
     <section id="view-ledger" class="view" aria-label="Ledger" inert>
@@ -797,7 +772,7 @@ html.conserve .dimmable { opacity: .45; }
             <li>Share, then Add to Home Screen.</li>
             <li>Launch Deck. The passphrase is remembered on this phone.</li>
           </ol>
-          <p>Weather and the Bible plan are live. Mail is the curated list in data/mail.json. Calendar is the curated list in data/calendar.json. Todos and phone-only holds stay on this device. Ledger and Vantage fill in only when their hosts answer.</p>
+          <p>Weather and the Bible plan are live. Mail is the curated list in data/mail.json. Calendar is the curated list in data/calendar.json. Todos stay on this device. Ledger and Vantage fill in only when their hosts answer.</p>
           <a class="alink" href="./deck-mk3.html">Desktop MK III</a>
         </article>
       </div>
@@ -999,9 +974,6 @@ function fmtHM(hm){
 function fmtTs(ts){
   return new Date(ts).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
 }
-function byTime(a, b){
-  return (a.time || '99:99') < (b.time || '99:99') ? -1 : 1;
-}
 function money2(n){
   return '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
@@ -1079,16 +1051,6 @@ function cleanMailItems(items){
     updatedAt: typeof it.updatedAt === 'string' ? it.updatedAt : ''
   })).filter((it) => it.whyShown && it.mailbox);
 }
-function cleanAgenda(arr){
-  if (!Array.isArray(arr)) return [];
-  return arr.filter((t) => t && typeof t.title === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(t.date)).map((t) => ({
-    id: String(t.id || uid()),
-    title: String(t.title).slice(0, 140),
-    date: t.date,
-    time: /^\d{2}:\d{2}$/.test(t.time || '') ? t.time : '',
-    ts: Number(t.ts) || 0
-  }));
-}
 function cleanDQ(arr){
   if (!Array.isArray(arr)) return [];
   return arr.filter((t) => t && typeof t.text === 'string').map((t) => ({
@@ -1098,7 +1060,6 @@ function cleanDQ(arr){
 
 const state = {
   todos: cleanTodos(load('deck.v2.todos', [])),
-  agenda: cleanAgenda(load('deck.v2.agenda', [])),
   ledgerBase: loadStr('deck.v2.ledgerBase', DEFAULT_LEDGER),
   vantageBase: loadStr('deck.v2.vantageBase', DEFAULT_VANTAGE)
 };
@@ -1166,8 +1127,6 @@ function appleCalHref(item){
   if (fromLink && fromLink !== 'calshow:') return fromLink;
   const fromStart = item && item.startsAt ? calshowFromInstant(item.startsAt) : '';
   if (fromStart) return fromStart;
-  const fromParts = item && item.date ? calshowFromParts(item.date, item.time) : '';
-  if (fromParts) return fromParts;
   return fromLink || 'calshow:';
 }
 function cleanCalendarItems(items){
@@ -1186,14 +1145,12 @@ function cleanCalendarItems(items){
   })).filter((it) => it.whyShown && it.calendar && (calshowFromInstant(it.startsAt) || normalizeCalshow(it.deepLink)));
 }
 function eventDate(item){
-  if (item.local) return item.date || '';
   const raw = String(item.startsAt || '');
   if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
   const d = new Date(raw);
   return Number.isNaN(d.getTime()) ? '' : isoDate(d);
 }
 function eventTime(item){
-  if (item.local) return item.time || '';
   const raw = String(item.startsAt || '');
   if (!raw || /^\d{4}-\d{2}-\d{2}$/.test(raw)) return '';
   const d = new Date(raw);
@@ -1201,10 +1158,7 @@ function eventTime(item){
   return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
 }
 function allEvents(){
-  const local = state.agenda.map((item) => ({
-    id: item.id, title: item.title, date: item.date, time: item.time, local: true, whyShown: 'hold'
-  }));
-  return calItems.concat(local);
+  return calItems;
 }
 function eventsOn(iso){
   return allEvents().filter((item) => eventDate(item) === iso).sort((a, b) => {
@@ -1254,24 +1208,12 @@ function eventRow(item, opts){
   what.appendChild(el('span', 'title', item.title));
   const bits = [];
   if (!opts.hideDate) bits.push(headDate(eventDate(item)));
-  bits.push(item.local ? 'On this phone' : (item.calendar === 'consulting' ? 'Consulting' : 'Personal'));
+  bits.push(item.calendar === 'consulting' ? 'Consulting' : 'Personal');
   if (item.location) bits.push(item.location);
   else if (item.note) bits.push(item.note);
   what.appendChild(el('span', 'sub', bits.filter(Boolean).join(' · ')));
   row.appendChild(what);
-  if (item.local && !opts.home) {
-    const x = el('button', 'x', '×');
-    x.type = 'button';
-    x.setAttribute('aria-label', 'Remove ' + item.title);
-    x.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      state.agenda = state.agenda.filter((a) => a.id !== item.id);
-      save('deck.v2.agenda', state.agenda);
-      renderAgenda();
-    });
-    row.appendChild(x);
-  } else if (!opts.home && !item.local) {
+  if (!opts.home) {
     const side = el('span', 'side');
     const hold = item.whyShown === 'hold';
     side.appendChild(el('span', 'pill ' + (hold ? 'reply' : 'urgent'), hold ? 'Hold' : 'Appt'));
@@ -2068,19 +2010,6 @@ document.getElementById('todo-form').addEventListener('submit', (e) => {
   input.value = '';
   renderTodos();
 });
-document.getElementById('cal-form').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const title = document.getElementById('cal-title').value.trim().slice(0, 140);
-  const date = document.getElementById('cal-date').value;
-  const time = document.getElementById('cal-time').value;
-  if (!title || !/^\d{4}-\d{2}-\d{2}$/.test(date)) return;
-  state.agenda.push({ id: uid(), title: title, date: date, time: /^\d{2}:\d{2}$/.test(time) ? time : '', ts: Date.now() });
-  save('deck.v2.agenda', state.agenda);
-  document.getElementById('cal-title').value = '';
-  document.getElementById('cal-time').value = '';
-  if (date !== todayISO()) calMode = 'week';
-  renderAgenda();
-});
 document.getElementById('host-form').addEventListener('submit', (e) => {
   e.preventDefault();
   const led = normBase(document.getElementById('ledger-host').value, DEFAULT_LEDGER);
@@ -2175,7 +2104,6 @@ renderDQ();
   document.getElementById('verse-ref').textContent = v.ref;
   document.getElementById('verse-txt').textContent = v.txt;
 })();
-document.getElementById('cal-date').value = todayISO();
 document.getElementById('ledger-host').value = state.ledgerBase;
 document.getElementById('vantage-host').value = state.vantageBase;
 applyCapacity(+(loadStr('deck.cap', '3')));
