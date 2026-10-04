@@ -51,7 +51,7 @@ a desktop browser to 393×852. Wider windows show the same UI in a phone column.
 | Manhattan, KS weather | Live from Open-Meteo (no key). “Wire down” if the request fails |
 | Bible plan | Live data, the Pastor Brian list already on MK III (Jun 7–Oct 28, 2026). One row on Home; the rest under More |
 | Mail | Curated list in `data/mail.json`. Only `attention` and `recent-reply` rows. A row opens that message in Apple Mail (`message://`). Empty copy is “Nothing needs you” |
-| Agenda | **Local only.** No external calendar. Add items on the Calendar tab |
+| Calendar | Curated appointments and holds in `data/calendar.json`. A row opens that time in Apple Calendar (`calshow:`). Phone-only holds can still be added on the tab. Empty copy is “Nothing on the calendar” |
 | Todos | **Local only**, on this phone, including the Home checkboxes |
 | Household Ledger | Live `GET /api/deck-summary` when that host answers (default `http://localhost:5181`, every 60s). Otherwise an offline snapshot — no invented dollars. Change the host under Ledger → Sources |
 | Vantage | Same pattern, default `http://localhost:8765`, every 90s. Read-only. No trading |
@@ -87,6 +87,14 @@ this `index.html`.
 - `index.html` — Command Deck 2.0 phone surface
 - `data/decisions.json` — decisions waiting on a choice (empty until real items are added)
 - `data/mail.json` — curated mail (attention and recent replies only)
+- `data/calendar.json` — curated appointments and holds
+- `deck-mk3.html` — desktop MK III
+- `deck-classic.html` — archived MK I
+- `manifest.webmanifest`, `sw.js`, `icon.svg`, `icon-180.png`, `icon-192.png`, `icon-512.png` — home-screen install
+- `wallpapers.html`, `globe-loader.html` — shader demos MK III still carries inline
+- `robots.txt`
+
+No build step and no secret-bearing backend.
 
 ## Curated mail (`data/mail.json`)
 
@@ -110,10 +118,27 @@ The deck builds the tap target from `internetMessageId`:
 `<local-part@domain>` → `message://%3Clocal-part@domain%3E`
 
 Until `internetMessageId` is filled in, the row still opens the Mail app (`message://`) and does not pick a message. Exchange REST ids (`AQMk…`) cannot be turned into that link. Do not put `ms-outlook://` or an `https://outlook.office.com` URL in `deepLink`; those are ignored.
-- `deck-mk3.html` — desktop MK III
-- `deck-classic.html` — archived MK I
-- `manifest.webmanifest`, `sw.js`, `icon.svg`, `icon-180.png`, `icon-192.png`, `icon-512.png` — home-screen install
-- `wallpapers.html`, `globe-loader.html` — shader demos MK III still carries inline
-- `robots.txt`
 
-No build step and no secret-bearing backend.
+## Curated calendar (`data/calendar.json`)
+
+The Calendar tab is the short list of appointments and holds that matter. It is not a full Outlook calendar. Tapping a row opens **Apple Calendar** on iPhone at that event’s start. The deck does not use `ms-outlook://` and does not send him to outlook.office.com.
+
+Apple has no public URL that selects one calendar event by id. The iOS scheme that lands on a time is `calshow:` plus seconds since 2001-01-01 00:00:00 UTC. `calshow:` alone opens the Calendar app. The deck builds that from `startsAt`. A `deepLink` that is already `calshow:<seconds>` is used as-is.
+
+Each item:
+
+| Field | Required | Meaning |
+| --- | --- | --- |
+| `id` | yes | Stable id. The seeded rows use the Exchange id of the mail item they came from. |
+| `title` | yes | Event name |
+| `startsAt` | yes | ISO 8601 start, with a numeric offset. Date-only (`2026-10-05`) is an all-day row. |
+| `endsAt` | no | ISO 8601 end, when known. Leave it off rather than guessing a duration. |
+| `location` | no | Place name already known. Do not invent an address. |
+| `note` | no | One short line |
+| `whyShown` | yes | `appointment` or `hold` |
+| `calendar` | yes | `personal` or `consulting` |
+| `deepLink` | no | Leave empty. If set, it must be `calshow:` or `calshow:<seconds>`. |
+| `updatedAt` | no | ISO timestamp |
+
+The first three rows are the upcoming appointments already stated in `data/mail.json` (EKART Automotive installation, the Junction City VA visit, and the Kansas driver’s license office). Clock times in those messages had no zone; they are stored as America/Chicago (`-05:00` in October). Past dates drop off the phone automatically. Chloe should replace or extend this list with the real calendar feed and drop items that are no longer ahead.
+
