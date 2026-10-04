@@ -51,7 +51,7 @@ a desktop browser to 393×852. Wider windows show the same UI in a phone column.
 | Manhattan, KS weather | Live from Open-Meteo (no key). “Wire down” if the request fails |
 | Bible plan | Live data, the Pastor Brian list already on MK III (Jun 7–Oct 28, 2026). One row on Home; the rest under More |
 | Mail | Curated list in `data/mail.json`. Only `attention` and `recent-reply` rows. A row opens that message in Apple Mail (`message://`). Empty copy is “Nothing needs you” |
-| Calendar | Curated appointments and holds in `data/calendar.json`. A row opens that time in Apple Calendar (`calshow:`). Phone-only holds can still be added on the tab. Empty copy is “Nothing on the calendar” |
+| Calendar | Curated appointments and holds in `data/calendar.json`. A row opens that time in Apple Calendar (`calshow:`). Empty copy is “Nothing on the calendar” |
 | Todos | **Local only**, on this phone, including the Home checkboxes |
 | Household Ledger | Live `GET /api/deck-summary` when that host answers (default `http://localhost:5181`, every 60s). Otherwise an offline snapshot — no invented dollars. Change the host under Ledger → Sources |
 | Vantage | Same pattern, default `http://localhost:8765`, every 90s. Read-only. No trading |
