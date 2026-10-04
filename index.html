@@ -196,7 +196,8 @@ h1.mark b { color: var(--fire); font-weight: 600; }
   border-top: 0.5px solid var(--sep); padding: 8px 0;
 }
 .mrow { grid-template-columns: 22px minmax(0,1fr) auto; width: 100%; text-align: left; }
-button.mrow, a.mrow { cursor: pointer; color: inherit; text-decoration: none; }
+button.mrow, a.mrow, a.arow { cursor: pointer; color: inherit; text-decoration: none; }
+a.arow { width: 100%; }
 .mailsec { margin: 16px 0 0; font-size: 13px; font-weight: 600; color: var(--ink-faint); letter-spacing: -0.01em; }
 .mailsec:first-child { margin-top: 0; }
 .when, .tm { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--cyan); letter-spacing: 0; }
@@ -683,8 +684,8 @@ html.conserve .dimmable { opacity: .45; }
 
     <section id="view-calendar" class="view" aria-label="Calendar" inert>
       <div class="scroller">
-        <div class="viewhead"><h2>Agenda</h2><span class="meta" id="cal-aside">Clear</span></div>
-        <p class="stub calm">Local agenda only. No external calendar is connected. Reading rows are the Pastor Brian plan.</p>
+        <div class="viewhead"><h2>Calendar</h2><span class="meta" id="cal-aside">Clear</span></div>
+        <p class="stub calm">Appointments and holds. Tap a row to open that time in Calendar.</p>
         <div class="lanes" role="tablist" aria-label="Agenda range">
           <button type="button" id="cal-today" class="on" role="tab" aria-selected="true">Today</button>
           <button type="button" id="cal-week" role="tab" aria-selected="false">Week</button>
@@ -692,7 +693,7 @@ html.conserve .dimmable { opacity: .45; }
         <div id="cal-list" style="margin:0 16px"></div>
       </div>
       <form class="composer" id="cal-form">
-        <input id="cal-title" maxlength="140" placeholder="Agenda item" aria-label="Agenda title" autocomplete="off">
+        <input id="cal-title" maxlength="140" placeholder="Hold on this phone" aria-label="Hold title" autocomplete="off">
         <div class="row2">
           <input id="cal-date" type="date" aria-label="Date" required>
           <input id="cal-time" type="time" aria-label="Time">
@@ -796,7 +797,7 @@ html.conserve .dimmable { opacity: .45; }
             <li>Share, then Add to Home Screen.</li>
             <li>Launch Deck. The passphrase is remembered on this phone.</li>
           </ol>
-          <p>Weather and the Bible plan are live. Mail is the curated list in data/mail.json. Todos and the agenda stay on this device. Ledger and Vantage fill in only when their hosts answer.</p>
+          <p>Weather and the Bible plan are live. Mail is the curated list in data/mail.json. Calendar is the curated list in data/calendar.json. Todos and phone-only holds stay on this device. Ledger and Vantage fill in only when their hosts answer.</p>
           <a class="alink" href="./deck-mk3.html">Desktop MK III</a>
         </article>
       </div>
@@ -813,8 +814,9 @@ html.conserve .dimmable { opacity: .45; }
       <span class="badge" id="mail-badge" hidden>0</span>
       <span>Mail</span>
     </button>
-    <button type="button" data-tab="calendar" id="tab-calendar">
+    <button type="button" data-tab="calendar" id="tab-calendar" aria-label="Calendar">
       <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3 10h18M8 3v4M16 3v4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span class="badge" id="cal-badge" hidden>0</span>
       <span>Calendar</span>
     </button>
     <button type="button" data-tab="ledger" id="tab-ledger">
@@ -939,6 +941,9 @@ const TABS = ['home','mail','calendar','ledger','more'];
 let mailItems = [];
 let mailState = 'loading';
 let mailRaw = '';
+let calItems = [];
+let calState = 'loading';
+let calRaw = '';
 let calMode = 'today';
 let bibleAll = false;
 let DQ = [];
@@ -1133,12 +1138,88 @@ function setTab(tab, opts){
   }
 }
 
-function renderToday(){
-  const today = todayISO();
-  document.getElementById('today-aside').textContent = headDate(today);
-  const list = document.getElementById('today-list');
-  clear(list);
-  const entry = readingFor(today);
+const APPLE_EPOCH_MS = Date.UTC(2001, 0, 1);
+function calshowFromMs(ms){
+  if (!Number.isFinite(ms)) return '';
+  return 'calshow:' + Math.round((ms - APPLE_EPOCH_MS) / 1000);
+}
+function calshowFromInstant(iso){
+  if (typeof iso !== 'string' || !iso.trim()) return '';
+  if (/^\d{4}-\d{2}-\d{2}$/.test(iso)) return calshowFromParts(iso, '');
+  return calshowFromMs(Date.parse(iso));
+}
+function calshowFromParts(date, time){
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date || '')) return '';
+  const hm = /^\d{2}:\d{2}$/.test(time || '') ? time : '00:00';
+  return calshowFromMs(new Date(date + 'T' + hm + ':00').getTime());
+}
+function normalizeCalshow(url){
+  const raw = String(url || '').trim();
+  if (!/^calshow:/i.test(raw)) return '';
+  if (/^calshow:\/\/?$/i.test(raw)) return 'calshow:';
+  const body = raw.replace(/^calshow:\/\//i, '').replace(/^calshow:/i, '');
+  if (!/^-?\d+$/.test(body)) return '';
+  return 'calshow:' + body;
+}
+function appleCalHref(item){
+  const fromLink = normalizeCalshow(item && item.deepLink);
+  if (fromLink && fromLink !== 'calshow:') return fromLink;
+  const fromStart = item && item.startsAt ? calshowFromInstant(item.startsAt) : '';
+  if (fromStart) return fromStart;
+  const fromParts = item && item.date ? calshowFromParts(item.date, item.time) : '';
+  if (fromParts) return fromParts;
+  return fromLink || 'calshow:';
+}
+function cleanCalendarItems(items){
+  if (!Array.isArray(items)) return [];
+  return items.filter((it) => it && typeof it.id === 'string' && it.id && typeof it.title === 'string' && it.title).map((it) => ({
+    id: it.id,
+    title: it.title.slice(0, 140),
+    location: typeof it.location === 'string' ? it.location.slice(0, 160) : '',
+    note: typeof it.note === 'string' ? it.note.slice(0, 240) : '',
+    startsAt: typeof it.startsAt === 'string' ? it.startsAt.trim() : '',
+    endsAt: typeof it.endsAt === 'string' ? it.endsAt.trim() : '',
+    whyShown: it.whyShown === 'hold' ? 'hold' : (it.whyShown === 'appointment' ? 'appointment' : ''),
+    calendar: it.calendar === 'consulting' ? 'consulting' : (it.calendar === 'personal' ? 'personal' : ''),
+    deepLink: typeof it.deepLink === 'string' ? it.deepLink.trim() : '',
+    updatedAt: typeof it.updatedAt === 'string' ? it.updatedAt : ''
+  })).filter((it) => it.whyShown && it.calendar && (calshowFromInstant(it.startsAt) || normalizeCalshow(it.deepLink)));
+}
+function eventDate(item){
+  if (item.local) return item.date || '';
+  const raw = String(item.startsAt || '');
+  if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
+  const d = new Date(raw);
+  return Number.isNaN(d.getTime()) ? '' : isoDate(d);
+}
+function eventTime(item){
+  if (item.local) return item.time || '';
+  const raw = String(item.startsAt || '');
+  if (!raw || /^\d{4}-\d{2}-\d{2}$/.test(raw)) return '';
+  const d = new Date(raw);
+  if (Number.isNaN(d.getTime())) return '';
+  return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+}
+function allEvents(){
+  const local = state.agenda.map((item) => ({
+    id: item.id, title: item.title, date: item.date, time: item.time, local: true, whyShown: 'hold'
+  }));
+  return calItems.concat(local);
+}
+function eventsOn(iso){
+  return allEvents().filter((item) => eventDate(item) === iso).sort((a, b) => {
+    return (eventTime(a) || '99:99').localeCompare(eventTime(b) || '99:99') || a.title.localeCompare(b.title);
+  });
+}
+function eventsAfter(iso){
+  return allEvents().filter((item) => eventDate(item) > iso).sort((a, b) => {
+    const byDate = eventDate(a) < eventDate(b) ? -1 : eventDate(a) > eventDate(b) ? 1 : 0;
+    if (byDate) return byDate;
+    return (eventTime(a) || '99:99').localeCompare(eventTime(b) || '99:99');
+  });
+}
+function readingRow(iso){
+  const entry = readingFor(iso);
   const row = el('div', 'readrow');
   const when = el('span', 'when');
   const what = el('div', 'what');
@@ -1147,7 +1228,7 @@ function renderToday(){
     what.appendChild(el('div', 'title', entry.ref));
     what.appendChild(el('div', 'sub', entry.note || 'Pastor Brian plan'));
   } else {
-    const nxt = nextReading(today);
+    const nxt = nextReading(iso);
     when.textContent = nxt ? 'Rest' : 'Done';
     if (nxt) {
       what.appendChild(el('div', 'title', 'No chapter today'));
@@ -1159,28 +1240,59 @@ function renderToday(){
       what.appendChild(el('div', 'title', 'No reading plan loaded'));
     }
   }
-  row.appendChild(when); row.appendChild(what); list.appendChild(row);
-  state.agenda.filter((a) => a.date === today).sort(byTime).forEach((item) => list.appendChild(agendaRow(item, true)));
-}
-function agendaRow(item, home){
-  const row = el('div', 'arow');
-  row.appendChild(el('span', 'when', fmtHM(item.time)));
-  const what = el('div', 'what');
-  what.appendChild(el('div', 'title', item.title));
-  if (!home) what.appendChild(el('div', 'sub', headDate(item.date)));
+  row.appendChild(when);
   row.appendChild(what);
-  if (!home) {
+  return row;
+}
+function eventRow(item, opts){
+  opts = opts || {};
+  const row = document.createElement('a');
+  row.className = 'arow';
+  row.href = appleCalHref(item);
+  row.appendChild(el('span', 'when', fmtHM(eventTime(item))));
+  const what = el('span', 'what');
+  what.appendChild(el('span', 'title', item.title));
+  const bits = [];
+  if (!opts.hideDate) bits.push(headDate(eventDate(item)));
+  bits.push(item.local ? 'On this phone' : (item.calendar === 'consulting' ? 'Consulting' : 'Personal'));
+  if (item.location) bits.push(item.location);
+  else if (item.note) bits.push(item.note);
+  what.appendChild(el('span', 'sub', bits.filter(Boolean).join(' · ')));
+  row.appendChild(what);
+  if (item.local && !opts.home) {
     const x = el('button', 'x', '×');
     x.type = 'button';
     x.setAttribute('aria-label', 'Remove ' + item.title);
-    x.addEventListener('click', () => {
+    x.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       state.agenda = state.agenda.filter((a) => a.id !== item.id);
       save('deck.v2.agenda', state.agenda);
       renderAgenda();
     });
     row.appendChild(x);
+  } else if (!opts.home && !item.local) {
+    const side = el('span', 'side');
+    const hold = item.whyShown === 'hold';
+    side.appendChild(el('span', 'pill ' + (hold ? 'reply' : 'urgent'), hold ? 'Hold' : 'Appt'));
+    row.appendChild(side);
   }
   return row;
+}
+function renderToday(){
+  const today = todayISO();
+  document.getElementById('today-aside').textContent = headDate(today);
+  const list = document.getElementById('today-list');
+  clear(list);
+  list.appendChild(readingRow(today));
+  if (calState === 'loading') return;
+  if (calState === 'error') list.appendChild(el('p', 'empty', "Calendar file didn't load."));
+  const todays = eventsOn(today);
+  todays.forEach((item) => list.appendChild(eventRow(item, { home: true, hideDate: true })));
+  if (!todays.length && calState !== 'error') {
+    const nxt = eventsAfter(today)[0];
+    if (nxt) list.appendChild(eventRow(nxt, { home: true }));
+  }
 }
 function renderAgenda(){ renderToday(); renderCal(); }
 
@@ -1321,59 +1433,82 @@ function renderCal(){
   document.getElementById('cal-week').classList.toggle('on', calMode === 'week');
   document.getElementById('cal-today').setAttribute('aria-selected', calMode === 'today' ? 'true' : 'false');
   document.getElementById('cal-week').setAttribute('aria-selected', calMode === 'week' ? 'true' : 'false');
-  const days = calMode === 'today' ? [today] : Array.from({ length: 7 }, (_, i) => addDays(today, i));
-  const localCount = state.agenda.filter((a) => days.indexOf(a.date) >= 0).length;
+  const upcoming = allEvents().filter((item) => eventDate(item) >= today);
   const aside = document.getElementById('cal-aside');
-  aside.textContent = localCount ? (localCount + (localCount === 1 ? ' item' : ' items')) : 'Clear';
+  aside.textContent = upcoming.length ? (upcoming.length + ' upcoming') : 'Clear';
   const list = document.getElementById('cal-list');
   clear(list);
-  days.forEach((iso) => {
-    const block = el('div', 'day');
-    block.appendChild(el('div', 'dayh', headDate(iso) + (iso === today ? ' · Today' : '')));
-    const reading = readingFor(iso);
-    if (reading) {
-      const r = el('div', 'readrow');
-      r.appendChild(el('span', 'when', 'Reading'));
-      const w = el('div', 'what');
-      w.appendChild(el('div', 'title', reading.ref));
-      w.appendChild(el('div', 'sub', reading.note || 'Pastor Brian plan'));
-      r.appendChild(w);
-      block.appendChild(r);
-    } else if (calMode === 'today') {
-      const nxt = nextReading(iso);
-      const r = el('div', 'readrow');
-      r.appendChild(el('span', 'when', nxt ? 'Rest' : 'Done'));
-      const w = el('div', 'what');
-      if (nxt) {
-        w.appendChild(el('div', 'title', 'No chapter today'));
-        w.appendChild(el('div', 'sub', 'Next: ' + nxt.ref + ' · ' + headDate(nxt.date)));
-      } else {
-        w.appendChild(el('div', 'title', BIBLE.length ? 'Plan complete' : 'No reading plan'));
-        if (BIBLE.length) w.appendChild(el('div', 'sub', 'Romans 5 through Revelation 22, finished Oct 28.'));
-      }
-      r.appendChild(w);
-      block.appendChild(r);
-    }
-    const items = state.agenda.filter((a) => a.date === iso).sort(byTime);
-    items.forEach((item) => {
-      const row = agendaRow(item, false);
-      const sub = row.querySelector('.sub');
-      if (sub) sub.remove();
-      block.appendChild(row);
-    });
-    if (!items.length && !reading && calMode === 'week') block.appendChild(el('div', 'quiet', 'Clear'));
-    if (!items.length && calMode === 'today') block.appendChild(el('p', 'empty', 'Nothing added for this day.'));
-    list.appendChild(block);
-  });
-  if (calMode === 'week') {
-    const later = state.agenda.filter((a) => a.date > addDays(today, 6)).sort((a, b) => a.date < b.date ? -1 : 1);
-    if (later.length) {
-      const block = el('div', 'day');
-      block.appendChild(el('div', 'dayh', 'LATER'));
-      later.forEach((item) => block.appendChild(agendaRow(item, false)));
-      list.appendChild(block);
-    }
+  if (calState === 'loading') {
+    aside.textContent = 'Checking';
+    list.appendChild(el('p', 'empty', 'Checking calendar…'));
+    updateCalBadge(0);
+    return;
   }
+  if (calState === 'error') list.appendChild(el('p', 'empty', "Calendar file didn't load."));
+  const weekEnd = addDays(today, 6);
+  if (calMode === 'today') {
+    const block = el('div', 'day');
+    block.appendChild(el('div', 'dayh', headDate(today) + ' · Today'));
+    block.appendChild(readingRow(today));
+    const todays = eventsOn(today);
+    todays.forEach((item) => block.appendChild(eventRow(item, { hideDate: true })));
+    if (!todays.length) block.appendChild(el('p', 'empty', upcoming.length ? 'Nothing today' : 'Nothing on the calendar'));
+    list.appendChild(block);
+    const later = eventsAfter(today);
+    if (later.length) {
+      list.appendChild(el('h3', 'mailsec', 'Coming up'));
+      later.forEach((item) => list.appendChild(eventRow(item)));
+    }
+  } else {
+    const days = Array.from({ length: 7 }, (_, i) => addDays(today, i));
+    let shown = 0;
+    days.forEach((iso) => {
+      const items = eventsOn(iso);
+      if (!items.length && iso !== today) return;
+      const block = el('div', 'day');
+      block.appendChild(el('div', 'dayh', headDate(iso) + (iso === today ? ' · Today' : '')));
+      if (iso === today) block.appendChild(readingRow(iso));
+      items.forEach((item) => block.appendChild(eventRow(item, { hideDate: true })));
+      if (!items.length) block.appendChild(el('p', 'empty', 'Nothing today'));
+      list.appendChild(block);
+      shown += items.length;
+    });
+    const later = allEvents().filter((item) => eventDate(item) > weekEnd).sort((a, b) => eventDate(a) < eventDate(b) ? -1 : 1);
+    if (later.length) {
+      list.appendChild(el('h3', 'mailsec', 'Later'));
+      later.forEach((item) => list.appendChild(eventRow(item)));
+      shown += later.length;
+    }
+    if (!shown && calState !== 'error') list.appendChild(el('p', 'empty', 'Nothing on the calendar'));
+  }
+  const n = allEvents().filter((item) => {
+    const d = eventDate(item);
+    return d >= today && d <= weekEnd;
+  }).length;
+  updateCalBadge(n);
+}
+function updateCalBadge(n){
+  const b = document.getElementById('cal-badge');
+  b.hidden = !n;
+  b.textContent = n > 9 ? '9+' : String(n);
+  document.getElementById('tab-calendar').setAttribute('aria-label', n ? 'Calendar, ' + n + ' this week' : 'Calendar');
+}
+async function loadCalendar(){
+  try {
+    const r = await fetchTimeout('./data/calendar.json', 5000);
+    if (!r.ok) throw new Error('status');
+    const text = await r.text();
+    if (text === calRaw && calState === 'ready') return;
+    calRaw = text;
+    const data = JSON.parse(text);
+    calItems = cleanCalendarItems(data && data.items);
+    calState = 'ready';
+  } catch (e) {
+    if (calState === 'ready') return;
+    calState = 'error';
+    calItems = [];
+  }
+  renderAgenda();
 }
 
 function setStat(pre, key, value, detail, tone){
@@ -2026,7 +2161,7 @@ document.addEventListener('keydown', (e) => {
 window.addEventListener('hashchange', () => setTab(tabFromHash(), { silent: true }));
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) { timers.forEach(clearInterval); timers = []; return; }
-  tick(); pollWeather(); pollLedger(); pollVantage(); pollVKS(); loadDecisions(); loadMail(); startTimers();
+  tick(); pollWeather(); pollLedger(); pollVantage(); pollVKS(); loadDecisions(); loadMail(); loadCalendar(); startTimers();
 });
 
 buildProjects();
@@ -2053,6 +2188,7 @@ pollVantage();
 pollVKS();
 loadDecisions();
 loadMail();
+loadCalendar();
 startTimers();
 if ('serviceWorker' in navigator && location.protocol !== 'file:') {
   navigator.serviceWorker.register('./sw.js').catch(function(){});
