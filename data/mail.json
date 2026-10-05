@@ -1,40 +1,60 @@
 {
-  "updatedAt": "2026-10-03T14:27:00-05:00",
+  "updatedAt": "2026-10-05T15:04:00-05:00",
   "items": [
     {
-      "id": "AQMkADAwATMwMAItZDAwADYtMzY4MS0wMAItMDAKAEYAAAPloCSr0b5rSYXRQ3rrPqvvBwBk0clRLlXBQZv8Hgc6308hAAACAQwAAABk0clRLlXBQZv8Hgc6308hAAnC9mnDAAAA",
-      "title": "Lance Rossi - please review - response requested",
-      "snippet": "Attention required regarding your account status. Dear Lance Rossi, We want to make sure you're aware that your Credit One Bank, N.A. (American Express) account needs attention.",
+      "id": "AAkALgAAAAAAHYQDEapmEc2byACqAC-EWg0AZNHJUS5VwUGb-B4HOt9PIQAJwvnqOwAA",
+      "title": "Your payment is past due",
+      "snippet": "RKB Property Management: rent past due for 2514 Stagg Hill Rd #12. Due date 10/01/2026. Total due $475.00 — pay via DoorLoop.",
       "whyShown": "attention",
       "mailbox": "personal",
-      "internetMessageId": "<Fc_tP5-aQvyilWsy1R5wDw@geopod-ismtpd-11>",
+      "internetMessageId": "<010001a10d964c07-07ad5033-7f43-49e8-b0b9-baa7accbda9b-000000@email.amazonses.com>",
       "deepLink": "",
-      "updatedAt": "2026-10-03T11:41:06-05:00"
+      "updatedAt": "2026-10-05T14:41:59-05:00"
     },
     {
-      "id": "AQMkADAwATMwMAItZDAwADYtMzY4MS0wMAItMDAKAEYAAAPloCSr0b5rSYXRQ3rrPqvvBwBk0clRLlXBQZv8Hgc6308hAAACAQwAAABk0clRLlXBQZv8Hgc6308hAAnC9mmqAAAA",
-      "title": "Review & Pay: Rent Charges Have Been Posted to Your Account",
-      "snippet": "Rent Charges Have Been Posted to Your Account. Company Name: RKB Property Management. Rent Due Date: 10/01/2026. Amount: $875.00. Total Outstanding Balance: $475.00.",
+      "id": "AAkALgAAAAAAHYQDEapmEc2byACqAC-EWg0AZNHJUS5VwUGb-B4HOt9PIQAJwvnqNAAA",
+      "title": "Only intended for Lance Rossi, response requested",
+      "snippet": "Halsted Financial: Credit One / LVNV account flagged for review — pre-legal notice; balance $642.15 with settlement offer.",
       "whyShown": "attention",
       "mailbox": "personal",
-      "internetMessageId": "<010001a0f93979b1-3a933b54-154f-4626-af27-59cde07abd2c-000000@email.amazonses.com>",
+      "internetMessageId": "<hh_-xL0CQDmSnXjK7xCNEg@geopod-ismtpd-41>",
       "deepLink": "",
-      "updatedAt": "2026-10-01T15:48:10-05:00"
+      "updatedAt": "2026-10-05T14:33:19-05:00"
     },
     {
-      "id": "AQMkADAwATMwMAItZDAwADYtMzY4MS0wMAItMDAKAEYAAAPloCSr0b5rSYXRQ3rrPqvvBwBk0clRLlXBQZv8Hgc6308hAAACAQwAAABk0clRLlXBQZv8Hgc6308hAAnC9mmkAAAA",
+      "id": "AAkALgAAAAAAHYQDEapmEc2byACqAC-EWg0AZNHJUS5VwUGb-B4HOt9PIQAJwvncjgAA",
+      "title": "Re: PHONE NUMBER",
+      "snippet": "Gabriel Louw (Briggs Auto): needs most recent bank statement showing September VA deposit — last item the bank needs.",
+      "whyShown": "attention",
+      "mailbox": "personal",
+      "internetMessageId": "<e283516091bc4c54a7d818ad2d999682@briggsauto.com>",
+      "deepLink": "",
+      "updatedAt": "2026-10-05T10:32:28-05:00"
+    },
+    {
+      "id": "AAkALgAAAAAAHYQDEapmEc2byACqAC-EWg0AZNHJUS5VwUGb-B4HOt9PIQAJwvnYngAA",
       "title": "VA appointment on Wednesday October 07, 2026",
-      "snippet": "In-person appointment Wednesday October 07, 2026 03:00 PM Junction City Va Clinic. Clinic: Junction City In-person Pact Team 4 Doctor Caycedo. Phone number: 785-350-4670.",
+      "snippet": "In-person Wed Oct 7, 2026 3:00 PM Junction City VA Clinic — PACT Team 4, Doctor Caycedo (Jc Cboc North).",
       "whyShown": "attention",
       "mailbox": "personal",
-      "internetMessageId": "<010a01a0f7cceb43-48486c02-bb35-43ff-9d18-fbd610bb12ca-000000@us-gov-west-1.amazonses.com>",
+      "internetMessageId": "<010a01a10c674264-4aa94305-2290-469d-86ee-a2424500e211-000000@us-gov-west-1.amazonses.com>",
       "deepLink": "",
-      "updatedAt": "2026-10-01T09:10:03-05:00"
+      "updatedAt": "2026-10-05T09:10:59-05:00"
+    },
+    {
+      "id": "AAkALgAAAAAAHYQDEapmEc2byACqAC-EWg0AZNHJUS5VwUGb-B4HOt9PIQAJwvmnywAA",
+      "title": "Today's sermon (out a little early)",
+      "snippet": "Brian Smith (Westview): Tangible Kingdom sermon notes attached — next step is invite people in; asks for feedback.",
+      "whyShown": "attention",
+      "mailbox": "personal",
+      "internetMessageId": "<CAF5n9NTFqLo1Q9cLZ3T1d4raZ7XkUiCqqwii_Y0W7bkQ=15_fw@mail.gmail.com>",
+      "deepLink": "",
+      "updatedAt": "2026-10-04T16:54:43-05:00"
     },
     {
       "id": "AQMkADAwATMwMAItZDAwADYtMzY4MS0wMAItMDAKAEYAAAPloCSr0b5rSYXRQ3rrPqvvBwBk0clRLlXBQZv8Hgc6308hAAACAQwAAABk0clRLlXBQZv8Hgc6308hAAnC9mmdAAAA",
       "title": "Your card on file has expired",
-      "snippet": "The card you have selected for AutoPay has expired. To continue with automatic payments, please log in to My WM and update your payment method.",
+      "snippet": "Waste Management: AutoPay card expired — update payment method in My WM to stay enrolled.",
       "whyShown": "attention",
       "mailbox": "personal",
       "internetMessageId": "<-2k1bcPEQ06d3C6HDH1new@geopod-ismtpd-12>",
@@ -42,19 +62,9 @@
       "updatedAt": "2026-10-01T02:07:07-05:00"
     },
     {
-      "id": "AQMkADAwATMwMAItZDAwADYtMzY4MS0wMAItMDAKAEYAAAPloCSr0b5rSYXRQ3rrPqvvBwBk0clRLlXBQZv8Hgc6308hAAACAQwAAABk0clRLlXBQZv8Hgc6308hAAnC9mmIAAAA",
-      "title": "Appointment Scheduled",
-      "snippet": "Your appointment has been scheduled. Service Center Name: EKART AUTOMOTIVE INC. Date / Time: 10/5/2026 10:00:00 AM. Type: Installation.",
-      "whyShown": "attention",
-      "mailbox": "personal",
-      "internetMessageId": "<kDN6AWq2RxmKgweJZ38Ovg@geopod-ismtpd-4>",
-      "deepLink": "",
-      "updatedAt": "2026-09-29T12:21:50-05:00"
-    },
-    {
       "id": "AQMkADAwATMwMAItZDAwADYtMzY4MS0wMAItMDAKAEYAAAPloCSr0b5rSYXRQ3rrPqvvBwBk0clRLlXBQZv8Hgc6308hAAACAQwAAABk0clRLlXBQZv8Hgc6308hAAnC9ml3AAAA",
       "title": "Appointment Confirmation",
-      "snippet": "You have an appointment with the driver's license office on Tuesday, October 27, 2026 at 11:00 AM. Please visit https://ksrevenue.gov/dovproof.html for required documents.",
+      "snippet": "Kansas DMV: driver's license appointment Tuesday Oct 27, 2026 at 11:00 AM — bring required documents.",
       "whyShown": "attention",
       "mailbox": "personal",
       "internetMessageId": "<44207fee-3452-4c04-9420-65a1a395d809@ORVEXCHANGE.kdor.ks.gov>",
@@ -62,19 +72,9 @@
       "updatedAt": "2026-09-28T16:40:31-05:00"
     },
     {
-      "id": "AQMkADAwATMwMAItZDAwADYtMzY4MS0wMAItMDAKAEYAAAPloCSr0b5rSYXRQ3rrPqvvBwBk0clRLlXBQZv8Hgc6308hAAACAQwAAABk0clRLlXBQZv8Hgc6308hAAm6JAOYAAAA",
-      "title": "Sunday's Sermon - new series! Tangible Kingdom",
-      "snippet": "Good Monday morning all! I have attached the sermon notes from the first sermon in the new series \"Tangible Kingdom\". Looking forward to any feedback!",
-      "whyShown": "attention",
-      "mailbox": "personal",
-      "internetMessageId": "<CAF5n9NQsvCNuzAkLM0wpQrbp_wh2P3OtC2dYoeSsbjWtXBvwbA@mail.gmail.com>",
-      "deepLink": "",
-      "updatedAt": "2026-09-14T06:53:37-05:00"
-    },
-    {
-      "id": "AQMkADAwATMwMAItZDAwADYtMzY4MS0wMAItMDAKAEYAAAPloCSr0b5rSYXRQ3rrPqvvBwBk0clRLlXBQZv8Hgc6308hAAACAQkAAABk0clRLlXBQZv8Hgc6308hAAnC90RHAAAA",
+      "id": "AAkALgAAAAAAHYQDEapmEc2byACqAC-EWg0AZNHJUS5VwUGb-B4HOt9PIQAJwvjU3gAA",
       "title": "Re: PHONE NUMBER",
-      "snippet": "Replied with the phone number that was requested.",
+      "snippet": "Sent Gabriel Louw the phone number he requested for the Briggs Auto loan file.",
       "whyShown": "recent-reply",
       "mailbox": "personal",
       "internetMessageId": "<LV8P220MB1782FF4CC063B1665E2172EAE3892@LV8P220MB1782.NAMP220.PROD.OUTLOOK.COM>",
@@ -82,9 +82,9 @@
       "updatedAt": "2026-10-02T16:50:53-05:00"
     },
     {
-      "id": "AQMkADAwATMwMAItZDAwADYtMzY4MS0wMAItMDAKAEYAAAPloCSr0b5rSYXRQ3rrPqvvBwBk0clRLlXBQZv8Hgc6308hAAACAQkAAABk0clRLlXBQZv8Hgc6308hAAnC90REAAAAAA==",
+      "id": "AAkALgAAAAAAHYQDEapmEc2byACqAC-EWg0AZNHJUS5VwUGb-B4HOt9PIQAJwvgi-wAA",
       "title": "Re: Lance Rossi - insurance",
-      "snippet": "Gabriel — signed and submitted the OneSpan insurance form. Let me know if the bank needs anything else. Thanks, Lance",
+      "snippet": "Told Gabriel the OneSpan insurance form was signed and submitted; offered to send anything else the bank needs.",
       "whyShown": "recent-reply",
       "mailbox": "personal",
       "internetMessageId": "<LV8P220MB178225FC75C61EA80BFA4FF1E38B2@LV8P220MB1782.NAMP220.PROD.OUTLOOK.COM>",
@@ -92,9 +92,9 @@
       "updatedAt": "2026-09-30T12:44:16-05:00"
     },
     {
-      "id": "AQMkADAwATMwMAItZDAwADYtMzY4MS0wMAItMDAKAEYAAAPloCSr0b5rSYXRQ3rrPqvvBwBk0clRLlXBQZv8Hgc6308hAAACAQkAAABk0clRLlXBQZv8Hgc6308hAAnC90RBAAAA",
+      "id": "AAkALgAAAAAAHYQDEapmEc2byACqAC-EWg0AZNHJUS5VwUGb-B4HOt9PIQAJwvdvRAAA",
       "title": "Lance Rossi - insurance",
-      "snippet": "Respectfully, Lance Rossi",
+      "snippet": "Sent insurance materials to Gabriel Louw at Briggs Auto.",
       "whyShown": "recent-reply",
       "mailbox": "personal",
       "internetMessageId": "<LV8P220MB17826AF4246ED89F1525239CE38D2@LV8P220MB1782.NAMP220.PROD.OUTLOOK.COM>",
@@ -102,14 +102,24 @@
       "updatedAt": "2026-09-28T14:03:08-05:00"
     },
     {
-      "id": "AQMkADAwATMwMAItZDAwADYtMzY4MS0wMAItMDAKAEYAAAPloCSr0b5rSYXRQ3rrPqvvBwBk0clRLlXBQZv8Hgc6308hAAACAQkAAABk0clRLlXBQZv8Hgc6308hAAm-3ekDAAAA",
+      "id": "AAkALgAAAAAAHYQDEapmEc2byACqAC-EWg0AZNHJUS5VwUGb-B4HOt9PIQAJv95PBgAA",
       "title": "Loan Documents",
-      "snippet": "Hi Gabe! Here are the documents you requested. Thanks again for all your help.",
+      "snippet": "Sent Gabe the June–August 2026 bank statements he requested for the loan file.",
       "whyShown": "recent-reply",
       "mailbox": "personal",
       "internetMessageId": "<LV8P220MB1782DDB901785B34F178AFEAE3822@LV8P220MB1782.NAMP220.PROD.OUTLOOK.COM>",
       "deepLink": "",
       "updatedAt": "2026-09-22T23:26:08-05:00"
+    },
+    {
+      "id": "AAkALgAAAAAAHYQDEapmEc2byACqAC-EWg0AZNHJUS5VwUGb-B4HOt9PIQAJvslSXAAA",
+      "title": "RE: Sunday's sermon - Loving Incarnationally",
+      "snippet": "Thanked Brian for the sermon and shared the BLEST mnemonic for incarnational living.",
+      "whyShown": "recent-reply",
+      "mailbox": "personal",
+      "internetMessageId": "<LV8P220MB1782FE2AF5D7A30C28B450BCE3842@LV8P220MB1782.NAMP220.PROD.OUTLOOK.COM>",
+      "deepLink": "",
+      "updatedAt": "2026-09-21T11:32:57-05:00"
     }
   ]
 }
