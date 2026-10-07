@@ -1,19 +1,10 @@
 {
-  "updatedAt": "2026-10-07T18:30:00.000Z",
+  "updatedAt": "2026-10-07T18:50:00.000Z",
   "stage": {
     "id": "weekly-sync",
     "title": "Weekly Sync",
     "asOf": "2026-10-07",
     "notes": [
-      {
-        "id": "ros-26",
-        "role": "building",
-        "linearIssueId": "ROS-26",
-        "linearUrl": "https://linear.app/rosscomm/issue/ROS-26/command-deck-weekly-sync-decision-stage-visuals-toggles",
-        "title": "This section",
-        "status": "In Progress",
-        "detail": "Building. Full section: visuals + toggles that write Linear."
-      },
       {
         "id": "ros-13",
         "role": "status",
@@ -39,7 +30,7 @@
       "id": "ros-16",
       "section": "weekly-sync",
       "title": "Essay · Who Picks Up the Phone",
-      "gloss": "Who Picks Up the Phone essay: publish decision.",
+      "gloss": "When your essay goes out on Substack.",
       "prompt": "After Substack PDF read.",
       "owner": "Patricia",
       "leftOff": "Cleared Substack PDF delivered to Lance; ROS-20 Done.",
@@ -61,7 +52,7 @@
       "id": "ros-8",
       "section": "weekly-sync",
       "title": "ENTRP 340 teaching packet",
-      "gloss": "ENTRP 340 teaching packet: resume and cover letter.",
+      "gloss": "Your resume and cover letter for the ENTRP 340 teaching job.",
       "prompt": "",
       "owner": "Writer",
       "leftOff": "Editor CLEAR; hold publish; GAPS with Lance.",
@@ -83,7 +74,7 @@
       "id": "ros-21",
       "section": "weekly-sync",
       "title": "Social + PDF re-gate",
-      "gloss": "Social posts and PDF leave-behind built from the cleared Substack essay.",
+      "gloss": "Social posts and a PDF handout made from the essay after it runs.",
       "prompt": "",
       "owner": "Editor / Digital Production",
       "leftOff": "Substack CLEAR (ROS-19 Done); social/PDF held for rebuild from cleared Substack.",
@@ -96,7 +87,7 @@
       "choice": "C",
       "decidedAt": "2026-10-07",
       "options": [
-        { "id": "A", "label": "Queue ROS-21 — DP rebuilds social + stylized PDF from cleared Substack → Editor hard re-gate" },
+        { "id": "A", "label": "Queue ROS-21: DP rebuilds social + stylized PDF from cleared Substack → Editor hard re-gate" },
         { "id": "B", "label": "Park ROS-21 until asked" },
         { "id": "C", "label": "Skip social; leave-behind PDF only when wanted" }
       ]
