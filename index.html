@@ -130,7 +130,7 @@ h1.mark b { color: var(--fire); font-weight: 600; }
   scroll-padding-top: calc(var(--nav-h) + var(--safe-top) + 8px);
   scroll-padding-bottom: calc(var(--tab-h) + var(--safe-bot) + 12px);
 }
-#deconflict, #proj-cards, #dispatch-block, #bible-block, #cap-block, #install-block, #vantage-block {
+#deconflict, #proj-cards, #dispatch-block, #bible-block, #cap-block, #install-block, #vantage-block, #weekly-sync, #sources, #weekly-sync .ditem {
   scroll-margin-top: calc(var(--nav-h) + var(--safe-top) + 12px);
 }
 
@@ -231,7 +231,7 @@ a.arow { width: 100%; }
 .addrow input:focus, .src input:focus, .dqrow input:focus, .dnote:focus {
   outline: none; border-color: var(--cyan-dim); box-shadow: 0 0 0 3px var(--cyan-soft);
 }
-.addrow button, .dqrow button, .dqacts button, #host-form button, #bible-more, .dpublish {
+.addrow button, .dqrow button, .dqacts button, #host-form button, #linear-form button, #bible-more, .dpublish, .dconfirm {
   flex: none; min-height: 44px; min-width: 64px; padding: 0 14px; border-radius: 12px;
   border: 0; background: var(--cyan-soft); color: var(--cyan);
   font-size: 17px; font-weight: 600; letter-spacing: -0.02em;
@@ -288,6 +288,72 @@ a.arow { width: 100%; }
 .opt input { width: 22px; height: 22px; margin: 0; accent-color: var(--cyan); flex: none; }
 .opt:has(input:checked) { background: var(--cyan-soft); color: var(--cyan); }
 .dnote { margin-top: 8px; min-height: 72px; resize: vertical; }
+.opt { align-items: flex-start; }
+.opt input { margin-top: 1px; }
+.letter {
+  width: 22px; height: 22px; margin-top: 1px; border-radius: 6px; flex: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: rgba(232,145,58,.16); color: var(--fire);
+  font-size: 13px; font-weight: 700;
+}
+.optlabel { min-width: 0; line-height: 1.3; }
+.syncjump {
+  width: 100%; min-height: 52px; display: flex; align-items: center; gap: 8px;
+  border-top: 0.5px solid var(--sep); padding: 8px 0; text-align: left;
+}
+.syncjump .what { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.syncjump .subid { font-size: 13px; color: var(--ink-mute); font-weight: 500; }
+.streammeta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 4px; }
+.issueid {
+  font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0;
+  color: var(--cyan); text-decoration: none;
+}
+.owner { font-size: 13px; color: var(--ink-mute); }
+.leftoff, .where { margin: 0 0 8px; color: var(--ink-mute); font-size: 15px; line-height: 1.35; }
+.where { color: var(--ink-faint); font-size: 13px; }
+.slot {
+  margin: 0 0 10px; padding: 10px 12px; border-radius: 12px;
+  border: 1px dashed rgba(90,209,240,.4); background: rgba(90,209,240,.05);
+}
+.slot .k { font-size: 12px; font-weight: 600; color: var(--ink-faint); margin-bottom: 2px; }
+.slot a { color: var(--cyan); font-size: 15px; font-weight: 600; text-decoration: none; overflow-wrap: anywhere; }
+.slot .emptyish { color: var(--ink-faint); font-size: 15px; }
+.dconfirm { width: 100%; margin-top: 10px; background: var(--fire); color: #1a0d04; }
+.dconfirm:disabled { opacity: .45; }
+.dstatus { margin: 8px 0 0; font-size: 13px; line-height: 1.4; color: var(--ink-mute); }
+.dstatus.ok { color: var(--ok); }
+.dstatus.warn { color: var(--fire); }
+.dstatus a { color: var(--cyan); font-weight: 600; }
+.commentcopy {
+  margin: 8px 0 0; padding: 10px 12px; border-radius: 12px;
+  background: rgba(255,255,255,.06); color: var(--ink);
+  font-family: var(--mono); font-size: 12px; line-height: 1.4;
+  white-space: pre-wrap; overflow-wrap: anywhere;
+  user-select: text; -webkit-user-select: text;
+}
+.noterow {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 8px 0; border-top: 0.5px solid var(--sep);
+  text-decoration: none; color: inherit;
+}
+.notebody { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.notebody b { font-size: 15px; font-weight: 600; letter-spacing: -0.02em; }
+.notebody span { font-size: 13px; color: var(--ink-mute); line-height: 1.35; }
+.stag {
+  flex: none; margin-top: 1px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0;
+  padding: 3px 7px; border-radius: 999px; white-space: nowrap;
+}
+.stag.started { color: var(--fire); background: rgba(232,145,58,.16); }
+.stag.done { color: var(--ok); background: rgba(74,222,128,.14); }
+.stag.backlog { color: var(--ink-mute); background: rgba(255,255,255,.08); }
+button.textlink {
+  display: inline; padding: 0; min-height: 0; border-radius: 0;
+  background: none; color: var(--cyan); font: inherit; font-weight: 600;
+  letter-spacing: inherit; text-decoration: underline; text-underline-offset: 2px;
+}
+.keyacts { display: flex; gap: 8px; }
+.keyacts button { flex: 1; }
 
 .lanes {
   display: grid; grid-template-columns: 1fr 1fr;
@@ -654,6 +720,19 @@ html.conserve .dimmable { opacity: .45; }
             <span class="chev" aria-hidden="true">›</span>
           </button>
         </article>
+
+        <article class="card" id="weekly-sync">
+          <div class="cardhead" style="cursor:default">
+            <span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14"><path d="M2 8h12M8 2v12" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="8" r="2.2" fill="currentColor"/></svg></span>
+            <span class="name">Weekly Sync</span>
+            <span class="aside mute" id="sync-aside">Checking</span>
+          </div>
+          <p class="dprompt" id="sync-lead">Courses of action from this sync. A pick stays on this phone. Confirm records it on Linear.</p>
+          <div id="sync-notes"></div>
+          <div id="sync-list"></div>
+          <div class="foot" id="sync-foot"></div>
+          <a class="dpublish" id="dec-publish-stage" href="mailto:lance_rossi_consulting@outlook.com?subject=Deck%20picks">Publish</a>
+        </article>
       </div>
     </section>
 
@@ -772,9 +851,23 @@ html.conserve .dimmable { opacity: .45; }
             <li>Share, then Add to Home Screen.</li>
             <li>Launch Deck. The passphrase is remembered on this phone.</li>
           </ol>
-          <p>Weather and the Bible plan are live. Mail is the curated list in data/mail.json. Calendar is the curated list in data/calendar.json. Todos stay on this device. Ledger and Vantage fill in only when their hosts answer.</p>
+          <p>Weather and the Bible plan are live. Mail is the curated list in data/mail.json. Calendar is the curated list in data/calendar.json. Todos stay on this device. Ledger and Vantage fill in only when their hosts answer. Weekly Sync on Home is the decision stage.</p>
           <a class="alink" href="./deck-mk3.html">Desktop MK III</a>
         </article>
+
+        <details class="src" id="sources">
+          <summary>Sources</summary>
+          <form id="linear-form" novalidate>
+            <label>Linear API key
+              <input id="linear-key" type="password" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Paste a personal API key">
+            </label>
+            <div class="keyacts">
+              <button type="submit">Save key</button>
+              <button type="button" id="linear-clear">Clear key</button>
+            </div>
+            <p class="foot" id="linear-note">Optional. Saved on this phone only. Used as the Authorization header to api.linear.app when you confirm a COA. Nothing here is stored in the repo.</p>
+          </form>
+        </details>
       </div>
     </section>
   </main>
@@ -1087,17 +1180,19 @@ function setTab(tab, opts){
   if (!opts.silent) history.replaceState(null, '', '#' + tab);
   if (opts.anchor) {
     const node = document.getElementById(opts.anchor);
+    if (node && node.tagName === 'DETAILS') node.open = true;
     const scroller = document.querySelector('#view-' + tab + ' .scroller');
     if (node && scroller) {
       requestAnimationFrame(() => {
         const cs = getComputedStyle(document.getElementById('app'));
         const chrome = (parseFloat(cs.getPropertyValue('--nav-h')) || 0) + (parseFloat(cs.getPropertyValue('--safe-top')) || 0);
         const top = node.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop - chrome - 8;
-        scroller.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+        scroller.scrollTo({ top: Math.max(0, top), behavior: opts.instant ? 'auto' : 'smooth' });
       });
     }
   }
 }
+let pendingAnchor = '';
 
 const APPLE_EPOCH_MS = Date.UTC(2001, 0, 1);
 function calshowFromMs(ms){
@@ -1823,12 +1918,50 @@ async function pollWeather(){
     ico.innerHTML = WX_ICON.cloud;
   }
 }
-/* Decisions — data/decisions.json is the record. Picks stay on this phone. */
+/* Decisions — data/decisions.json is the record. Picks stay on this phone.
+   Weekly Sync items (section weekly-sync) render on #weekly-sync.
+   Confirm posts a Linear comment when a key is saved under More → Sources. */
 const PICKS_KEY = 'cf-deck-picks';
+const LINEAR_KEY = 'deck.v2.linearKey';
+const LINEAR_API = 'https://api.linear.app/graphql';
 let decisionItems = [];
+let stageNotes = [];
 let decisionsState = 'loading';
 let decisionsRaw = '';
 let picksCache = null;
+function safeId(id){ return String(id || '').replace(/[^a-zA-Z0-9_-]/g, ''); }
+function cleanHttpUrl(v){
+  if (typeof v !== 'string') return '';
+  const t = v.trim();
+  if (!t) return '';
+  try {
+    const u = new URL(t);
+    if (u.protocol !== 'https:' && u.protocol !== 'http:') return '';
+    return u.href;
+  } catch (e) { return ''; }
+}
+function cleanIssueId(v){
+  if (typeof v !== 'string') return '';
+  const t = v.trim().toUpperCase();
+  return /^[A-Z][A-Z0-9]*-\d+$/.test(t) ? t : '';
+}
+function linearKey(){
+  return loadStr(LINEAR_KEY, '').trim();
+}
+function normalizeLinearKey(raw){
+  const k = String(raw || '').trim().replace(/^Bearer\s+/i, '').trim();
+  if (!k || /\s/.test(k) || k.length < 16) return '';
+  return k;
+}
+function extLink(href, text, cls){
+  const a = document.createElement('a');
+  if (cls) a.className = cls;
+  a.href = href;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  a.textContent = text;
+  return a;
+}
 function loadPicks(){
   if (picksCache) return picksCache;
   try {
@@ -1841,7 +1974,11 @@ function loadPicks(){
           id: p.id,
           choice: typeof p.choice === 'string' ? p.choice : '',
           note: typeof p.note === 'string' ? p.note : '',
-          at: typeof p.at === 'string' ? p.at : ''
+          at: typeof p.at === 'string' ? p.at : '',
+          linearChoice: typeof p.linearChoice === 'string' ? p.linearChoice : '',
+          linearNote: typeof p.linearNote === 'string' ? p.linearNote : '',
+          linearAt: typeof p.linearAt === 'string' ? p.linearAt : '',
+          linearCommentUrl: cleanHttpUrl(p.linearCommentUrl)
         }))
       };
       return picksCache;
@@ -1856,24 +1993,36 @@ function savePicks(){
   try { localStorage.setItem(PICKS_KEY, JSON.stringify(picksCache)); } catch (e) {}
   updatePublish();
 }
+function blankPick(id, now){
+  return {
+    id: id, choice: '', note: '', at: now,
+    linearChoice: '', linearNote: '', linearAt: '', linearCommentUrl: ''
+  };
+}
 function upsertPick(id, patch){
   const store = loadPicks();
   let pick = store.picks.find((p) => p.id === id);
   const now = new Date().toISOString();
   if (!pick) {
-    pick = { id: id, choice: '', note: '', at: now };
+    pick = blankPick(id, now);
     store.picks.push(pick);
   }
   if (Object.prototype.hasOwnProperty.call(patch, 'choice')) pick.choice = String(patch.choice || '');
   if (Object.prototype.hasOwnProperty.call(patch, 'note')) pick.note = String(patch.note || '').slice(0, 500);
+  if (Object.prototype.hasOwnProperty.call(patch, 'linearChoice')) pick.linearChoice = String(patch.linearChoice || '');
+  if (Object.prototype.hasOwnProperty.call(patch, 'linearNote')) pick.linearNote = String(patch.linearNote || '').slice(0, 500);
+  if (Object.prototype.hasOwnProperty.call(patch, 'linearAt')) pick.linearAt = String(patch.linearAt || '');
+  if (Object.prototype.hasOwnProperty.call(patch, 'linearCommentUrl')) pick.linearCommentUrl = cleanHttpUrl(patch.linearCommentUrl);
   pick.at = now;
   savePicks();
 }
 function updatePublish(){
-  const a = document.getElementById('dec-publish');
-  if (!a) return;
   const body = JSON.stringify(loadPicks(), null, 2);
-  a.href = 'mailto:lance_rossi_consulting@outlook.com?subject=' + encodeURIComponent('Deck picks') + '&body=' + encodeURIComponent(body);
+  const href = 'mailto:lance_rossi_consulting@outlook.com?subject=' + encodeURIComponent('Deck picks') + '&body=' + encodeURIComponent(body);
+  ['dec-publish', 'dec-publish-stage'].forEach((id) => {
+    const a = document.getElementById(id);
+    if (a) a.href = href;
+  });
 }
 function cleanDecisionItems(items){
   if (!Array.isArray(items)) return [];
@@ -1883,74 +2032,427 @@ function cleanDecisionItems(items){
     prompt: typeof it.prompt === 'string' ? it.prompt : '',
     allowNote: !!it.allowNote,
     status: it.status,
+    section: it.section === 'weekly-sync' ? 'weekly-sync' : '',
+    owner: typeof it.owner === 'string' ? it.owner.slice(0, 80) : '',
+    leftOff: typeof it.leftOff === 'string' ? it.leftOff.slice(0, 280) : '',
+    where: typeof it.where === 'string' ? it.where.slice(0, 280) : '',
+    linearIssueId: cleanIssueId(it.linearIssueId),
+    linearUrl: cleanHttpUrl(it.linearUrl),
+    previewUrl: cleanHttpUrl(it.previewUrl),
     options: it.options.filter((o) => o && typeof o.id === 'string' && o.id && typeof o.label === 'string').map((o) => ({ id: o.id, label: o.label }))
   })).filter((it) => it.options.length);
 }
-function renderDecisions(){
-  const list = document.getElementById('dec-list');
-  const aside = document.getElementById('dec-aside');
-  if (!list || !aside) return;
+function cleanStageNotes(notes){
+  if (!Array.isArray(notes)) return [];
+  return notes.filter((n) => n && typeof n.title === 'string' && n.title).map((n) => ({
+    id: typeof n.id === 'string' ? n.id : '',
+    role: n.role === 'building' ? 'building' : 'status',
+    title: n.title.slice(0, 120),
+    status: typeof n.status === 'string' ? n.status.slice(0, 40) : '',
+    detail: typeof n.detail === 'string' ? n.detail.slice(0, 280) : '',
+    linearIssueId: cleanIssueId(n.linearIssueId),
+    linearUrl: cleanHttpUrl(n.linearUrl)
+  }));
+}
+function stageTone(status){
+  const s = String(status || '').toLowerCase();
+  if (s === 'done' || s === 'completed' || s === 'complete') return 'done';
+  if (s.indexOf('progress') >= 0 || s === 'building' || s === 'started') return 'started';
+  return 'backlog';
+}
+function decisionComment(item, choice, note){
+  const opt = item.options.find((o) => o.id === choice);
+  const lines = ['**Command Deck · Weekly Sync**', ''];
+  const who = [item.linearIssueId, item.title].filter(Boolean).join(' · ');
+  if (who) lines.push(who);
+  lines.push('COA ' + choice + ' — ' + (opt ? opt.label : choice));
+  if (note) lines.push('', 'Note: ' + note);
+  lines.push('', 'Recorded from Command Deck on this phone.');
+  return lines.join('\n');
+}
+function copyText(txt){
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    return navigator.clipboard.writeText(txt).then(function () { return true; }).catch(function () { return false; });
+  }
+  return Promise.resolve(false);
+}
+async function linearGraphql(query, variables){
+  const key = linearKey();
+  if (!key) {
+    const err = new Error('no-key');
+    err.code = 'no-key';
+    throw err;
+  }
+  const ctrl = new AbortController();
+  const timer = setTimeout(function () { ctrl.abort(); }, 12000);
+  let response;
+  try {
+    response = await fetch(LINEAR_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': key },
+      body: JSON.stringify({ query: query, variables: variables }),
+      signal: ctrl.signal
+    });
+  } catch (e) {
+    const err = new Error('network');
+    err.code = 'network';
+    throw err;
+  } finally {
+    clearTimeout(timer);
+  }
+  let data = null;
+  try { data = await response.json(); } catch (e) {}
+  if (!response.ok || !data || data.errors) {
+    const err = new Error('linear');
+    err.code = (response.status === 401 || response.status === 403) ? 'auth' : 'linear';
+    throw err;
+  }
+  return data.data;
+}
+async function postDecisionComment(issueKey, body){
+  if (!issueKey) {
+    const err = new Error('no issue');
+    err.code = 'linear';
+    throw err;
+  }
+  let issueId = issueKey;
+  const found = await linearGraphql('query($id: String!) { issue(id: $id) { id } }', { id: issueKey });
+  if (found && found.issue && found.issue.id) issueId = found.issue.id;
+  const created = await linearGraphql(
+    'mutation($issueId: String!, $body: String!) { commentCreate(input: { issueId: $issueId, body: $body }) { success comment { id url } } }',
+    { issueId: issueId, body: body }
+  );
+  const res = created && created.commentCreate;
+  if (!res || res.success !== true) {
+    const err = new Error('not accepted');
+    err.code = 'linear';
+    throw err;
+  }
+  return res.comment || {};
+}
+function streamView(pick){
+  if (!pick || !pick.choice) return { btn: 'Confirm on Linear', disabled: true, status: 'Choose A, B, or C.', kind: '' };
+  const same = pick.linearChoice === pick.choice && (pick.linearNote || '') === (pick.note || '') && pick.linearAt;
+  if (same) return { btn: 'Confirm again', disabled: false, status: 'On Linear.', kind: 'ok', href: pick.linearCommentUrl || '' };
+  return { btn: 'Confirm on Linear', disabled: false, status: 'Saved on this phone.', kind: '' };
+}
+function paintPickChrome(id){
+  const pick = loadPicks().picks.find((p) => p.id === id) || null;
+  const aside = document.querySelector('[data-pick-aside="' + safeId(id) + '"]');
+  if (aside) {
+    if (pick && pick.choice) { aside.textContent = pick.choice; aside.classList.remove('mute'); }
+    else { aside.textContent = 'Open'; aside.classList.add('mute'); }
+  }
+  const root = document.getElementById('stream-' + safeId(id));
+  if (!root || root.dataset.busy === '1' || root.dataset.hold === '1') return;
+  const btn = root.querySelector('.dconfirm');
+  const stat = root.querySelector('.dstatus');
+  if (!btn || !stat) return;
+  const view = streamView(pick);
+  btn.textContent = view.btn;
+  btn.disabled = !!view.disabled;
+  clear(stat);
+  stat.className = 'dstatus' + (view.kind ? ' ' + view.kind : '');
+  if (view.href) {
+    stat.appendChild(document.createTextNode('On Linear. '));
+    stat.appendChild(extLink(view.href, 'Open comment'));
+  } else stat.textContent = view.status;
+}
+function fallbackCopyNote(code, copied){
+  const copiedBit = copied ? 'Comment copied.' : 'Copy was blocked — the comment is below.';
+  if (code === 'no-key') return 'No Linear key on this phone. ' + copiedBit + ' Paste it on the issue, or save a key under More → Sources.';
+  if (code === 'auth') return 'Linear refused that key. ' + copiedBit + ' Check More → Sources.';
+  if (code === 'network') return 'Linear did not answer. ' + copiedBit;
+  return 'Linear did not take the comment. ' + copiedBit;
+}
+async function finishFallback(root, item, body, code){
+  root.dataset.hold = '1';
+  let copied = false;
+  try { copied = await copyText(body); } catch (e) { copied = false; }
+  const stat = root.querySelector('.dstatus');
+  if (stat) {
+    clear(stat);
+    stat.className = 'dstatus warn';
+    stat.appendChild(document.createTextNode(fallbackCopyNote(code, copied) + ' '));
+    if (item.linearUrl) stat.appendChild(extLink(item.linearUrl, 'Open ' + (item.linearIssueId || 'Linear')));
+  }
+  let pre = root.querySelector('.commentcopy');
+  if (!pre) {
+    pre = el('pre', 'commentcopy');
+    root.appendChild(pre);
+  }
+  pre.textContent = body;
+  const btn = root.querySelector('.dconfirm');
+  if (btn) { btn.disabled = false; btn.textContent = 'Confirm on Linear'; }
+}
+async function confirmStream(item){
+  const root = document.getElementById('stream-' + safeId(item.id));
+  if (!root || root.dataset.busy === '1') return;
+  const pick = loadPicks().picks.find((p) => p.id === item.id);
+  if (!pick || !pick.choice) return;
+  const body = decisionComment(item, pick.choice, pick.note || '');
+  const stat = root.querySelector('.dstatus');
+  const btn = root.querySelector('.dconfirm');
+  const old = root.querySelector('.commentcopy');
+  if (old) old.remove();
+  delete root.dataset.hold;
+  if (!linearKey() || !item.linearIssueId) {
+    if (item.linearUrl) window.open(item.linearUrl, '_blank', 'noopener');
+    await finishFallback(root, item, body, linearKey() ? 'linear' : 'no-key');
+    return;
+  }
+  root.dataset.busy = '1';
+  if (btn) { btn.disabled = true; btn.textContent = 'Posting…'; }
+  if (stat) { stat.className = 'dstatus'; stat.textContent = 'Posting to ' + item.linearIssueId + '…'; }
+  try {
+    const comment = await postDecisionComment(item.linearIssueId, body);
+    delete root.dataset.busy;
+    upsertPick(item.id, {
+      linearChoice: pick.choice,
+      linearNote: pick.note || '',
+      linearAt: new Date().toISOString(),
+      linearCommentUrl: comment && comment.url ? comment.url : ''
+    });
+    paintPickChrome(item.id);
+  } catch (err) {
+    delete root.dataset.busy;
+    if (btn) btn.disabled = false;
+    const code = err && err.code === 'auth' ? 'auth' : (err && err.code === 'network' ? 'network' : 'linear');
+    await finishFallback(root, item, body, code);
+  }
+}
+function noteRow(note){
+  const row = document.createElement(note.linearUrl ? 'a' : 'div');
+  row.className = 'noterow';
+  if (note.linearUrl) {
+    row.href = note.linearUrl;
+    row.target = '_blank';
+    row.rel = 'noopener noreferrer';
+  }
+  row.appendChild(el('span', 'stag ' + stageTone(note.status), note.status || 'Note'));
+  const body = el('span', 'notebody');
+  body.appendChild(el('b', '', (note.linearIssueId ? note.linearIssueId + ' · ' : '') + note.title));
+  if (note.detail) body.appendChild(el('span', '', note.detail));
+  row.appendChild(body);
+  return row;
+}
+function previewSlot(item){
+  const slot = el('div', 'slot');
+  slot.appendChild(el('div', 'k', 'Preview'));
+  if (item.previewUrl) slot.appendChild(extLink(item.previewUrl, item.previewUrl));
+  else slot.appendChild(el('div', 'emptyish', 'Open for a preview URL.'));
+  return slot;
+}
+function streamJump(item){
+  const pick = loadPicks().picks.find((p) => p.id === item.id);
+  const btn = el('button', 'syncjump');
+  btn.type = 'button';
+  btn.setAttribute('data-sync', 'weekly-sync');
+  btn.setAttribute('data-stream', 'stream-' + safeId(item.id));
+  const what = el('span', 'what');
+  what.appendChild(el('span', 'title', item.title));
+  const sub = [item.linearIssueId, item.owner].filter(Boolean).join(' · ');
+  if (sub) what.appendChild(el('span', 'subid', sub));
+  btn.appendChild(what);
+  const aside = el('span', 'aside' + (pick && pick.choice ? '' : ' mute'), pick && pick.choice ? pick.choice : 'Open');
+  aside.setAttribute('data-pick-aside', safeId(item.id));
+  btn.appendChild(aside);
+  btn.appendChild(el('span', 'chev', '›'));
+  return btn;
+}
+function bindChoice(item, input, optId){
+  input.addEventListener('change', () => {
+    if (!input.checked) return;
+    const root = document.getElementById('stream-' + safeId(item.id));
+    if (root) delete root.dataset.hold;
+    upsertPick(item.id, { choice: optId });
+    paintPickChrome(item.id);
+  });
+}
+function streamCard(item){
+  const pick = loadPicks().picks.find((p) => p.id === item.id);
+  const card = el('article', 'ditem');
+  card.id = 'stream-' + safeId(item.id);
+  const meta = el('div', 'streammeta');
+  if (item.linearUrl) meta.appendChild(extLink(item.linearUrl, item.linearIssueId || 'Linear', 'issueid'));
+  else if (item.linearIssueId) meta.appendChild(el('span', 'issueid', item.linearIssueId));
+  if (item.owner) meta.appendChild(el('span', 'owner', item.owner));
+  if (meta.childNodes.length) card.appendChild(meta);
+  card.appendChild(el('h3', '', item.title));
+  if (item.prompt) card.appendChild(el('p', 'dprompt', item.prompt));
+  if (item.leftOff) card.appendChild(el('p', 'leftoff', 'Left off: ' + item.leftOff));
+  if (item.where) card.appendChild(el('p', 'where', item.where));
+  card.appendChild(previewSlot(item));
+  const group = el('div', 'opts');
+  group.setAttribute('role', 'radiogroup');
+  group.setAttribute('aria-label', item.title);
+  item.options.forEach((opt) => {
+    const label = el('label', 'opt');
+    const input = document.createElement('input');
+    input.type = 'radio';
+    input.name = 'sync-' + safeId(item.id);
+    input.value = opt.id;
+    input.checked = !!(pick && pick.choice === opt.id);
+    bindChoice(item, input, opt.id);
+    label.appendChild(input);
+    if (opt.id.length <= 3) label.appendChild(el('span', 'letter', opt.id));
+    label.appendChild(el('span', 'optlabel', opt.label));
+    group.appendChild(label);
+  });
+  card.appendChild(group);
+  if (item.allowNote) {
+    const note = document.createElement('textarea');
+    note.className = 'dnote';
+    note.maxLength = 500;
+    note.rows = 2;
+    note.placeholder = 'Note (optional)';
+    note.setAttribute('aria-label', 'Note for ' + item.title);
+    note.value = pick && pick.note ? pick.note : '';
+    note.addEventListener('input', () => {
+      delete card.dataset.hold;
+      upsertPick(item.id, { note: note.value });
+      paintPickChrome(item.id);
+    });
+    card.appendChild(note);
+  }
+  const view = streamView(pick);
+  const confirm = el('button', 'dconfirm', view.btn);
+  confirm.type = 'button';
+  confirm.disabled = !!view.disabled;
+  confirm.addEventListener('click', () => { confirmStream(item); });
+  card.appendChild(confirm);
+  const stat = el('p', 'dstatus' + (view.kind ? ' ' + view.kind : ''), view.href ? '' : view.status);
+  if (view.href) {
+    stat.appendChild(document.createTextNode('On Linear. '));
+    stat.appendChild(extLink(view.href, 'Open comment'));
+  }
+  card.appendChild(stat);
+  return card;
+}
+function decisionCard(item){
+  const pick = loadPicks().picks.find((p) => p.id === item.id);
+  const card = el('article', 'ditem');
+  card.appendChild(el('h3', '', item.title));
+  if (item.prompt) card.appendChild(el('p', 'dprompt', item.prompt));
+  const group = el('div', 'opts');
+  group.setAttribute('role', 'radiogroup');
+  group.setAttribute('aria-label', item.title);
+  item.options.forEach((opt) => {
+    const label = el('label', 'opt');
+    const input = document.createElement('input');
+    input.type = 'radio';
+    input.name = 'decision-' + safeId(item.id);
+    input.value = opt.id;
+    input.checked = !!(pick && pick.choice === opt.id);
+    input.addEventListener('change', () => { if (input.checked) upsertPick(item.id, { choice: opt.id }); });
+    label.appendChild(input);
+    label.appendChild(el('span', '', opt.label));
+    group.appendChild(label);
+  });
+  card.appendChild(group);
+  if (item.allowNote) {
+    const note = document.createElement('textarea');
+    note.className = 'dnote';
+    note.maxLength = 500;
+    note.rows = 2;
+    note.placeholder = 'Note (optional)';
+    note.setAttribute('aria-label', 'Note for ' + item.title);
+    note.value = pick && pick.note ? pick.note : '';
+    note.addEventListener('input', () => upsertPick(item.id, { note: note.value }));
+    card.appendChild(note);
+  }
+  return card;
+}
+function syncFoot(){
+  const foot = document.getElementById('sync-foot');
+  if (!foot) return;
+  clear(foot);
+  const lead = linearKey()
+    ? 'Confirm posts the COA as a comment on that Linear issue. '
+    : 'No Linear key on this phone. Confirm copies the comment and opens the issue. ';
+  foot.appendChild(document.createTextNode(lead + 'The key lives under '));
+  const jump = el('button', 'textlink', 'More → Sources');
+  jump.type = 'button';
+  jump.setAttribute('data-go', 'more');
+  jump.setAttribute('data-anchor', 'sources');
+  foot.appendChild(jump);
+  foot.appendChild(document.createTextNode('.'));
+}
+function paintLinearNote(){
+  const note = document.getElementById('linear-note');
+  if (!note) return;
+  note.textContent = linearKey()
+    ? 'A key is saved on this phone. It is sent only to api.linear.app when you confirm a COA.'
+    : 'No key saved. Confirm copies the comment and opens the issue. A personal API key from Linear → Settings → Account → Security & access posts it directly. Saved on this phone only.';
+}
+function renderStage(){
+  const list = document.getElementById('sync-list');
+  const notesEl = document.getElementById('sync-notes');
+  const aside = document.getElementById('sync-aside');
+  if (!list || !notesEl || !aside) return;
   clear(list);
+  clear(notesEl);
+  syncFoot();
   if (decisionsState === 'loading') {
     aside.textContent = 'Checking';
     aside.classList.add('mute');
     list.appendChild(el('p', 'empty', 'Checking decisions…'));
-    updatePublish();
     return;
   }
   if (decisionsState === 'error') {
     aside.textContent = 'Offline';
     aside.classList.add('mute');
     list.appendChild(el('p', 'empty', "Decisions file didn't load."));
-    updatePublish();
     return;
   }
-  const open = decisionItems.filter((it) => it.status === 'open');
-  if (!open.length) {
-    aside.textContent = 'None';
+  const weekly = decisionItems.filter((it) => it.status === 'open' && it.section === 'weekly-sync');
+  aside.textContent = weekly.length ? weekly.length + ' open' : 'None';
+  aside.classList.toggle('mute', !weekly.length);
+  stageNotes.filter((n) => n.role === 'building').forEach((n) => notesEl.appendChild(noteRow(n)));
+  if (!weekly.length) list.appendChild(el('p', 'empty', 'Nothing staged.'));
+  else weekly.forEach((item) => list.appendChild(streamCard(item)));
+  const also = stageNotes.filter((n) => n.role !== 'building');
+  if (also.length) {
+    list.appendChild(el('p', 'hsub', 'Also'));
+    also.forEach((n) => list.appendChild(noteRow(n)));
+  }
+}
+function stickWeekly(){
+  if ((location.hash || '').replace('#', '').toLowerCase() !== 'weekly-sync') return;
+  setTab('home', { silent: true, anchor: pendingAnchor || 'weekly-sync', instant: true });
+  pendingAnchor = '';
+}
+function renderDecisions(){
+  renderStage();
+  const list = document.getElementById('dec-list');
+  const aside = document.getElementById('dec-aside');
+  if (!list || !aside) { stickWeekly(); return; }
+  clear(list);
+  if (decisionsState === 'loading') {
+    aside.textContent = 'Checking';
     aside.classList.add('mute');
-    list.appendChild(el('p', 'empty', 'Nothing waiting on you.'));
-    updatePublish();
-    return;
-  }
-  aside.textContent = open.length + ' open';
-  aside.classList.remove('mute');
-  const picks = loadPicks();
-  open.forEach((item, index) => {
-    const pick = picks.picks.find((p) => p.id === item.id);
-    const card = el('article', 'ditem');
-    card.appendChild(el('h3', '', item.title));
-    if (item.prompt) card.appendChild(el('p', 'dprompt', item.prompt));
-    const group = el('div', 'opts');
-    group.setAttribute('role', 'radiogroup');
-    group.setAttribute('aria-label', item.title);
-    item.options.forEach((opt) => {
-      const label = el('label', 'opt');
-      const input = document.createElement('input');
-      input.type = 'radio';
-      input.name = 'decision-' + index;
-      input.value = opt.id;
-      input.checked = !!(pick && pick.choice === opt.id);
-      input.addEventListener('change', () => { if (input.checked) upsertPick(item.id, { choice: opt.id }); });
-      label.appendChild(input);
-      label.appendChild(el('span', '', opt.label));
-      group.appendChild(label);
-    });
-    card.appendChild(group);
-    if (item.allowNote) {
-      const note = document.createElement('textarea');
-      note.className = 'dnote';
-      note.maxLength = 500;
-      note.rows = 2;
-      note.placeholder = 'Note (optional)';
-      note.setAttribute('aria-label', 'Note for ' + item.title);
-      note.value = pick && pick.note ? pick.note : '';
-      note.addEventListener('input', () => upsertPick(item.id, { note: note.value }));
-      card.appendChild(note);
+    list.appendChild(el('p', 'empty', 'Checking decisions…'));
+  } else if (decisionsState === 'error') {
+    aside.textContent = 'Offline';
+    aside.classList.add('mute');
+    list.appendChild(el('p', 'empty', "Decisions file didn't load."));
+  } else {
+    const open = decisionItems.filter((it) => it.status === 'open');
+    const weekly = open.filter((it) => it.section === 'weekly-sync');
+    const rest = open.filter((it) => it.section !== 'weekly-sync');
+    if (!open.length) {
+      aside.textContent = 'None';
+      aside.classList.add('mute');
+      list.appendChild(el('p', 'empty', 'Nothing waiting on you.'));
+    } else {
+      aside.textContent = open.length + ' open';
+      aside.classList.remove('mute');
+      weekly.forEach((item) => list.appendChild(streamJump(item)));
+      rest.forEach((item) => list.appendChild(decisionCard(item)));
     }
-    list.appendChild(card);
-  });
+  }
   updatePublish();
+  stickWeekly();
 }
 async function loadDecisions(){
   try {
@@ -1961,11 +2463,13 @@ async function loadDecisions(){
     decisionsRaw = text;
     const data = JSON.parse(text);
     decisionItems = cleanDecisionItems(data && data.items);
+    stageNotes = cleanStageNotes(data && data.stage && data.stage.notes);
     decisionsState = 'ready';
   } catch (e) {
     if (decisionsState === 'ready') return;
     decisionsState = 'error';
     decisionItems = [];
+    stageNotes = [];
   }
   renderDecisions();
 }
@@ -1995,6 +2499,14 @@ function startTimers(){
 document.body.addEventListener('click', (e) => {
   const tabBtn = e.target.closest('[data-tab]');
   if (tabBtn && tabBtn.closest('.tabs')) { setTab(tabBtn.dataset.tab); return; }
+  const sync = e.target.closest('[data-sync]');
+  if (sync) {
+    const stream = sync.getAttribute('data-stream') || 'weekly-sync';
+    pendingAnchor = stream;
+    if ((location.hash || '').toLowerCase() !== '#weekly-sync') location.hash = 'weekly-sync';
+    else setTab('home', { silent: true, anchor: stream });
+    return;
+  }
   const go = e.target.closest('[data-go]');
   if (go) setTab(go.dataset.go, { anchor: go.dataset.anchor || '' });
 });
@@ -2028,6 +2540,33 @@ document.getElementById('host-form').addEventListener('submit', (e) => {
   refreshOpenLinks();
   pollLedger();
   pollVantage();
+});
+document.getElementById('linear-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const note = document.getElementById('linear-note');
+  const input = document.getElementById('linear-key');
+  const raw = input.value;
+  if (!raw.trim()) {
+    paintLinearNote();
+    return;
+  }
+  const key = normalizeLinearKey(raw);
+  if (!key) {
+    note.textContent = 'That key has spaces or is too short. Paste the token Linear showed once.';
+    return;
+  }
+  try { localStorage.setItem(LINEAR_KEY, key); }
+  catch (err) { note.textContent = 'This phone blocked saving the key.'; return; }
+  input.value = '';
+  paintLinearNote();
+  syncFoot();
+});
+document.getElementById('linear-clear').addEventListener('click', () => {
+  try { localStorage.removeItem(LINEAR_KEY); } catch (e) {}
+  const input = document.getElementById('linear-key');
+  if (input) input.value = '';
+  paintLinearNote();
+  syncFoot();
 });
 document.getElementById('bible-more').addEventListener('click', () => { bibleAll = !bibleAll; renderBible(); });
 document.getElementById('cap').addEventListener('input', (e) => applyCapacity(+e.target.value));
@@ -2087,7 +2626,17 @@ document.addEventListener('keydown', (e) => {
     document.getElementById('dq-input').focus();
   }
 });
-window.addEventListener('hashchange', () => setTab(tabFromHash(), { silent: true }));
+window.addEventListener('hashchange', () => {
+  const raw = (location.hash || '#home').replace('#', '').toLowerCase();
+  if (raw === 'weekly-sync') {
+    const anchor = pendingAnchor || 'weekly-sync';
+    pendingAnchor = '';
+    setTab('home', { silent: true, anchor: anchor });
+    return;
+  }
+  pendingAnchor = '';
+  setTab(tabFromHash(), { silent: true });
+});
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) { timers.forEach(clearInterval); timers = []; return; }
   tick(); pollWeather(); pollLedger(); pollVantage(); pollVKS(); loadDecisions(); loadMail(); loadCalendar(); startTimers();
@@ -2107,8 +2656,13 @@ renderDQ();
 document.getElementById('ledger-host').value = state.ledgerBase;
 document.getElementById('vantage-host').value = state.vantageBase;
 applyCapacity(+(loadStr('deck.cap', '3')));
-setTab(tabFromHash(), { silent: true });
+(function openInitial(){
+  const raw = (location.hash || '#home').replace('#', '').toLowerCase();
+  if (raw === 'weekly-sync') setTab('home', { silent: true, anchor: 'weekly-sync', instant: true });
+  else setTab(tabFromHash(), { silent: true });
+})();
 updatePublish();
+paintLinearNote();
 tick();
 pollWeather();
 pollLedger();
