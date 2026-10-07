@@ -1,4 +1,96 @@
 {
-  "updatedAt": "2026-10-02T22:50:00.000Z",
-  "items": []
+  "updatedAt": "2026-10-07T15:30:00.000Z",
+  "stage": {
+    "id": "weekly-sync",
+    "title": "Weekly Sync",
+    "asOf": "2026-10-07",
+    "notes": [
+      {
+        "id": "ros-26",
+        "role": "building",
+        "linearIssueId": "ROS-26",
+        "linearUrl": "https://linear.app/rosscomm/issue/ROS-26/command-deck-weekly-sync-decision-stage-visuals-toggles",
+        "title": "This section",
+        "status": "In Progress",
+        "detail": "Building. Full section: visuals + toggles that write Linear."
+      },
+      {
+        "id": "ros-13",
+        "role": "status",
+        "linearIssueId": "ROS-13",
+        "linearUrl": "https://linear.app/rosscomm/issue/ROS-13/golden-rule-hccs-rebuild-mock-scroll-taylor-presentation",
+        "title": "Golden Rule",
+        "status": "Done",
+        "detail": "Preview live; waiting Lance/Taylor feedback."
+      },
+      {
+        "id": "ros-17",
+        "role": "status",
+        "linearIssueId": "ROS-17",
+        "linearUrl": "https://linear.app/rosscomm/issue/ROS-17/command-deck-pages-stale-catch-up-owed",
+        "title": "Deck Pages catch-up",
+        "status": "Backlog",
+        "detail": ""
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "ros-16",
+      "section": "weekly-sync",
+      "title": "Essay · Who Picks Up the Phone",
+      "prompt": "After Substack PDF read.",
+      "owner": "Patricia",
+      "leftOff": "Cleared Substack PDF delivered to Lance; ROS-20 Done.",
+      "where": "Publish on hold; conclusion deferred; social/PDF re-gate is ROS-21.",
+      "linearIssueId": "ROS-16",
+      "linearUrl": "https://linear.app/rosscomm/issue/ROS-16/who-picks-up-the-phone-essay-package-wed-lance-handoff",
+      "previewUrl": "",
+      "allowNote": true,
+      "status": "open",
+      "options": [
+        { "id": "A", "label": "Mark Substack for publish when ready" },
+        { "id": "B", "label": "Hold publish and open markup round" },
+        { "id": "C", "label": "Park essay; call ROS-21 when he wants social/PDF leave-behind" }
+      ]
+    },
+    {
+      "id": "ros-8",
+      "section": "weekly-sync",
+      "title": "ENTRP 340 teaching packet",
+      "prompt": "",
+      "owner": "Writer",
+      "leftOff": "Editor CLEAR; hold publish; GAPS with Lance.",
+      "where": "",
+      "linearIssueId": "ROS-8",
+      "linearUrl": "https://linear.app/rosscomm/issue/ROS-8/entrp-340-teaching-packet-resume-cover-letter",
+      "previewUrl": "",
+      "allowNote": true,
+      "status": "open",
+      "options": [
+        { "id": "A", "label": "Answer remaining GAPS ready for, then stylized PDF leave-behind (ROS-24)" },
+        { "id": "B", "label": "Park packet until posting goes live" },
+        { "id": "C", "label": "Hold GAPS open; no PDF until asked" }
+      ]
+    },
+    {
+      "id": "ros-21",
+      "section": "weekly-sync",
+      "title": "Social + PDF re-gate",
+      "prompt": "",
+      "owner": "Editor / Digital Production",
+      "leftOff": "Substack CLEAR (ROS-19 Done); social/PDF held for rebuild from cleared Substack.",
+      "where": "",
+      "linearIssueId": "ROS-21",
+      "linearUrl": "https://linear.app/rosscomm/issue/ROS-21/follow-on-social-pdf-re-gate-from-cleared-substack",
+      "previewUrl": "",
+      "allowNote": true,
+      "status": "open",
+      "options": [
+        { "id": "A", "label": "Queue ROS-21 — DP rebuilds social + stylized PDF from cleared Substack → Editor hard re-gate" },
+        { "id": "B", "label": "Park ROS-21 until asked" },
+        { "id": "C", "label": "Skip social; leave-behind PDF only when wanted" }
+      ]
+    }
+  ]
 }

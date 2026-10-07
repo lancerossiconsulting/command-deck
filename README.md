@@ -60,7 +60,7 @@ a desktop browser to 393×852. Wider windows show the same UI in a phone column.
 | Firm deconflict | Personal is the default and the only owner unless `owner` is `"firm"`. The strip is “nothing double-owned” because each project has one owner. Set `firmOwner` when a real person owns firm work. Shipped firm rows are still unassigned |
 | Capacity | Optional dimmer on More (1–2 dims projects and extras). Shares the `deck.cap` value with MK III |
 | Dispatch | Optional queue on More. Shares `deck.dq` with MK III |
-| Decisions | System of record in `data/decisions.json` (ships empty). Open items render on Home as single-select choices. Picks stay in this browser under `cf-deck-picks`. **Publish** opens a mailto to lance_rossi_consulting@outlook.com with that JSON. No backend |
+| Decisions | System of record in `data/decisions.json`. Open items that are not part of Weekly Sync render on Home as single-select choices. Weekly Sync streams render as rows on that card and in full on the stage at `#weekly-sync`. Picks stay in this browser under `cf-deck-picks`. **Publish** opens a mailto to lance_rossi_consulting@outlook.com with that JSON. **Confirm** on a Weekly Sync stream writes a Linear comment when a personal API key is saved under More → Sources. No backend, and no key in the repo |
 
 Sample names, meetings, and dollar figures in early layout mocks are not
 in the product. Empty and offline states are intentional.
@@ -85,7 +85,7 @@ this `index.html`.
 ## Files
 
 - `index.html` — Command Deck 2.0 phone surface
-- `data/decisions.json` — decisions waiting on a choice (empty until real items are added)
+- `data/decisions.json` — decisions waiting on a choice, including the Weekly Sync stage
 - `data/mail.json` — curated mail (attention and recent replies only)
 - `data/calendar.json` — curated appointments and holds
 - `deck-mk3.html` — desktop MK III
@@ -141,4 +141,38 @@ Each item:
 | `updatedAt` | no | ISO timestamp |
 
 The first three rows are the upcoming appointments already stated in `data/mail.json` (EKART Automotive installation, the Junction City VA visit, and the Kansas driver’s license office). Clock times in those messages had no zone; they are stored as America/Chicago (`-05:00` in October). Past dates drop off the phone automatically. Chloe should replace or extend this list with the real calendar feed and drop items that are no longer ahead.
+
+## Weekly Sync (`#weekly-sync`)
+
+Phone surface only. Decisions already live on `index.html`, so the stage is there. MK III links across with Phone v2 and does not render this list.
+
+Open https://lancerossiconsulting.github.io/command-deck/#weekly-sync
+
+Home keeps a short row per open stream (issue, owner, and the letter already picked). The stage itself is the last card on Home. Each stream shows the Linear issue, a left-off line, an empty preview slot until `previewUrl` is set, and courses of action A / B / C.
+
+ROS-26 is a status chip at the top of the stage (In Progress / building). It is not a choice. ROS-13 and ROS-17 sit under Also, also without toggles.
+
+A pick is stored on this phone as soon as the radio changes. **Confirm** is what writes Linear:
+
+1. If More → Sources has a Linear personal API key, the page `POST`s `https://api.linear.app/graphql` from the browser and creates a comment on that issue (`linearIssueId`, for example `ROS-16`). The Pages origin is allowed by Linear’s CORS response. The key stays in `localStorage` under `deck.v2.linearKey`. It is not in git.
+2. If there is no key, or Linear refuses the call, Confirm copies the comment and opens the issue. Publish still emails the JSON batch either way.
+
+One-time setup for a direct post: Linear → Settings → Account → Security & access → create a personal API key that can create comments. Paste it under More → Sources. A full-access key works. A read-only key does not.
+
+Items in `data/decisions.json` keep the existing fields (`id`, `title`, `prompt`, `status`, `allowNote`, `options`). Weekly Sync adds:
+
+| Field | Required | Meaning |
+| --- | --- | --- |
+| `section` | no | `weekly-sync` places the item on the stage instead of the Home radio list |
+| `linearIssueId` | no | Issue identifier, such as `ROS-16`. Confirm comments on it |
+| `linearUrl` | no | `http` or `https` link shown on the stage |
+| `owner` | no | Lane label |
+| `leftOff` | no | One line under the title |
+| `where` | no | Optional second line |
+| `previewUrl` | no | `http` or `https` link for the preview slot. Empty leaves the slot open |
+| `options[].id` | yes | `A`, `B`, or `C` on the staged streams |
+
+`stage.notes` holds status rows (`role` `building` or `status`, `title`, `status`, `detail`, `linearIssueId`, `linearUrl`). A note is not a decision.
+
+The service worker cache name is in `sw.js`. Bump it when the shell changes so an installed Deck drops the old cache.
 
