@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-07T15:30:00.000Z",
+  "updatedAt": "2026-10-07T18:30:00.000Z",
   "stage": {
     "id": "weekly-sync",
     "title": "Weekly Sync",
@@ -39,6 +39,7 @@
       "id": "ros-16",
       "section": "weekly-sync",
       "title": "Essay · Who Picks Up the Phone",
+      "gloss": "Who Picks Up the Phone essay: publish decision.",
       "prompt": "After Substack PDF read.",
       "owner": "Patricia",
       "leftOff": "Cleared Substack PDF delivered to Lance; ROS-20 Done.",
@@ -47,7 +48,9 @@
       "linearUrl": "https://linear.app/rosscomm/issue/ROS-16/who-picks-up-the-phone-essay-package-wed-lance-handoff",
       "previewUrl": "",
       "allowNote": true,
-      "status": "open",
+      "status": "closed",
+      "choice": "C",
+      "decidedAt": "2026-10-07",
       "options": [
         { "id": "A", "label": "Mark Substack for publish when ready" },
         { "id": "B", "label": "Hold publish and open markup round" },
@@ -58,6 +61,7 @@
       "id": "ros-8",
       "section": "weekly-sync",
       "title": "ENTRP 340 teaching packet",
+      "gloss": "ENTRP 340 teaching packet: resume and cover letter.",
       "prompt": "",
       "owner": "Writer",
       "leftOff": "Editor CLEAR; hold publish; GAPS with Lance.",
@@ -66,7 +70,9 @@
       "linearUrl": "https://linear.app/rosscomm/issue/ROS-8/entrp-340-teaching-packet-resume-cover-letter",
       "previewUrl": "",
       "allowNote": true,
-      "status": "open",
+      "status": "closed",
+      "choice": "B",
+      "decidedAt": "2026-10-07",
       "options": [
         { "id": "A", "label": "Answer remaining GAPS ready for, then stylized PDF leave-behind (ROS-24)" },
         { "id": "B", "label": "Park packet until posting goes live" },
@@ -77,6 +83,7 @@
       "id": "ros-21",
       "section": "weekly-sync",
       "title": "Social + PDF re-gate",
+      "gloss": "Social posts and PDF leave-behind built from the cleared Substack essay.",
       "prompt": "",
       "owner": "Editor / Digital Production",
       "leftOff": "Substack CLEAR (ROS-19 Done); social/PDF held for rebuild from cleared Substack.",
@@ -85,7 +92,9 @@
       "linearUrl": "https://linear.app/rosscomm/issue/ROS-21/follow-on-social-pdf-re-gate-from-cleared-substack",
       "previewUrl": "",
       "allowNote": true,
-      "status": "open",
+      "status": "closed",
+      "choice": "C",
+      "decidedAt": "2026-10-07",
       "options": [
         { "id": "A", "label": "Queue ROS-21 — DP rebuilds social + stylized PDF from cleared Substack → Editor hard re-gate" },
         { "id": "B", "label": "Park ROS-21 until asked" },
