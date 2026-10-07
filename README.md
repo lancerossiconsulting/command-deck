@@ -60,7 +60,7 @@ a desktop browser to 393×852. Wider windows show the same UI in a phone column.
 | Firm deconflict | Personal is the default and the only owner unless `owner` is `"firm"`. The strip is “nothing double-owned” because each project has one owner. Set `firmOwner` when a real person owns firm work. Shipped firm rows are still unassigned |
 | Capacity | Optional dimmer on More (1–2 dims projects and extras). Shares the `deck.cap` value with MK III |
 | Dispatch | Optional queue on More. Shares `deck.dq` with MK III |
-| Decisions | System of record in `data/decisions.json`. Open items that are not part of Weekly Sync render on Home as single-select choices. Weekly Sync streams render as rows on that card and in full on the stage at `#weekly-sync`. Picks stay in this browser under `cf-deck-picks`. **Publish** opens a mailto to lance_rossi_consulting@outlook.com with that JSON. **Confirm** on a Weekly Sync stream writes a Linear comment when a personal API key is saved under More → Sources. No backend, and no key in the repo |
+| Decisions | System of record in `data/decisions.json`. Open items that are not part of Weekly Sync render on Home as single-select choices. Weekly Sync streams render on the stage at `#weekly-sync`. A closed item with `choice` is a locked call, not an open ask. **Confirm** posts a Linear comment. The first confirm on a phone asks for a personal API key inline and saves it in `localStorage` (`deck.v2.linearKey`). The same key can be pasted under More → Sources. No backend, and no key in the repo. A faint “Email picks JSON” link is an export, not the confirm path |
 
 Sample names, meetings, and dollar figures in early layout mocks are not
 in the product. Empty and offline states are intentional.
@@ -148,28 +148,36 @@ Phone surface only. Decisions already live on `index.html`, so the stage is ther
 
 Open https://lancerossiconsulting.github.io/command-deck/#weekly-sync
 
-Home keeps a short row per open stream (issue, owner, and the letter already picked). The stage itself is the last card on Home. Each stream shows the Linear issue, a left-off line, an empty preview slot until `previewUrl` is set, and courses of action A / B / C.
+Home keeps a short row per stream. Locked calls show the letter and “Decided.” Open streams still show the courses of action. The stage is the last card on Home. Each card shows the Linear issue id and a `gloss` line.
 
-ROS-26 is a status chip at the top of the stage (In Progress / building). It is not a choice. ROS-13 and ROS-17 sit under Also, also without toggles.
+ROS-26 is a status chip at the top of the stage. It is not a choice. ROS-13 and ROS-17 sit under Also, also without toggles.
 
-A pick is stored on this phone as soon as the radio changes. **Confirm** is what writes Linear:
+The 2026-10-07 sync is locked in `data/decisions.json`: ROS-16 choice C, ROS-8 choice B, ROS-21 choice C. Those cards render as decided.
 
-1. If More → Sources has a Linear personal API key, the page `POST`s `https://api.linear.app/graphql` from the browser and creates a comment on that issue (`linearIssueId`, for example `ROS-16`). The Pages origin is allowed by Linear’s CORS response. The key stays in `localStorage` under `deck.v2.linearKey`. It is not in git.
-2. If there is no key, or Linear refuses the call, Confirm copies the comment and opens the issue. Publish still emails the JSON batch either way.
+A pick on an open stream is stored on this phone as soon as the radio changes (`cf-deck-picks`). **Confirm** posts it:
 
-One-time setup for a direct post: Linear → Settings → Account → Security & access → create a personal API key that can create comments. Paste it under More → Sources. A full-access key works. A read-only key does not.
+1. If this phone already has a Linear personal API key, the page `POST`s `https://api.linear.app/graphql` and creates a comment on `linearIssueId`. The Pages origin is allowed by Linear’s CORS response. The key stays in `localStorage` under `deck.v2.linearKey`. It is not in git.
+2. If no key is saved, Confirm opens a one-time paste on that card, saves it, then posts. More → Sources edits the same key.
+3. If Linear refuses the key or does not answer, the card says so and the pick stays. “Copy and open issue” is the last resort. Confirm does not email anyone.
 
-Items in `data/decisions.json` keep the existing fields (`id`, `title`, `prompt`, `status`, `allowNote`, `options`). Weekly Sync adds:
+There is no keyless Linear comment from this static page. `commentCreate` without an `Authorization` header returns 401. An OAuth client secret cannot live in a public repo, and this deck has no backend.
+
+One-time key: Linear → Settings → Account → Security & access → a personal API key that can create comments. A full-access key works. A read-only key does not.
+
+Items keep the existing fields (`id`, `title`, `prompt`, `status`, `allowNote`, `options`). Weekly Sync adds:
 
 | Field | Required | Meaning |
 | --- | --- | --- |
 | `section` | no | `weekly-sync` places the item on the stage instead of the Home radio list |
+| `gloss` | no | One plain-English line of what the stream is |
+| `choice` | no | Locked COA id, such as `C`, used when `status` is `closed` |
+| `decidedAt` | no | ISO date the call was locked |
 | `linearIssueId` | no | Issue identifier, such as `ROS-16`. Confirm comments on it |
 | `linearUrl` | no | `http` or `https` link shown on the stage |
 | `owner` | no | Lane label |
-| `leftOff` | no | One line under the title |
-| `where` | no | Optional second line |
-| `previewUrl` | no | `http` or `https` link for the preview slot. Empty leaves the slot open |
+| `leftOff` | no | One line under the title on an open stream |
+| `where` | no | Optional second line on an open stream |
+| `previewUrl` | no | `http` or `https` link for the preview slot on an open stream. Empty leaves the slot open |
 | `options[].id` | yes | `A`, `B`, or `C` on the staged streams |
 
 `stage.notes` holds status rows (`role` `building` or `status`, `title`, `status`, `detail`, `linearIssueId`, `linearUrl`). A note is not a decision.

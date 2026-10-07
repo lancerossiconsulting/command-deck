@@ -221,14 +221,14 @@ a.arow { width: 100%; }
 .tt { font-size: 17px; letter-spacing: -0.03em; overflow-wrap: anywhere; }
 
 .addrow { display: flex; gap: 8px; padding: 4px 0 10px; }
-.addrow input, .src input, .dqrow input, .dnote {
+.addrow input, .src input, .dqrow input, .dnote, .keyprompt input {
   flex: 1; width: 100%; min-width: 0;
   background: rgba(255,255,255,.06);
   border: 0.5px solid var(--line);
   color: var(--ink);
   border-radius: 12px; padding: 11px 12px; font-size: 17px;
 }
-.addrow input:focus, .src input:focus, .dqrow input:focus, .dnote:focus {
+.addrow input:focus, .src input:focus, .dqrow input:focus, .dnote:focus, .keyprompt input:focus {
   outline: none; border-color: var(--cyan-dim); box-shadow: 0 0 0 3px var(--cyan-soft);
 }
 .addrow button, .dqrow button, .dqacts button, #host-form button, #linear-form button, #bible-more, .dpublish, .dconfirm {
@@ -320,12 +320,43 @@ a.arow { width: 100%; }
 .slot .k { font-size: 12px; font-weight: 600; color: var(--ink-faint); margin-bottom: 2px; }
 .slot a { color: var(--cyan); font-size: 15px; font-weight: 600; text-decoration: none; overflow-wrap: anywhere; }
 .slot .emptyish { color: var(--ink-faint); font-size: 15px; }
-.dconfirm { width: 100%; margin-top: 10px; background: var(--fire); color: #1a0d04; }
+.dconfirm {
+  width: 100%; margin-top: 10px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--fire); color: #1a0d04;
+}
 .dconfirm:disabled { opacity: .45; }
 .dstatus { margin: 8px 0 0; font-size: 13px; line-height: 1.4; color: var(--ink-mute); }
 .dstatus.ok { color: var(--ok); }
 .dstatus.warn { color: var(--fire); }
 .dstatus a { color: var(--cyan); font-weight: 600; }
+.aside.settled, .block h3 .aside.settled { color: var(--ok); }
+.gloss { margin: 0 0 10px; font-size: 17px; line-height: 1.35; color: var(--ink); }
+.decided {
+  display: flex; gap: 10px; align-items: flex-start;
+  margin: 2px 0 4px; padding: 10px 12px; border-radius: 12px;
+  background: rgba(74,222,128,.1);
+}
+.decided .notebody b { font-size: 15px; }
+.keyprompt {
+  display: none; margin-top: 10px; padding: 12px; border-radius: 12px;
+  background: rgba(90,209,240,.08); border: 1px solid rgba(90,209,240,.4);
+}
+.keyprompt.show { display: block; }
+.keyprompt .keylead { margin: 0 0 10px; font-size: 15px; line-height: 1.4; color: var(--ink); }
+.keyprompt input { margin-bottom: 8px; }
+.keyprompt .dconfirm { margin-top: 0; }
+.lastresort {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; min-height: 44px; margin-top: 8px;
+  color: var(--ink-mute); font-size: 15px; font-weight: 600;
+  text-decoration: underline; text-underline-offset: 2px;
+}
+a.quiet {
+  color: var(--ink-faint); font-size: 13px; font-weight: 500;
+  text-decoration: underline; text-underline-offset: 2px;
+}
+.exportline { margin-top: 6px; }
 .commentcopy {
   margin: 8px 0 0; padding: 10px 12px; border-radius: 12px;
   background: rgba(255,255,255,.06); color: var(--ink);
@@ -662,7 +693,6 @@ html.conserve .dimmable { opacity: .45; }
             <span class="aside mute" id="dec-aside">Checking</span>
           </div>
           <div id="dec-list"></div>
-          <a class="dpublish" id="dec-publish" href="mailto:lance_rossi_consulting@outlook.com?subject=Deck%20picks">Publish</a>
         </article>
 
         <article class="card">
@@ -730,11 +760,10 @@ html.conserve .dimmable { opacity: .45; }
             <span class="name">Weekly Sync</span>
             <span class="aside mute" id="sync-aside">Checking</span>
           </div>
-          <p class="dprompt" id="sync-lead">Courses of action from this sync. A pick stays on this phone. Confirm records it on Linear.</p>
+          <p class="dprompt" id="sync-lead">Courses of action from this sync. Confirm posts the choice on the Linear issue.</p>
           <div id="sync-notes"></div>
           <div id="sync-list"></div>
           <div class="foot" id="sync-foot"></div>
-          <a class="dpublish" id="dec-publish-stage" href="mailto:lance_rossi_consulting@outlook.com?subject=Deck%20picks">Publish</a>
         </article>
       </div>
     </section>
@@ -854,7 +883,7 @@ html.conserve .dimmable { opacity: .45; }
             <li>Share, then Add to Home Screen.</li>
             <li>Launch Deck. The passphrase is remembered on this phone.</li>
           </ol>
-          <p>Weather and the Bible plan are live. Mail is the curated list in data/mail.json. Calendar is the curated list in data/calendar.json. Todos stay on this device. Ledger and Vantage fill in only when their hosts answer. Weekly Sync on Home is the decision stage.</p>
+          <p>Weather and the Bible plan are live. Mail is the curated list in data/mail.json. Calendar is the curated list in data/calendar.json. Todos stay on this device. Ledger and Vantage fill in only when their hosts answer. Weekly Sync on Home is the decision stage. Confirm posts the choice to Linear.</p>
           <a class="alink" href="./deck-mk3.html">Desktop MK III</a>
         </article>
 
@@ -2047,10 +2076,8 @@ function upsertPick(id, patch){
 function updatePublish(){
   const body = JSON.stringify(loadPicks(), null, 2);
   const href = 'mailto:lance_rossi_consulting@outlook.com?subject=' + encodeURIComponent('Deck picks') + '&body=' + encodeURIComponent(body);
-  ['dec-publish', 'dec-publish-stage'].forEach((id) => {
-    const a = document.getElementById(id);
-    if (a) a.href = href;
-  });
+  const a = document.getElementById('dec-export');
+  if (a) a.href = href;
 }
 function cleanDecisionItems(items){
   if (!Array.isArray(items)) return [];
@@ -2067,6 +2094,9 @@ function cleanDecisionItems(items){
     linearIssueId: cleanIssueId(it.linearIssueId),
     linearUrl: cleanHttpUrl(it.linearUrl),
     previewUrl: cleanHttpUrl(it.previewUrl),
+    gloss: typeof it.gloss === 'string' ? it.gloss.slice(0, 180) : '',
+    choice: typeof it.choice === 'string' ? it.choice : '',
+    decidedAt: typeof it.decidedAt === 'string' ? it.decidedAt.slice(0, 40) : '',
     options: it.options.filter((o) => o && typeof o.id === 'string' && o.id && typeof o.label === 'string').map((o) => ({ id: o.id, label: o.label }))
   })).filter((it) => it.options.length);
 }
@@ -2162,59 +2192,53 @@ function streamView(pick){
   if (!pick || !pick.choice) return { btn: 'Confirm on Linear', disabled: true, status: 'Choose A, B, or C.', kind: '' };
   const same = pick.linearChoice === pick.choice && (pick.linearNote || '') === (pick.note || '') && pick.linearAt;
   if (same) return { btn: 'Confirm again', disabled: false, status: 'On Linear.', kind: 'ok', href: pick.linearCommentUrl || '' };
-  return { btn: 'Confirm on Linear', disabled: false, status: 'Saved on this phone.', kind: '' };
+  return { btn: 'Confirm on Linear', disabled: false, status: 'Saved on this phone. Confirm posts it to Linear.', kind: '' };
 }
 function paintPickChrome(id){
   const pick = loadPicks().picks.find((p) => p.id === id) || null;
   const aside = document.querySelector('[data-pick-aside="' + safeId(id) + '"]');
-  if (aside) {
-    if (pick && pick.choice) { aside.textContent = pick.choice; aside.classList.remove('mute'); }
+  const item = decisionItems.find((it) => it.id === id);
+  if (aside && !(item && item.status === 'closed')) {
+    if (pick && pick.choice) { aside.textContent = pick.choice; aside.classList.remove('mute'); aside.classList.remove('settled'); }
     else { aside.textContent = 'Open'; aside.classList.add('mute'); }
   }
   const root = document.getElementById('stream-' + safeId(id));
   if (!root || root.dataset.busy === '1' || root.dataset.hold === '1') return;
-  const btn = root.querySelector('.dconfirm');
-  const stat = root.querySelector('.dstatus');
+  const btn = root.querySelector('.mainconfirm');
+  const stat = root.querySelector('.cardstatus');
   if (!btn || !stat) return;
   const view = streamView(pick);
   btn.textContent = view.btn;
   btn.disabled = !!view.disabled;
+  if (linearKey()) btn.hidden = false;
   clear(stat);
-  stat.className = 'dstatus' + (view.kind ? ' ' + view.kind : '');
+  stat.className = 'dstatus cardstatus' + (view.kind ? ' ' + view.kind : '');
   if (view.href) {
     stat.appendChild(document.createTextNode('On Linear. '));
     stat.appendChild(extLink(view.href, 'Open comment'));
   } else stat.textContent = view.status;
 }
-function fallbackCopyNote(code, copied){
-  const copiedBit = copied === true
-    ? 'Comment copied.'
-    : (copied === false ? 'Copy was blocked — the comment is below.' : 'The comment is below.');
-  if (code === 'no-key') return 'No Linear key on this phone. ' + copiedBit + ' Paste it on the issue, or save a key under More → Sources.';
-  if (code === 'auth') return 'Linear refused that key. ' + copiedBit + ' Check More → Sources.';
-  if (code === 'network') return 'Linear did not answer. ' + copiedBit;
-  return 'Linear did not take the comment. ' + copiedBit;
+function postErrorText(code){
+  if (code === 'auth') return 'Linear refused that key. The pick is still on this phone.';
+  if (code === 'network') return 'Linear did not answer. The pick is still on this phone.';
+  return 'Linear did not take the comment. The pick is still on this phone.';
 }
-function showFallback(root, item, body, code, copied){
-  const stat = root.querySelector('.dstatus');
-  if (stat) {
-    clear(stat);
-    stat.className = 'dstatus warn';
-    stat.appendChild(document.createTextNode(fallbackCopyNote(code, copied) + ' '));
-    if (item.linearUrl) stat.appendChild(extLink(item.linearUrl, 'Open ' + (item.linearIssueId || 'Linear')));
-  }
-  let pre = root.querySelector('.commentcopy');
-  if (!pre) {
-    pre = el('pre', 'commentcopy');
-    root.appendChild(pre);
-  }
-  pre.textContent = body;
-  const btn = root.querySelector('.dconfirm');
-  if (btn) { btn.disabled = false; btn.textContent = 'Confirm on Linear'; }
+function revealKeyPrompt(root){
+  const prompt = root.querySelector('.keyprompt');
+  const main = root.querySelector('.mainconfirm');
+  if (main) main.hidden = true;
+  if (!prompt) return;
+  prompt.classList.add('show');
+  const input = prompt.querySelector('input');
+  if (input) { input.value = ''; input.focus(); }
 }
-async function finishFallback(root, item, body, code){
-  root.dataset.hold = '1';
-  showFallback(root, item, body, code, null);
+function clearPostExtras(root){
+  if (!root) return;
+  root.querySelectorAll('.lastresort, .commentcopy').forEach((n) => n.remove());
+  const promptErr = root.querySelector('.keyprompt .dstatus');
+  if (promptErr) { promptErr.textContent = ''; promptErr.className = 'dstatus'; }
+}
+async function copyAndOpen(item, body, stat){
   let copied = false;
   try {
     copied = await Promise.race([
@@ -2222,27 +2246,75 @@ async function finishFallback(root, item, body, code){
       new Promise((resolve) => setTimeout(() => resolve(false), 1200))
     ]);
   } catch (e) { copied = false; }
-  if (root.dataset.hold === '1') showFallback(root, item, body, code, copied);
+  if (item.linearUrl) window.open(item.linearUrl, '_blank', 'noopener');
+  if (stat) {
+    clear(stat);
+    stat.className = 'dstatus warn cardstatus';
+    stat.textContent = copied
+      ? 'Comment copied. The issue is open — paste it there. The pick is still on this phone.'
+      : 'Copy was blocked. The comment is below. The pick is still on this phone.';
+    if (item.linearUrl) {
+      stat.appendChild(document.createTextNode(' '));
+      stat.appendChild(extLink(item.linearUrl, 'Open ' + (item.linearIssueId || 'Linear')));
+    }
+  }
+  if (!copied) {
+    const root = stat && stat.closest('.ditem');
+    if (root && !root.querySelector('.commentcopy')) {
+      const pre = el('pre', 'commentcopy');
+      pre.textContent = body;
+      root.appendChild(pre);
+    }
+  }
+}
+function showPostError(root, item, body, code){
+  root.dataset.hold = '1';
+  delete root.dataset.busy;
+  const main = root.querySelector('.mainconfirm');
+  if (main) { main.hidden = false; main.disabled = false; main.textContent = 'Confirm on Linear'; }
+  const stat = root.querySelector('.cardstatus');
+  if (stat) {
+    clear(stat);
+    stat.className = 'dstatus warn cardstatus';
+    stat.textContent = postErrorText(code);
+  }
+  if (code === 'auth') revealKeyPrompt(root);
+  if (!root.querySelector('.lastresort')) {
+    const fallback = el('button', 'lastresort', 'Copy and open issue');
+    fallback.type = 'button';
+    fallback.addEventListener('click', () => { copyAndOpen(item, body, root.querySelector('.cardstatus')); });
+    if (stat) stat.after(fallback);
+    else root.appendChild(fallback);
+  }
 }
 async function confirmStream(item){
   const root = document.getElementById('stream-' + safeId(item.id));
-  if (!root || root.dataset.busy === '1') return;
+  if (!root || root.dataset.busy === '1' || item.status === 'closed') return;
   const pick = loadPicks().picks.find((p) => p.id === item.id);
   if (!pick || !pick.choice) return;
   const body = decisionComment(item, pick.choice, pick.note || '');
-  const stat = root.querySelector('.dstatus');
-  const btn = root.querySelector('.dconfirm');
-  const old = root.querySelector('.commentcopy');
-  if (old) old.remove();
+  const stat = root.querySelector('.cardstatus');
+  const btn = root.querySelector('.mainconfirm');
+  clearPostExtras(root);
   delete root.dataset.hold;
-  if (!linearKey() || !item.linearIssueId) {
-    if (item.linearUrl) window.open(item.linearUrl, '_blank', 'noopener');
-    await finishFallback(root, item, body, linearKey() ? 'linear' : 'no-key');
+  if (!item.linearIssueId) {
+    showPostError(root, item, body, 'linear');
     return;
   }
+  if (!linearKey()) {
+    revealKeyPrompt(root);
+    if (stat) {
+      clear(stat);
+      stat.className = 'dstatus cardstatus';
+      stat.textContent = 'Paste the key above. Confirm posts this comment. Nothing is emailed.';
+    }
+    return;
+  }
+  const prompt = root.querySelector('.keyprompt');
+  if (prompt) prompt.classList.remove('show');
   root.dataset.busy = '1';
-  if (btn) { btn.disabled = true; btn.textContent = 'Posting…'; }
-  if (stat) { stat.className = 'dstatus'; stat.textContent = 'Posting to ' + item.linearIssueId + '…'; }
+  if (btn) { btn.hidden = false; btn.disabled = true; btn.textContent = 'Posting…'; }
+  if (stat) { stat.className = 'dstatus cardstatus'; stat.textContent = 'Posting to ' + item.linearIssueId + '…'; }
   try {
     const comment = await postDecisionComment(item.linearIssueId, body);
     delete root.dataset.busy;
@@ -2254,10 +2326,8 @@ async function confirmStream(item){
     });
     paintPickChrome(item.id);
   } catch (err) {
-    delete root.dataset.busy;
-    if (btn) btn.disabled = false;
     const code = err && err.code === 'auth' ? 'auth' : (err && err.code === 'network' ? 'network' : 'linear');
-    await finishFallback(root, item, body, code);
+    showPostError(root, item, body, code);
   }
 }
 function noteRow(note){
@@ -2282,18 +2352,37 @@ function previewSlot(item){
   else slot.appendChild(el('div', 'emptyish', 'Open for a preview URL.'));
   return slot;
 }
+function optionLabel(item, id){
+  const opt = item.options.find((o) => o.id === id);
+  return opt ? opt.label : '';
+}
+function shortDay(iso){
+  if (!/^\d{4}-\d{2}-\d{2}/.test(iso || '')) return '';
+  const d = parseISO(iso.slice(0, 10));
+  if (!d || isNaN(d.getTime())) return '';
+  return d.getDate() + ' ' + MO[d.getMonth()] + ' ' + d.getFullYear();
+}
+function streamMeta(item){
+  const meta = el('div', 'streammeta');
+  if (item.linearUrl) meta.appendChild(extLink(item.linearUrl, item.linearIssueId || 'Linear', 'issueid'));
+  else if (item.linearIssueId) meta.appendChild(el('span', 'issueid', item.linearIssueId));
+  if (item.owner) meta.appendChild(el('span', 'owner', item.owner));
+  return meta;
+}
 function streamJump(item){
+  const closed = item.status === 'closed';
   const pick = loadPicks().picks.find((p) => p.id === item.id);
+  const choice = closed ? (item.choice || '') : (pick && pick.choice ? pick.choice : '');
   const btn = el('button', 'syncjump');
   btn.type = 'button';
   btn.setAttribute('data-sync', 'weekly-sync');
   btn.setAttribute('data-stream', 'stream-' + safeId(item.id));
   const what = el('span', 'what');
   what.appendChild(el('span', 'title', item.title));
-  const sub = [item.linearIssueId, item.owner].filter(Boolean).join(' · ');
+  const sub = [item.linearIssueId, closed ? 'Decided' : item.owner].filter(Boolean).join(' · ');
   if (sub) what.appendChild(el('span', 'subid', sub));
   btn.appendChild(what);
-  const aside = el('span', 'aside' + (pick && pick.choice ? '' : ' mute'), pick && pick.choice ? pick.choice : 'Open');
+  const aside = el('span', 'aside' + (closed ? ' settled' : (choice ? '' : ' mute')), choice || (closed ? 'Set' : 'Open'));
   aside.setAttribute('data-pick-aside', safeId(item.id));
   btn.appendChild(aside);
   btn.appendChild(el('span', 'chev', '›'));
@@ -2303,21 +2392,82 @@ function bindChoice(item, input, optId){
   input.addEventListener('change', () => {
     if (!input.checked) return;
     const root = document.getElementById('stream-' + safeId(item.id));
-    if (root) delete root.dataset.hold;
+    if (root) {
+      delete root.dataset.hold;
+      clearPostExtras(root);
+      const prompt = root.querySelector('.keyprompt');
+      if (prompt && linearKey()) prompt.classList.remove('show');
+    }
     upsertPick(item.id, { choice: optId });
     paintPickChrome(item.id);
   });
+}
+function keyPrompt(item){
+  const box = el('form', 'keyprompt');
+  box.noValidate = true;
+  box.appendChild(el('p', 'keylead', 'Paste a Linear key once. Saving it posts this comment. It stays on this phone.'));
+  const input = document.createElement('input');
+  input.type = 'password';
+  input.autocomplete = 'off';
+  input.autocapitalize = 'off';
+  input.spellcheck = false;
+  input.placeholder = 'Personal API key';
+  input.setAttribute('aria-label', 'Linear API key');
+  box.appendChild(input);
+  const save = el('button', 'dconfirm', 'Save and post');
+  save.type = 'submit';
+  box.appendChild(save);
+  const err = el('p', 'dstatus', '');
+  box.appendChild(err);
+  box.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const key = normalizeLinearKey(input.value);
+    if (!key) {
+      err.className = 'dstatus warn';
+      err.textContent = 'That key has spaces or is too short. Paste the token Linear showed once.';
+      input.focus();
+      return;
+    }
+    try { localStorage.setItem(LINEAR_KEY, key); }
+    catch (ex) {
+      err.className = 'dstatus warn';
+      err.textContent = 'This phone blocked saving the key. The pick is still here.';
+      return;
+    }
+    input.value = '';
+    err.textContent = '';
+    paintLinearNote();
+    syncFoot();
+    confirmStream(item);
+  });
+  return box;
+}
+function settledCard(item){
+  const card = el('article', 'ditem');
+  card.id = 'stream-' + safeId(item.id);
+  const meta = streamMeta(item);
+  if (meta.childNodes.length) card.appendChild(meta);
+  card.appendChild(el('h3', '', item.title));
+  if (item.gloss) card.appendChild(el('p', 'gloss', item.gloss));
+  const row = el('div', 'decided');
+  row.appendChild(el('span', 'stag done', 'Decided'));
+  const body = el('span', 'notebody');
+  const label = optionLabel(item, item.choice);
+  body.appendChild(el('b', '', (item.choice ? item.choice + ' · ' : '') + (label || 'Locked')));
+  const when = shortDay(item.decidedAt);
+  if (when) body.appendChild(el('span', '', when));
+  row.appendChild(body);
+  card.appendChild(row);
+  return card;
 }
 function streamCard(item){
   const pick = loadPicks().picks.find((p) => p.id === item.id);
   const card = el('article', 'ditem');
   card.id = 'stream-' + safeId(item.id);
-  const meta = el('div', 'streammeta');
-  if (item.linearUrl) meta.appendChild(extLink(item.linearUrl, item.linearIssueId || 'Linear', 'issueid'));
-  else if (item.linearIssueId) meta.appendChild(el('span', 'issueid', item.linearIssueId));
-  if (item.owner) meta.appendChild(el('span', 'owner', item.owner));
+  const meta = streamMeta(item);
   if (meta.childNodes.length) card.appendChild(meta);
   card.appendChild(el('h3', '', item.title));
+  if (item.gloss) card.appendChild(el('p', 'gloss', item.gloss));
   if (item.prompt) card.appendChild(el('p', 'dprompt', item.prompt));
   if (item.leftOff) card.appendChild(el('p', 'leftoff', 'Left off: ' + item.leftOff));
   if (item.where) card.appendChild(el('p', 'where', item.where));
@@ -2349,18 +2499,20 @@ function streamCard(item){
     note.value = pick && pick.note ? pick.note : '';
     note.addEventListener('input', () => {
       delete card.dataset.hold;
+      clearPostExtras(card);
       upsertPick(item.id, { note: note.value });
       paintPickChrome(item.id);
     });
     card.appendChild(note);
   }
   const view = streamView(pick);
-  const confirm = el('button', 'dconfirm', view.btn);
+  const confirm = el('button', 'dconfirm mainconfirm', view.btn);
   confirm.type = 'button';
   confirm.disabled = !!view.disabled;
   confirm.addEventListener('click', () => { confirmStream(item); });
   card.appendChild(confirm);
-  const stat = el('p', 'dstatus' + (view.kind ? ' ' + view.kind : ''), view.href ? '' : view.status);
+  card.appendChild(keyPrompt(item));
+  const stat = el('p', 'dstatus cardstatus' + (view.kind ? ' ' + view.kind : ''), view.href ? '' : view.status);
   if (view.href) {
     stat.appendChild(document.createTextNode('On Linear. '));
     stat.appendChild(extLink(view.href, 'Open comment'));
@@ -2406,28 +2558,40 @@ function syncFoot(){
   const foot = document.getElementById('sync-foot');
   if (!foot) return;
   clear(foot);
-  const lead = linearKey()
-    ? 'Confirm posts the COA as a comment on that Linear issue. '
-    : 'No Linear key on this phone. Confirm copies the comment and opens the issue. ';
-  foot.appendChild(document.createTextNode(lead + 'The key lives under '));
-  const jump = el('button', 'textlink', 'More → Sources');
-  jump.type = 'button';
-  jump.setAttribute('data-go', 'more');
-  jump.setAttribute('data-anchor', 'sources');
-  foot.appendChild(jump);
-  foot.appendChild(document.createTextNode('.'));
+  const openWeekly = decisionItems.filter((it) => it.status === 'open' && it.section === 'weekly-sync');
+  const closedWeekly = decisionItems.filter((it) => it.status === 'closed' && it.section === 'weekly-sync');
+  if (decisionsState === 'ready' && !openWeekly.length && closedWeekly.length) {
+    foot.appendChild(document.createTextNode('Locked. Nothing here is waiting on a confirm.'));
+  } else {
+    foot.appendChild(document.createTextNode('Confirm posts the comment on the Linear issue. The first time, paste the key on the card. It is also under '));
+    const jump = el('button', 'textlink', 'More → Sources');
+    jump.type = 'button';
+    jump.setAttribute('data-go', 'more');
+    jump.setAttribute('data-anchor', 'sources');
+    foot.appendChild(jump);
+    foot.appendChild(document.createTextNode('.'));
+  }
+  const line = el('div', 'exportline');
+  const exp = document.createElement('a');
+  exp.id = 'dec-export';
+  exp.className = 'quiet';
+  exp.textContent = 'Email picks JSON';
+  line.appendChild(exp);
+  foot.appendChild(line);
+  updatePublish();
 }
 function paintLinearNote(){
   const note = document.getElementById('linear-note');
   if (!note) return;
   note.textContent = linearKey()
     ? 'A key is saved on this phone. It is sent only to api.linear.app when you confirm a COA.'
-    : 'No key saved. Confirm copies the comment and opens the issue. A personal API key from Linear → Settings → Account → Security & access posts it directly. Saved on this phone only.';
+    : 'No key yet. Confirm asks for it on the card, once. You can also paste it here. Saved on this phone only.';
 }
 function renderStage(){
   const list = document.getElementById('sync-list');
   const notesEl = document.getElementById('sync-notes');
   const aside = document.getElementById('sync-aside');
+  const lead = document.getElementById('sync-lead');
   if (!list || !notesEl || !aside) return;
   clear(list);
   clear(notesEl);
@@ -2435,21 +2599,41 @@ function renderStage(){
   if (decisionsState === 'loading') {
     aside.textContent = 'Checking';
     aside.classList.add('mute');
+    aside.classList.remove('settled');
     list.appendChild(el('p', 'empty', 'Checking decisions…'));
     return;
   }
   if (decisionsState === 'error') {
     aside.textContent = 'Offline';
     aside.classList.add('mute');
+    aside.classList.remove('settled');
     list.appendChild(el('p', 'empty', "Decisions file didn't load."));
     return;
   }
-  const weekly = decisionItems.filter((it) => it.status === 'open' && it.section === 'weekly-sync');
-  aside.textContent = weekly.length ? weekly.length + ' open' : 'None';
-  aside.classList.toggle('mute', !weekly.length);
+  const weeklyOpen = decisionItems.filter((it) => it.status === 'open' && it.section === 'weekly-sync');
+  const weeklyClosed = decisionItems.filter((it) => it.status === 'closed' && it.section === 'weekly-sync');
+  if (weeklyOpen.length) {
+    aside.textContent = weeklyOpen.length + ' open';
+    aside.classList.remove('mute');
+    aside.classList.remove('settled');
+    if (lead) lead.textContent = 'Courses of action from this sync. Confirm posts the choice on the Linear issue.';
+  } else if (weeklyClosed.length) {
+    aside.textContent = 'Settled';
+    aside.classList.remove('mute');
+    aside.classList.add('settled');
+    if (lead) lead.textContent = 'Locked from 7 Oct 2026. These are the calls from that sync.';
+  } else {
+    aside.textContent = 'None';
+    aside.classList.add('mute');
+    aside.classList.remove('settled');
+  }
   stageNotes.filter((n) => n.role === 'building').forEach((n) => notesEl.appendChild(noteRow(n)));
-  if (!weekly.length) list.appendChild(el('p', 'empty', 'Nothing staged.'));
-  else weekly.forEach((item) => list.appendChild(streamCard(item)));
+  weeklyOpen.forEach((item) => list.appendChild(streamCard(item)));
+  if (weeklyClosed.length) {
+    if (weeklyOpen.length) list.appendChild(el('p', 'hsub', 'Decided'));
+    weeklyClosed.forEach((item) => list.appendChild(settledCard(item)));
+  }
+  if (!weeklyOpen.length && !weeklyClosed.length) list.appendChild(el('p', 'empty', 'Nothing staged.'));
   const also = stageNotes.filter((n) => n.role !== 'building');
   if (also.length) {
     list.appendChild(el('p', 'hsub', 'Also'));
@@ -2470,23 +2654,34 @@ function renderDecisions(){
   if (decisionsState === 'loading') {
     aside.textContent = 'Checking';
     aside.classList.add('mute');
+    aside.classList.remove('settled');
     list.appendChild(el('p', 'empty', 'Checking decisions…'));
   } else if (decisionsState === 'error') {
     aside.textContent = 'Offline';
     aside.classList.add('mute');
+    aside.classList.remove('settled');
     list.appendChild(el('p', 'empty', "Decisions file didn't load."));
   } else {
     const open = decisionItems.filter((it) => it.status === 'open');
-    const weekly = open.filter((it) => it.section === 'weekly-sync');
+    const weeklyOpen = open.filter((it) => it.section === 'weekly-sync');
+    const weeklyClosed = decisionItems.filter((it) => it.status === 'closed' && it.section === 'weekly-sync');
     const rest = open.filter((it) => it.section !== 'weekly-sync');
-    if (!open.length) {
+    if (!open.length && !weeklyClosed.length) {
       aside.textContent = 'None';
       aside.classList.add('mute');
+      aside.classList.remove('settled');
       list.appendChild(el('p', 'empty', 'Nothing waiting on you.'));
+    } else if (!open.length) {
+      aside.textContent = 'Settled';
+      aside.classList.remove('mute');
+      aside.classList.add('settled');
+      weeklyClosed.forEach((item) => list.appendChild(streamJump(item)));
     } else {
       aside.textContent = open.length + ' open';
       aside.classList.remove('mute');
-      weekly.forEach((item) => list.appendChild(streamJump(item)));
+      aside.classList.remove('settled');
+      weeklyOpen.forEach((item) => list.appendChild(streamJump(item)));
+      weeklyClosed.forEach((item) => list.appendChild(streamJump(item)));
       rest.forEach((item) => list.appendChild(decisionCard(item)));
     }
   }
