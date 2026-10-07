@@ -2159,16 +2159,15 @@ function paintPickChrome(id){
   } else stat.textContent = view.status;
 }
 function fallbackCopyNote(code, copied){
-  const copiedBit = copied ? 'Comment copied.' : 'Copy was blocked — the comment is below.';
+  const copiedBit = copied === true
+    ? 'Comment copied.'
+    : (copied === false ? 'Copy was blocked — the comment is below.' : 'The comment is below.');
   if (code === 'no-key') return 'No Linear key on this phone. ' + copiedBit + ' Paste it on the issue, or save a key under More → Sources.';
   if (code === 'auth') return 'Linear refused that key. ' + copiedBit + ' Check More → Sources.';
   if (code === 'network') return 'Linear did not answer. ' + copiedBit;
   return 'Linear did not take the comment. ' + copiedBit;
 }
-async function finishFallback(root, item, body, code){
-  root.dataset.hold = '1';
-  let copied = false;
-  try { copied = await copyText(body); } catch (e) { copied = false; }
+function showFallback(root, item, body, code, copied){
   const stat = root.querySelector('.dstatus');
   if (stat) {
     clear(stat);
@@ -2184,6 +2183,18 @@ async function finishFallback(root, item, body, code){
   pre.textContent = body;
   const btn = root.querySelector('.dconfirm');
   if (btn) { btn.disabled = false; btn.textContent = 'Confirm on Linear'; }
+}
+async function finishFallback(root, item, body, code){
+  root.dataset.hold = '1';
+  showFallback(root, item, body, code, null);
+  let copied = false;
+  try {
+    copied = await Promise.race([
+      copyText(body),
+      new Promise((resolve) => setTimeout(() => resolve(false), 1200))
+    ]);
+  } catch (e) { copied = false; }
+  if (root.dataset.hold === '1') showFallback(root, item, body, code, copied);
 }
 async function confirmStream(item){
   const root = document.getElementById('stream-' + safeId(item.id));
