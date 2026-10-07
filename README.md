@@ -60,7 +60,7 @@ a desktop browser to 393×852. Wider windows show the same UI in a phone column.
 | Firm deconflict | Personal is the default and the only owner unless `owner` is `"firm"`. The strip is “nothing double-owned” because each project has one owner. Set `firmOwner` when a real person owns firm work. Shipped firm rows are still unassigned |
 | Capacity | Optional dimmer on More (1–2 dims projects and extras). Shares the `deck.cap` value with MK III |
 | Dispatch | Optional queue on More. Shares `deck.dq` with MK III |
-| Decisions | System of record in `data/decisions.json`. Open items that are not part of Weekly Sync render on Home as single-select choices. Weekly Sync streams render on the stage at `#weekly-sync`. A closed item with `choice` is a locked call, not an open ask. **Confirm** posts a Linear comment. The first confirm on a phone asks for a personal API key inline and saves it in `localStorage` (`deck.v2.linearKey`). The same key can be pasted under More → Sources. No backend, and no key in the repo. A faint “Email picks JSON” link is an export, not the confirm path |
+| Decisions | System of record in `data/decisions.json`. Open items that are not part of Weekly Sync render on Home as single-select choices. Weekly Sync streams render on the stage at `#weekly-sync`. A closed item with `choice` is a locked call, not an open ask. **Confirm** posts a Linear comment. The first confirm asks for a personal API key inline and saves it in `localStorage` (`deck.v2.linearKey`). The same key can be pasted under More → Sources. No backend, and no key in the repo. Confirm does not email |
 
 Sample names, meetings, and dollar figures in early layout mocks are not
 in the product. Empty and offline states are intentional.
