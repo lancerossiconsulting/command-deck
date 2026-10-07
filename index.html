@@ -2123,7 +2123,7 @@ function decisionComment(item, choice, note){
   const lines = ['**Command Deck · Weekly Sync**', ''];
   const who = [item.linearIssueId, item.title].filter(Boolean).join(' · ');
   if (who) lines.push(who);
-  lines.push('COA ' + choice + ' — ' + (opt ? opt.label : choice));
+  lines.push('COA ' + choice + ' · ' + (opt ? opt.label : choice));
   if (note) lines.push('', 'Note: ' + note);
   lines.push('', 'Recorded from Command Deck on this phone.');
   return lines.join('\n');
@@ -2251,7 +2251,7 @@ async function copyAndOpen(item, body, stat){
     clear(stat);
     stat.className = 'dstatus warn cardstatus';
     stat.textContent = copied
-      ? 'Comment copied. The issue is open — paste it there. The pick is still on this phone.'
+      ? 'Comment copied. The issue is open. Paste it there. The pick is still on this phone.'
       : 'Copy was blocked. The comment is below. The pick is still on this phone.';
     if (item.linearUrl) {
       stat.appendChild(document.createTextNode(' '));

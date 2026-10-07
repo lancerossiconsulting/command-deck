@@ -1,6 +1,6 @@
 /* Command Deck 2.0 — offline shell. Network-first for the app, cache-first for icons.
    Does not cache ledger, vantage, weather, or mailbox calls. */
-const CACHE = 'deck-v2-10';
+const CACHE = 'deck-v2-11';
 const ASSETS = [
   './',
   './index.html',

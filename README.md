@@ -150,7 +150,7 @@ Open https://lancerossiconsulting.github.io/command-deck/#weekly-sync
 
 Home keeps a short row per stream. Locked calls show the letter and “Decided.” Open streams still show the courses of action. The stage is the last card on Home. Each card shows the Linear issue id and a `gloss` line.
 
-ROS-26 is a status chip at the top of the stage. It is not a choice. ROS-13 and ROS-17 sit under Also, also without toggles.
+ROS-13 and ROS-17 sit under Also. They are status, not choices. ROS-26 is shipped and is not on the stage.
 
 The 2026-10-07 sync is locked in `data/decisions.json`: ROS-16 choice C, ROS-8 choice B, ROS-21 choice C. Those cards render as decided.
 
@@ -169,7 +169,7 @@ Items keep the existing fields (`id`, `title`, `prompt`, `status`, `allowNote`, 
 | Field | Required | Meaning |
 | --- | --- | --- |
 | `section` | no | `weekly-sync` places the item on the stage instead of the Home radio list |
-| `gloss` | no | One plain-English line of what the stream is |
+| `gloss` | no | One line the title does not already say |
 | `choice` | no | Locked COA id, such as `C`, used when `status` is `closed` |
 | `decidedAt` | no | ISO date the call was locked |
 | `linearIssueId` | no | Issue identifier, such as `ROS-16`. Confirm comments on it |
