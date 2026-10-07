@@ -56,8 +56,8 @@ a desktop browser to 393×852. Wider windows show the same UI in a phone column.
 | Household Ledger | Live `GET /api/deck-summary` when that host answers (default `http://localhost:5181`, every 60s). Otherwise an offline snapshot — no invented dollars. Change the host under Ledger → Sources |
 | Vantage | Same pattern, default `http://localhost:8765`, every 90s. Read-only. No trading |
 | Vincent & Kayla | Live status light from the same opt-in Pantry basket as MK III. Level and age only, never dollar amounts. “No signal” when the light is off |
-| Projects | Real links for Command Deck, Ledger, and Vantage. Rossi Kitchen is an empty personal slot. The firm lane is an empty slot |
-| Firm deconflict | Personal is the default and the only owner unless `owner` is `"firm"`. The strip is “nothing double-owned” because each project has one owner. Set `firmOwner` when a real person owns firm work; the shipped slot is unassigned |
+| Projects | Command Deck, Ledger, and Vantage stay linked. Rossi Kitchen is still an unwired personal slot. Meta Muse is a personal backlog placeholder. Firm rows are Who Picks Up the Phone (in progress), Golden Rule HCCS (active), and Command Deck Pages catch-up (backlog) |
+| Firm deconflict | Personal is the default and the only owner unless `owner` is `"firm"`. The strip is “nothing double-owned” because each project has one owner. Set `firmOwner` when a real person owns firm work. Shipped firm rows are still unassigned |
 | Capacity | Optional dimmer on More (1–2 dims projects and extras). Shares the `deck.cap` value with MK III |
 | Dispatch | Optional queue on More. Shares `deck.dq` with MK III |
 | Decisions | System of record in `data/decisions.json` (ships empty). Open items render on Home as single-select choices. Picks stay in this browser under `cf-deck-picks`. **Publish** opens a mailto to lance_rossi_consulting@outlook.com with that JSON. No backend |

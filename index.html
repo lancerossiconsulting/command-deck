@@ -269,6 +269,8 @@ a.arow { width: 100%; }
 .dot.cold { background: var(--gold); }
 .dot.offline, .dot.wait { background: var(--ink-faint); }
 .dot.slot { background: transparent; border: 1.5px solid var(--fire); }
+.dot.progress, .dot.active { background: var(--cyan); }
+.dot.backlog { background: var(--gold); }
 .firmline {
   width: 100%; min-height: 44px; display: flex; align-items: center; gap: 8px;
   border-top: 0.5px solid var(--sep); color: var(--fire);
@@ -320,15 +322,16 @@ a.arow { width: 100%; }
   border-radius: var(--radius); background: var(--card);
   box-shadow: 0 8px 24px rgba(0,0,0,.16);
 }
-.pcard h3 { margin: 0 88px 4px 0; font-size: 17px; font-weight: 600; letter-spacing: -0.03em; }
+.pcard h3 { margin: 0 108px 4px 0; font-size: 17px; font-weight: 600; letter-spacing: -0.03em; }
 .pcard p { margin: 0 0 10px; color: var(--ink-mute); font-size: 15px; line-height: 1.35; }
 .pstatus {
   position: absolute; top: 14px; right: 16px;
   font-size: 13px; font-weight: 600; color: var(--ink-faint);
+  white-space: nowrap;
 }
-.pstatus[data-kind="live"] { color: var(--cyan); }
+.pstatus[data-kind="live"], .pstatus[data-kind="progress"], .pstatus[data-kind="active"] { color: var(--cyan); }
 .pstatus[data-kind="locked"], .pstatus[data-kind="slot"] { color: var(--fire); }
-.pstatus[data-kind="cold"] { color: var(--gold); }
+.pstatus[data-kind="cold"], .pstatus[data-kind="backlog"] { color: var(--gold); }
 .pmeta { font-size: 13px; font-weight: 600; color: var(--cyan); margin-bottom: 8px; }
 .pmeta.firm { color: var(--fire); }
 .pactions { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -810,6 +813,7 @@ html.conserve .dimmable { opacity: .45; }
 /* DECK DATA START — phone surface.
    Personal is the default owner. A project is firm only when owner === "firm".
    firmOwner stays blank until a real person owns that work.
+   Workstream kinds (progress, active, backlog) are labels, not host probes.
    bibleCalendar is the same Pastor Brian plan as MK III. */
 const BIBLE = [
     { date:"2026-06-07", ref:"Romans 5" },  { date:"2026-06-08", ref:"Romans 6" },  { date:"2026-06-09", ref:"Romans 7" },
@@ -878,8 +882,19 @@ const PROJECTS = [
     repo: 'https://github.com/lancerossiconsulting/vantage', repoLabel: 'vantage' },
   { id: 'rossi-kitchen', name: 'Rossi Kitchen', short: 'KITCHEN', owner: 'personal', kind: 'slot',
     desc: 'Reserved personal slot. No link is wired yet.' },
-  { id: 'firm-slot', name: 'Firm slot', short: 'FIRM', owner: 'firm', firmOwner: '', kind: 'slot', needsDecision: false,
-    desc: 'Reserved for firm-owned work. It is not on the personal list.' }
+  { id: 'meta-muse', name: 'Meta Muse', short: 'MUSE', owner: 'personal', kind: 'backlog',
+    desc: 'Facebook Marketplace chachkie sale. Backlog placeholder (ROS-23). No work until Lance calls it.',
+    link: 'https://linear.app/rosscomm/issue/ROS-23/placeholder-meta-muse-fb-marketplace-chachkie-sale', linkLabel: 'ROS-23' },
+  { id: 'who-picks-up', name: 'Who Picks Up the Phone', short: 'ESSAY', owner: 'firm', firmOwner: '', kind: 'progress', needsDecision: false,
+    desc: 'Essay package in progress (ROS-16). Substack was delivered clear Wednesday. Publish is on hold. Conclusion 16 is deferred. Social and PDF wait on a re-gate (ROS-21, backlog).',
+    link: 'https://linear.app/rosscomm/issue/ROS-16/who-picks-up-the-phone-essay-package-wed-lance-handoff', linkLabel: 'ROS-16' },
+  { id: 'golden-rule', name: 'Golden Rule HCCS', short: 'HCCS', owner: 'firm', firmOwner: '', kind: 'active', needsDecision: false,
+    desc: 'Ongoing client site. Rebuild mock and the Taylor package are done (ROS-13). Preview is the Netlify share.',
+    preview: 'https://splendid-babka-8804a1.netlify.app',
+    link: 'https://linear.app/rosscomm/issue/ROS-13/golden-rule-hccs-rebuild-mock-scroll-taylor-presentation', linkLabel: 'ROS-13' },
+  { id: 'pages-catchup', name: 'Command Deck Pages', short: 'PAGES', owner: 'firm', firmOwner: '', kind: 'backlog', needsDecision: false,
+    desc: 'Stale Pages catch-up, owed (ROS-17). Backlog until it is reopened. The live phone surface stays on Command Deck.',
+    link: 'https://linear.app/rosscomm/issue/ROS-17/command-deck-pages-stale-catch-up-owed', linkLabel: 'ROS-17' }
 ];
 /* DECK DATA END */
 
@@ -1628,8 +1643,18 @@ function refreshOpenLinks(){
   document.querySelectorAll('[data-open="ledger"]').forEach((a) => { a.href = ledgerHome(); });
   document.querySelectorAll('[data-open="vantage"]').forEach((a) => { a.href = vantageHome(); });
 }
-function initialKind(p){ return p.kind === 'slot' ? 'slot' : (p.kind === 'live' ? 'live' : 'wait'); }
-function initialLabel(p){ return p.kind === 'slot' ? 'Slot' : (p.kind === 'live' ? 'Live' : 'Checking'); }
+function initialKind(p){
+  if (p.kind === 'slot' || p.kind === 'live' || p.kind === 'progress' || p.kind === 'active' || p.kind === 'backlog') return p.kind;
+  return 'wait';
+}
+function initialLabel(p){
+  if (p.kind === 'slot') return 'Slot';
+  if (p.kind === 'live') return 'Live';
+  if (p.kind === 'progress') return 'In progress';
+  if (p.kind === 'active') return 'Active';
+  if (p.kind === 'backlog') return 'Backlog';
+  return 'Checking';
+}
 function firmOwned(p){
   const who = (p.firmOwner || '').trim();
   return who ? ('Firm · ' + who) : 'Firm · Unassigned';
@@ -1701,6 +1726,8 @@ function buildProjects(){
     if (p.id === 'ledger') { const a = makeLink(ledgerHome(), 'Open', true); a.dataset.open = 'ledger'; actions.appendChild(a); }
     if (p.id === 'vantage') { const a = makeLink(vantageHome(), 'Open', true); a.dataset.open = 'vantage'; actions.appendChild(a); }
     if (p.repo) actions.appendChild(makeLink(p.repo, 'GitHub', true));
+    if (p.preview) actions.appendChild(makeLink(p.preview, 'Preview', true));
+    if (p.link) actions.appendChild(makeLink(p.link, p.linkLabel || 'Open', true));
     if (actions.childNodes.length) art.appendChild(actions);
     cards.appendChild(art);
   });
@@ -1709,6 +1736,7 @@ function buildProjects(){
     li.appendChild(el('span', 'nm', p.name));
     if (p.owner === 'firm') li.appendChild(el('span', 'tag', firmOwned(p)));
     else if (p.kind === 'slot') li.appendChild(el('span', 'tag', 'Slot'));
+    else if (p.kind === 'backlog') li.appendChild(el('span', 'tag', 'Backlog'));
     return li;
   }
   pers.forEach((p) => ownP.appendChild(ownLi(p)));
