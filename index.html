@@ -2405,7 +2405,7 @@ function bindChoice(item, input, optId){
 function keyPrompt(item){
   const box = el('form', 'keyprompt');
   box.noValidate = true;
-  box.appendChild(el('p', 'keylead', 'Paste a Linear key once. Saving it posts this comment. It stays on this phone.'));
+  box.appendChild(el('p', 'keylead', 'Paste your Linear key once. It\'s saved on this device only. Saving also posts this pick to Linear.'));
   const input = document.createElement('input');
   input.type = 'password';
   input.autocomplete = 'off';
@@ -2561,7 +2561,7 @@ function syncFoot(){
   const openWeekly = decisionItems.filter((it) => it.status === 'open' && it.section === 'weekly-sync');
   const closedWeekly = decisionItems.filter((it) => it.status === 'closed' && it.section === 'weekly-sync');
   if (decisionsState === 'ready' && !openWeekly.length && closedWeekly.length) {
-    foot.appendChild(document.createTextNode('Locked. Nothing here is waiting on a confirm.'));
+    foot.appendChild(document.createTextNode('All three are locked. Nothing here is waiting on you.'));
   } else {
     foot.appendChild(document.createTextNode('Confirm posts the comment on the Linear issue. The first time, paste the key on the card. It is also under '));
     const jump = el('button', 'textlink', 'More → Sources');
@@ -2571,14 +2571,6 @@ function syncFoot(){
     foot.appendChild(jump);
     foot.appendChild(document.createTextNode('.'));
   }
-  const line = el('div', 'exportline');
-  const exp = document.createElement('a');
-  exp.id = 'dec-export';
-  exp.className = 'quiet';
-  exp.textContent = 'Email picks JSON';
-  line.appendChild(exp);
-  foot.appendChild(line);
-  updatePublish();
 }
 function paintLinearNote(){
   const note = document.getElementById('linear-note');
@@ -2621,7 +2613,7 @@ function renderStage(){
     aside.textContent = 'Settled';
     aside.classList.remove('mute');
     aside.classList.add('settled');
-    if (lead) lead.textContent = 'Locked from 7 Oct 2026. These are the calls from that sync.';
+    if (lead) lead.textContent = 'Your calls from the 7 Oct 2026 sync.';
   } else {
     aside.textContent = 'None';
     aside.classList.add('mute');
