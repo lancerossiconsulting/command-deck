@@ -12,7 +12,7 @@
         "linearUrl": "https://linear.app/rosscomm/issue/ROS-13/golden-rule-hccs-rebuild-mock-scroll-taylor-presentation",
         "title": "Golden Rule",
         "status": "Done",
-        "detail": "Preview live; waiting Lance/Taylor feedback."
+        "detail": "Preview is live. Waiting on feedback from you and Taylor."
       },
       {
         "id": "ros-17",
@@ -45,7 +45,7 @@
       "options": [
         { "id": "A", "label": "Mark Substack for publish when ready" },
         { "id": "B", "label": "Hold publish and open markup round" },
-        { "id": "C", "label": "Park essay; call ROS-21 when he wants social/PDF leave-behind" }
+        { "id": "C", "label": "Park the essay until you've read it." }
       ]
     },
     {
@@ -89,7 +89,7 @@
       "options": [
         { "id": "A", "label": "Queue ROS-21: DP rebuilds social + stylized PDF from cleared Substack → Editor hard re-gate" },
         { "id": "B", "label": "Park ROS-21 until asked" },
-        { "id": "C", "label": "Skip social; leave-behind PDF only when wanted" }
+        { "id": "C", "label": "Skip social. PDF handout only when you ask." }
       ]
     }
   ]
