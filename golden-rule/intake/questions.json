@@ -212,9 +212,9 @@
       "id": "governing_other",
       "section": "ownership",
       "prompt": "Will the governing body do anything else you want listed?",
-      "help": "The form has two lines for this. Put each item on its own line, or write None.",
+      "help": "The form has two lines for this. Put each item on its own line, or write None. Leave this blank if there is nothing to add.",
       "type": "textarea",
-      "required": true,
+      "required": false,
       "notSure": true,
       "maps_to": "[NONE, OR LIST]",
       "placeholder": "None, or a short list"
@@ -1324,9 +1324,9 @@
       "id": "interview_question",
       "section": "hiring",
       "prompt": "Is there an extra interview question you want on the form?",
-      "help": "If not, write None.",
+      "help": "Leave this blank if you do not want an extra question.",
       "type": "textarea",
-      "required": true,
+      "required": false,
       "notSure": true,
       "maps_to": "[ADDITIONAL QUESTION]"
     },

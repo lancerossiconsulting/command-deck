@@ -307,8 +307,8 @@ footer.nav {
 (function () {
   "use strict";
 
-  // Swap this single constant for FormSubmit's hashed alias later.
-  var FORMSUBMIT_ENDPOINT = "https://formsubmit.co/ajax/lance.rossi.consulting@gmail.com";
+  // FormSubmit hashed alias. The inbox address stays off this page.
+  var FORMSUBMIT_ENDPOINT = "https://formsubmit.co/ajax/aef32fbab4f0a981bae1a0278e59dbbe";
   var STORE_KEY = "gr.hccs.intake.v1";
 
   // FormSubmit's table lists one row per field name. JSON key order is not
@@ -1160,6 +1160,14 @@ footer.nav {
     return "";
   }
 
+  function formAccepted(parsed) {
+    if (!parsed) return false;
+    var flag = parsed.success;
+    if (flag === true || flag === "true") return true;
+    if (flag === false || flag === "false") return false;
+    return false;
+  }
+
   async function sendAnswers() {
     if (state.sending || state.submitted) return;
     var gap = firstGap();
@@ -1200,7 +1208,7 @@ footer.nav {
       var text = await res.text();
       var parsed = null;
       try { parsed = JSON.parse(text); } catch (e) { parsed = null; }
-      var ok = res.ok && parsed && (parsed.success === true || parsed.success === "true");
+      var ok = res.ok && formAccepted(parsed);
       state.sending = false;
       state.mode = ok ? "success" : "failure";
       if (ok) state.submitted = true;
