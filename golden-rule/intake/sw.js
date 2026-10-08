@@ -1,9 +1,9 @@
 /* Golden Rule intake.
    This file lives under /golden-rule/intake/, so its scope is only that folder.
    The Command Deck worker at the site root would otherwise control this path.
-   gr-intake-v2 drops any earlier intake cache and loads the page from the network
-   first, so a new FormSubmit alias is not stuck behind an old copy. */
-var CACHE = "gr-intake-v2";
+   gr-intake-v3 drops any earlier intake cache and loads the page from the network
+   first, so date and phone formatting is not stuck behind an old copy. */
+var CACHE = "gr-intake-v3";
 
 self.addEventListener("install", function () {
   self.skipWaiting();

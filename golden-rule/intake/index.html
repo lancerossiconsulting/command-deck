@@ -374,11 +374,42 @@ footer.nav {
     return m[2] + "/" + m[3] + "/" + m[1];
   }
 
+  function formatPhone(v) {
+    var raw = String(v || "").trim();
+    var digits = raw.replace(/\D/g, "");
+    if (digits.length !== 10) return raw;
+    return "(" + digits.slice(0, 3) + ") " + digits.slice(3, 6) + "-" + digits.slice(6);
+  }
+
+  function present(kind, value) {
+    var v = String(value == null ? "" : value).trim();
+    if (!v) return "";
+    if (kind === "date") return formatMDY(v);
+    if (kind === "tel") return formatPhone(v);
+    return v;
+  }
+
+  function presentParts(specs, row) {
+    var out = {};
+    var known = {};
+    (specs || []).forEach(function (spec) {
+      known[spec.key] = true;
+      out[spec.key] = present(spec.type, row && row[spec.key]);
+    });
+    if (row) {
+      Object.keys(row).forEach(function (key) {
+        if (!known[key]) out[key] = String(row[key] == null ? "" : row[key]).trim();
+      });
+    }
+    return out;
+  }
+
   function fillTemplate(template, row) {
     var out = String(template).replace(/\{([A-Za-z0-9_]+)(?::([A-Za-z]+))?\}/g, function (_, key, kind) {
       var v = row && row[key] != null ? String(row[key]).trim() : "";
       if (!v) return "\u0000";
       if (kind === "date") return formatMDY(v);
+      if (kind === "tel") return formatPhone(v);
       return v;
     });
     var parts = out.split("\u0000").map(function (s) {
@@ -390,13 +421,14 @@ footer.nav {
   }
 
   function rowLine(q, row) {
+    var shown = presentParts(q.columns, row);
     if (q.id === "office_hours" && /^closed$/i.test(String(row.opens || "").trim())) {
-      var day = String(row.day || "").trim();
+      var day = String(shown.day || "").trim();
       return day ? day + ", Closed" : "Closed";
     }
-    if (q.line) return fillTemplate(q.line, row);
+    if (q.line) return fillTemplate(q.line, shown);
     return (q.columns || []).map(function (c) {
-      return String(row[c.key] || "").trim();
+      return shown[c.key] || "";
     }).filter(Boolean).join(", ");
   }
 
@@ -434,16 +466,16 @@ footer.nav {
       if (!lines.length) return "(left blank)";
       text = lines.length === 1 ? lines[0] : lines.map(function (line, i) { return (i + 1) + ". " + line; }).join("\n");
     } else if (q.type === "fields") {
-      var values = a.values || {};
+      var values = presentParts(q.fields, a.values || {});
       if (q.line) text = fillTemplate(q.line, values);
       else {
         text = (q.fields || []).map(function (f) {
-          var v = String(values[f.key] || "").trim();
+          var v = values[f.key] || "";
           return v ? f.label + ": " + v : "";
         }).filter(Boolean).join(", ");
       }
     } else {
-      text = String(a.value || "").trim();
+      text = present(q.type, a.value);
     }
     return text ? text : "(left blank)";
   }
