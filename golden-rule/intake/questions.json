@@ -1,0 +1,2006 @@
+{
+  "meta": {
+    "business": "Golden Rule Home Care & Concierge Services, LLC",
+    "shortName": "Golden Rule",
+    "estimatedMinutes": 50,
+    "notes": "Add a question to the questions array. Keep ids stable. Each question needs id, section, prompt, help, type, required, notSure, and maps_to. Types: text, email, tel, date, number, textarea, single, multi, rows, fields. Policy numbers are not questions. The preparer numbers them."
+  },
+  "sections": [
+    {
+      "id": "business",
+      "label": "Business"
+    },
+    {
+      "id": "ownership",
+      "label": "Ownership and leadership"
+    },
+    {
+      "id": "staff",
+      "label": "Staff"
+    },
+    {
+      "id": "services",
+      "label": "Services"
+    },
+    {
+      "id": "area",
+      "label": "Service area and hours"
+    },
+    {
+      "id": "pay",
+      "label": "Pay and benefits"
+    },
+    {
+      "id": "jobs",
+      "label": "Job requirements"
+    },
+    {
+      "id": "hiring",
+      "label": "Hiring and screening"
+    },
+    {
+      "id": "training",
+      "label": "Training and competency"
+    },
+    {
+      "id": "records",
+      "label": "Records and health"
+    },
+    {
+      "id": "conduct",
+      "label": "Discipline and leaving"
+    },
+    {
+      "id": "handbook",
+      "label": "Handbook and daily work"
+    },
+    {
+      "id": "policies",
+      "label": "Signing the policies"
+    }
+  ],
+  "questions": [
+    {
+      "id": "legal_name",
+      "section": "business",
+      "prompt": "What is the legal business name?",
+      "help": "Enter it exactly as it appears on your Kansas Secretary of State filing.",
+      "type": "text",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[ENTITY NAME]",
+      "placeholder": "As it appears on the Kansas Secretary of State filing",
+      "autocomplete": "organization"
+    },
+    {
+      "id": "dba",
+      "section": "business",
+      "prompt": "Do you use a different trade name (a DBA)?",
+      "help": "If the public name matches the legal name, write None.",
+      "type": "text",
+      "required": true,
+      "notSure": true,
+      "maps_to": "Starter question. No yellow bracket. Used if the application name and the legal name differ.",
+      "placeholder": "Trade name, or None"
+    },
+    {
+      "id": "ein",
+      "section": "business",
+      "prompt": "What is the business EIN?",
+      "help": "This is the federal employer identification number. If you do not have it handy, tap Not sure yet.",
+      "type": "text",
+      "required": true,
+      "notSure": true,
+      "maps_to": "Starter question. No yellow bracket. Used on tax and application paperwork.",
+      "placeholder": "XX-XXXXXXX",
+      "autocomplete": "off"
+    },
+    {
+      "id": "street",
+      "section": "business",
+      "prompt": "What is the street address of the parent office?",
+      "help": "This is the address that goes on the handbook and the application.",
+      "type": "text",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[ADDRESS]",
+      "placeholder": "Street address",
+      "autocomplete": "street-address"
+    },
+    {
+      "id": "city",
+      "section": "business",
+      "prompt": "What city is the parent office in?",
+      "help": "City only. The ZIP is next.",
+      "type": "text",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[ADDRESS]",
+      "placeholder": "City",
+      "autocomplete": "address-level2"
+    },
+    {
+      "id": "zip",
+      "section": "business",
+      "prompt": "What is the ZIP code?",
+      "help": "Five digits is enough.",
+      "type": "text",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[ADDRESS]",
+      "placeholder": "66502",
+      "inputMode": "numeric",
+      "autocomplete": "postal-code"
+    },
+    {
+      "id": "phone",
+      "section": "business",
+      "prompt": "What is the main business phone number?",
+      "help": "Include the area code. The after-hours number is a later question.",
+      "type": "tel",
+      "required": true,
+      "notSure": true,
+      "maps_to": "Starter question. No yellow bracket. The on-call number is asked separately.",
+      "placeholder": "Include the area code",
+      "autocomplete": "tel"
+    },
+    {
+      "id": "email",
+      "section": "business",
+      "prompt": "What is the business email address?",
+      "help": "Use the inbox you want on applications and on the handbook.",
+      "type": "email",
+      "required": true,
+      "notSure": true,
+      "maps_to": "Starter question. No yellow bracket.",
+      "placeholder": "you@yourbusiness.com",
+      "autocomplete": "email"
+    },
+    {
+      "id": "governing_type",
+      "section": "ownership",
+      "prompt": "Who has legal authority to run the agency?",
+      "help": "For many single-owner LLCs, the answer is the sole member.",
+      "type": "single",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[GOVERNING BODY, FOR EXAMPLE SOLE MEMBER OF THE LLC OR BOARD OF DIRECTORS]",
+      "options": [
+        {
+          "id": "sole",
+          "label": "Sole member of the LLC"
+        },
+        {
+          "id": "board",
+          "label": "Board of directors"
+        }
+      ],
+      "allowOther": true,
+      "otherLabel": "Something else"
+    },
+    {
+      "id": "governing_members",
+      "section": "ownership",
+      "prompt": "Who is on the governing body, and what is each person's role?",
+      "help": "For a single-member LLC, one row with you as the member is enough. Add a row for each other owner or director.",
+      "type": "rows",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[GOVERNING BODY MEMBER NAMES]",
+      "columns": [
+        {
+          "key": "name",
+          "label": "Name",
+          "type": "text",
+          "placeholder": "Full name"
+        },
+        {
+          "key": "role",
+          "label": "Role",
+          "type": "text",
+          "placeholder": "Member, owner, or director"
+        }
+      ],
+      "line": "{name}, {role}",
+      "rowRequired": [
+        "name",
+        "role"
+      ],
+      "addLabel": "Add a person"
+    },
+    {
+      "id": "governing_other",
+      "section": "ownership",
+      "prompt": "Will the governing body do anything else you want listed?",
+      "help": "The form has two lines for this. Put each item on its own line, or write None.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[NONE, OR LIST]",
+      "placeholder": "None, or a short list"
+    },
+    {
+      "id": "admin_name",
+      "section": "ownership",
+      "prompt": "Who is the administrator?",
+      "help": "This is the person responsible for day to day operation.",
+      "type": "text",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[ADMINISTRATOR NAME]",
+      "placeholder": "Full name",
+      "autocomplete": "name"
+    },
+    {
+      "id": "admin_dob",
+      "section": "ownership",
+      "prompt": "What is the administrator's date of birth?",
+      "help": "KDHE asks for this on the qualifications worksheet.",
+      "type": "date",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[DATE] on the administrator qualifications worksheet (date of birth)"
+    },
+    {
+      "id": "admin_experience",
+      "section": "ownership",
+      "prompt": "What work experience should we list for the administrator?",
+      "help": "List each employer, the role, and the dates. A short list is perfect.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[EMPLOYER, ROLE, DATES] for the administrator",
+      "placeholder": "Employer, role, dates"
+    },
+    {
+      "id": "admin_education",
+      "section": "ownership",
+      "prompt": "What degrees, certificates, or training should we list for the administrator?",
+      "help": "Include the school or program and the year. If none, write None.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[DEGREE OR CERTIFICATE, SCHOOL, YEAR] for the administrator"
+    },
+    {
+      "id": "admin_residence",
+      "section": "ownership",
+      "prompt": "Where does the administrator live, and about how far is that from the office?",
+      "help": "KDHE asks the administrator to live in the service area. City and approximate miles are enough.",
+      "type": "fields",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[CITY, MILES] and [CITY, MILES FROM PARENT OFFICE] for the administrator",
+      "fields": [
+        {
+          "key": "city",
+          "label": "City",
+          "type": "text",
+          "placeholder": "City"
+        },
+        {
+          "key": "miles",
+          "label": "Miles from the parent office",
+          "type": "number"
+        }
+      ],
+      "line": "{city}, {miles} miles from the parent office"
+    },
+    {
+      "id": "admin_license",
+      "section": "ownership",
+      "prompt": "Does the administrator hold a professional license?",
+      "help": "License type and number, or None.",
+      "type": "text",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[LICENSE TYPE AND NUMBER, OR NONE] for the administrator",
+      "placeholder": "Type and number, or None"
+    },
+    {
+      "id": "alt_name",
+      "section": "ownership",
+      "prompt": "Who is the alternate administrator?",
+      "help": "This person fills in when the administrator is not available. It can be you if you also hold that role.",
+      "type": "text",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[ALTERNATE ADMINISTRATOR NAME]"
+    },
+    {
+      "id": "alt_dob",
+      "section": "ownership",
+      "prompt": "What is the alternate administrator's date of birth?",
+      "help": "Same worksheet as the administrator.",
+      "type": "date",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[DATE] on the alternate qualifications worksheet (date of birth)"
+    },
+    {
+      "id": "alt_experience",
+      "section": "ownership",
+      "prompt": "What work experience should we list for the alternate administrator?",
+      "help": "Employer, role, and dates.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[EMPLOYER, ROLE, DATES] for the alternate administrator"
+    },
+    {
+      "id": "alt_education",
+      "section": "ownership",
+      "prompt": "What degrees, certificates, or training should we list for the alternate administrator?",
+      "help": "School or program and year. If none, write None.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[DEGREE OR CERTIFICATE, SCHOOL, YEAR] for the alternate administrator"
+    },
+    {
+      "id": "alt_residence",
+      "section": "ownership",
+      "prompt": "Where does the alternate administrator live, and about how far is that from the office?",
+      "help": "City and approximate miles.",
+      "type": "fields",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[CITY, MILES] and [CITY, MILES FROM PARENT OFFICE] for the alternate administrator",
+      "fields": [
+        {
+          "key": "city",
+          "label": "City",
+          "type": "text"
+        },
+        {
+          "key": "miles",
+          "label": "Miles from the parent office",
+          "type": "number"
+        }
+      ],
+      "line": "{city}, {miles} miles from the parent office"
+    },
+    {
+      "id": "alt_license",
+      "section": "ownership",
+      "prompt": "Does the alternate administrator hold a professional license?",
+      "help": "License type and number, or None.",
+      "type": "text",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[LICENSE TYPE AND NUMBER, OR NONE] for the alternate administrator"
+    },
+    {
+      "id": "manager_names",
+      "section": "ownership",
+      "prompt": "Who is the manager or supervisor, if you have one?",
+      "help": "If that person is also the administrator, say so. If you do not have a separate manager yet, write None.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[MANAGER NAME(S)]"
+    },
+    {
+      "id": "other_positions",
+      "section": "ownership",
+      "prompt": "Are there other roles on the org chart?",
+      "help": "For example office staff or scheduling staff. If none, write None.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[OTHER POSITION, FOR EXAMPLE OFFICE OR SCHEDULING STAFF]"
+    },
+    {
+      "id": "reporting_lines",
+      "section": "ownership",
+      "prompt": "Who reports to whom?",
+      "help": "One person can hold more than one role. List each line, such as: Caregivers report to the manager. The manager reports to the administrator.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[NAME] and [REPORTS TO] on the organizational chart",
+      "placeholder": "Who reports to whom"
+    },
+    {
+      "id": "staff_roster",
+      "section": "staff",
+      "prompt": "Who works for you now, and who do you plan to hire?",
+      "help": "Include yourself. A planned start date is fine. If you do not know a date, leave that one blank.",
+      "type": "rows",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[NAME] and [MM/DD/YYYY] on the staff roster",
+      "columns": [
+        {
+          "key": "name",
+          "label": "Name",
+          "type": "text",
+          "placeholder": "Full name"
+        },
+        {
+          "key": "role",
+          "label": "Role",
+          "type": "text",
+          "placeholder": "Role"
+        },
+        {
+          "key": "start",
+          "label": "Start date or planned start",
+          "type": "date"
+        }
+      ],
+      "line": "{name}, {role}, starts {start:date}",
+      "rowRequired": [
+        "name",
+        "role"
+      ],
+      "addLabel": "Add a person"
+    },
+    {
+      "id": "services",
+      "section": "services",
+      "prompt": "Which services will you offer?",
+      "help": "Select every service you want on the statement of services. Errands, and toileting that includes collection bags, are their own lines on that form.",
+      "type": "multi",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[OTHER SERVICE] and the service checkboxes on the statement of services",
+      "options": [
+        {
+          "id": "companionship",
+          "label": "Companionship"
+        },
+        {
+          "id": "homemaker",
+          "label": "Homemaker (light housekeeping)"
+        },
+        {
+          "id": "meals",
+          "label": "Meal preparation"
+        },
+        {
+          "id": "transport",
+          "label": "Transportation"
+        },
+        {
+          "id": "errands",
+          "label": "Errands and shopping for the client"
+        },
+        {
+          "id": "bathing",
+          "label": "Personal care: bathing"
+        },
+        {
+          "id": "dressing",
+          "label": "Personal care: dressing"
+        },
+        {
+          "id": "toileting",
+          "label": "Personal care: toileting and continence care, including emptying urinary collection bags and ostomy bags"
+        },
+        {
+          "id": "meds",
+          "label": "Medication reminders"
+        },
+        {
+          "id": "respite",
+          "label": "Respite"
+        },
+        {
+          "id": "postsurg",
+          "label": "Help after surgery"
+        }
+      ],
+      "allowOther": true,
+      "otherLabel": "Other"
+    },
+    {
+      "id": "noncare_services",
+      "section": "services",
+      "prompt": "Do you also offer home organizing, downsizing, or concierge services that are not licensed supportive care?",
+      "help": "If you do, describe how you keep them separate from supportive care. If you do not, write None. KDHE will confirm how this should be worded on the application.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[IF THE BUSINESS ALSO OFFERS HOME ORGANIZING, DOWNSIZING, OR CONCIERGE SERVICES, DESCRIBE HOW THEY ARE SEPARATED FROM LICENSED SUPPORTIVE CARE SERVICES.]"
+    },
+    {
+      "id": "counties",
+      "section": "area",
+      "prompt": "Which Kansas counties will you serve?",
+      "help": "Golden Rule is in Manhattan, which is in Riley County. Select every county you will serve. This list should match section F of the KDHE application.",
+      "type": "multi",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[COUNTY LIST]",
+      "options": [
+        {
+          "id": "riley",
+          "label": "Riley"
+        },
+        {
+          "id": "pottawatomie",
+          "label": "Pottawatomie"
+        },
+        {
+          "id": "geary",
+          "label": "Geary"
+        },
+        {
+          "id": "wabaunsee",
+          "label": "Wabaunsee"
+        },
+        {
+          "id": "clay",
+          "label": "Clay"
+        },
+        {
+          "id": "marshall",
+          "label": "Marshall"
+        },
+        {
+          "id": "dickinson",
+          "label": "Dickinson"
+        }
+      ],
+      "allowOther": true,
+      "otherLabel": "Other county"
+    },
+    {
+      "id": "cities",
+      "section": "area",
+      "prompt": "Which cities will you serve?",
+      "help": "Name the cities inside those counties. This is extra detail for the application. The packet's county blank is the previous question.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "Starter question. No separate city bracket. Supports the service area next to [COUNTY LIST]."
+    },
+    {
+      "id": "office_hours",
+      "section": "area",
+      "prompt": "What are your office hours each day, and who covers them?",
+      "help": "Write Closed in Opens if the office is shut that day. Who covers can be a name or a role.",
+      "type": "rows",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[TIME], [TIME], and [NAME OR ROLE] for each day in the hours policy; [HOURS] office hours in the handbook",
+      "columns": [
+        {
+          "key": "day",
+          "label": "Day",
+          "type": "text"
+        },
+        {
+          "key": "opens",
+          "label": "Opens",
+          "type": "text",
+          "placeholder": "8:00 a.m. or Closed"
+        },
+        {
+          "key": "closes",
+          "label": "Closes",
+          "type": "text",
+          "placeholder": "5:00 p.m."
+        },
+        {
+          "key": "who",
+          "label": "Who covers",
+          "type": "text",
+          "placeholder": "Name or role"
+        }
+      ],
+      "seed": [
+        {
+          "day": "Monday"
+        },
+        {
+          "day": "Tuesday"
+        },
+        {
+          "day": "Wednesday"
+        },
+        {
+          "day": "Thursday"
+        },
+        {
+          "day": "Friday"
+        },
+        {
+          "day": "Saturday"
+        },
+        {
+          "day": "Sunday"
+        }
+      ],
+      "line": "{day}, {opens} to {closes}, {who}",
+      "addLabel": "Add a day"
+    },
+    {
+      "id": "hours_posted",
+      "section": "area",
+      "prompt": "Where will you post your hours?",
+      "help": "Clients and staff should be able to find them without calling.",
+      "type": "single",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[LOCATION, FOR EXAMPLE OFFICE DOOR AND WEBSITE]",
+      "options": [
+        {
+          "id": "door",
+          "label": "On the office door"
+        },
+        {
+          "id": "site",
+          "label": "On the website"
+        },
+        {
+          "id": "both",
+          "label": "On the office door and the website"
+        }
+      ],
+      "allowOther": true,
+      "otherLabel": "Somewhere else"
+    },
+    {
+      "id": "oncall_phone",
+      "section": "area",
+      "prompt": "What phone number should people use after hours?",
+      "help": "This is the on-call number in the handbook and in the on-call policy.",
+      "type": "tel",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[ON-CALL PHONE NUMBER] and handbook [PHONE]"
+    },
+    {
+      "id": "oncall_hours",
+      "section": "area",
+      "prompt": "When is someone on call?",
+      "help": "For example, whenever the office is closed, or a shorter window such as 5:00 p.m. to 8:00 a.m.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "Starter question for on-call hours. The policy's time grid is the office-hours question. This answer describes after-hours coverage."
+    },
+    {
+      "id": "oncall_preparer",
+      "section": "area",
+      "prompt": "Who prepares the on-call schedule?",
+      "help": "A name or a role is fine.",
+      "type": "text",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[ROLE] (who prepares the on-call schedule)",
+      "placeholder": "Administrator"
+    },
+    {
+      "id": "oncall_advance_days",
+      "section": "area",
+      "prompt": "How many days ahead will that schedule be ready?",
+      "help": "A common choice is 7 or 14 days.",
+      "type": "number",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[NUMBER] days in advance for the on-call schedule",
+      "min": 1,
+      "placeholder": "14"
+    },
+    {
+      "id": "oncall_schedule_location",
+      "section": "area",
+      "prompt": "Where will the on-call schedule be kept?",
+      "help": "For example, a binder at the parent office, or a shared calendar.",
+      "type": "text",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[LOCATION] where the on-call schedule is kept"
+    },
+    {
+      "id": "oncall_response_minutes",
+      "section": "area",
+      "prompt": "How many minutes should the on-call person take to answer or call back?",
+      "help": "The draft leaves this number up to you.",
+      "type": "number",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[NUMBER] minutes and the [AGENCY TO SET] tag on that sentence",
+      "min": 1,
+      "placeholder": "15"
+    },
+    {
+      "id": "backup_phone",
+      "section": "area",
+      "prompt": "If the on-call person cannot be reached, what number should staff call?",
+      "help": "This is the administrator or alternate administrator backup number.",
+      "type": "tel",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[PHONE NUMBER] backup when the on-call manager cannot be reached"
+    },
+    {
+      "id": "pay_ranges",
+      "section": "pay",
+      "prompt": "What pay range will you offer for each role?",
+      "help": "The job descriptions need a range for the administrator, the alternate, a manager, and a supportive care worker. Remove a row if you will not pay that role separately.",
+      "type": "rows",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY TO SET] pay range on each job description",
+      "columns": [
+        {
+          "key": "role",
+          "label": "Role",
+          "type": "text"
+        },
+        {
+          "key": "low",
+          "label": "Low",
+          "type": "number",
+          "placeholder": "16"
+        },
+        {
+          "key": "high",
+          "label": "High",
+          "type": "number",
+          "placeholder": "20"
+        },
+        {
+          "key": "basis",
+          "label": "Pay basis",
+          "type": "select",
+          "options": [
+            "per hour",
+            "per year"
+          ]
+        }
+      ],
+      "seed": [
+        {
+          "role": "Administrator"
+        },
+        {
+          "role": "Alternate administrator"
+        },
+        {
+          "role": "Manager or supervisor"
+        },
+        {
+          "role": "Supportive care worker"
+        }
+      ],
+      "line": "{role}, ${low} to ${high} {basis}",
+      "rowRequired": [
+        "role",
+        "low",
+        "high",
+        "basis"
+      ],
+      "requireAllRows": true,
+      "addLabel": "Add a role"
+    },
+    {
+      "id": "benefits",
+      "section": "pay",
+      "prompt": "Which benefits will you offer?",
+      "help": "Select everything you plan to offer. Choose None yet if you are not ready to offer benefits.",
+      "type": "multi",
+      "required": true,
+      "notSure": true,
+      "maps_to": "Starter question. No yellow benefits bracket. Used in the handbook pay section.",
+      "options": [
+        {
+          "id": "health",
+          "label": "Health insurance"
+        },
+        {
+          "id": "dental",
+          "label": "Dental insurance"
+        },
+        {
+          "id": "vision",
+          "label": "Vision insurance"
+        },
+        {
+          "id": "retirement",
+          "label": "Retirement plan"
+        },
+        {
+          "id": "holidays",
+          "label": "Paid holidays"
+        },
+        {
+          "id": "training",
+          "label": "Paid training time"
+        },
+        {
+          "id": "none",
+          "label": "None yet"
+        }
+      ],
+      "allowOther": true,
+      "otherLabel": "Other"
+    },
+    {
+      "id": "pto",
+      "section": "pay",
+      "prompt": "What is your paid time off policy?",
+      "help": "If you do not offer paid time off yet, write None.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "Starter question. No yellow PTO bracket. Used in the handbook."
+    },
+    {
+      "id": "full_time_hours",
+      "section": "pay",
+      "prompt": "How many hours a week count as full time?",
+      "help": "For example, 32 or more hours a week.",
+      "type": "text",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[HOURS] full time, and the [AGENCY TO SET] tag on job categories",
+      "placeholder": "32 or more hours a week"
+    },
+    {
+      "id": "part_time_hours",
+      "section": "pay",
+      "prompt": "How many hours a week count as part time?",
+      "help": "For example, under 32 hours a week.",
+      "type": "text",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[HOURS] part time",
+      "placeholder": "Under 32 hours a week"
+    },
+    {
+      "id": "workweek",
+      "section": "pay",
+      "prompt": "When does your workweek start and end?",
+      "help": "This is the span you use for overtime. Your CPA or attorney will confirm the overtime rules. A common span is Sunday at 12:00 a.m. through Saturday at 11:59 p.m.",
+      "type": "fields",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[DAY AND TIME] to [DAY AND TIME]",
+      "fields": [
+        {
+          "key": "start",
+          "label": "Workweek starts",
+          "type": "text",
+          "placeholder": "Sunday 12:00 a.m."
+        },
+        {
+          "key": "end",
+          "label": "Workweek ends",
+          "type": "text",
+          "placeholder": "Saturday 11:59 p.m."
+        }
+      ],
+      "line": "{start} to {end}"
+    },
+    {
+      "id": "travel_pay",
+      "section": "pay",
+      "prompt": "How will you pay for travel time between clients during the workday?",
+      "help": "Your CPA or attorney will confirm whether this time must be paid. Write what you intend. For example, paid at the same hourly rate.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY POLICY, CONFIRM COMPENSABILITY WITH CPA OR ATTORNEY]"
+    },
+    {
+      "id": "mileage",
+      "section": "pay",
+      "prompt": "What mileage reimbursement will you pay?",
+      "help": "For example, the IRS rate, a set amount per mile, or none.",
+      "type": "text",
+      "required": true,
+      "notSure": true,
+      "maps_to": "Handbook [AGENCY TO SET] mileage reimbursement. Also used with the caregiver driving rules."
+    },
+    {
+      "id": "pay_schedule",
+      "section": "pay",
+      "prompt": "How often will you pay?",
+      "help": "Pick the schedule you intend to use.",
+      "type": "single",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[SCHEDULE] paydays",
+      "options": [
+        {
+          "id": "weekly",
+          "label": "Every week"
+        },
+        {
+          "id": "biweekly",
+          "label": "Every two weeks"
+        },
+        {
+          "id": "semimonthly",
+          "label": "Twice a month"
+        },
+        {
+          "id": "monthly",
+          "label": "Once a month"
+        }
+      ],
+      "allowOther": true,
+      "otherLabel": "A different schedule"
+    },
+    {
+      "id": "pay_method",
+      "section": "pay",
+      "prompt": "How will people receive their pay?",
+      "help": "Direct deposit, a paper check, or their choice.",
+      "type": "single",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[DIRECT DEPOSIT OR CHECK]",
+      "options": [
+        {
+          "id": "deposit",
+          "label": "Direct deposit"
+        },
+        {
+          "id": "check",
+          "label": "Paper check"
+        },
+        {
+          "id": "either",
+          "label": "The employee may choose either"
+        }
+      ]
+    },
+    {
+      "id": "breaks",
+      "section": "pay",
+      "prompt": "What is your break and meal policy?",
+      "help": "For example, an unpaid meal break of 30 minutes when a shift runs longer than 6 hours.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "Handbook [AGENCY TO SET] breaks and meals"
+    },
+    {
+      "id": "admin_requirements",
+      "section": "jobs",
+      "prompt": "Any extra requirements for the administrator, besides driving?",
+      "help": "Driving is its own question. Use this box for anything else, or write None.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[ADDITIONAL AGENCY REQUIREMENTS, FOR EXAMPLE VALID DRIVER'S LICENSE] on the administrator job description"
+    },
+    {
+      "id": "admin_duties",
+      "section": "jobs",
+      "prompt": "Any extra duties for the administrator, beyond the standard list?",
+      "help": "If none, write None.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[ADDITIONAL DUTIES SET BY THE AGENCY]"
+    },
+    {
+      "id": "admin_driving",
+      "section": "jobs",
+      "prompt": "What driving requirements apply to the administrator?",
+      "help": "For example, a valid license and current insurance. If none, write None.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY TO SET DRIVING REQUIREMENTS] for the administrator"
+    },
+    {
+      "id": "admin_physical",
+      "section": "jobs",
+      "prompt": "What lifting or physical demands should the administrator job description include?",
+      "help": "If you are not ready to set a weight limit, tap Not sure yet.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY TO SET] lifting and physical demands for the administrator"
+    },
+    {
+      "id": "alt_supervises",
+      "section": "jobs",
+      "prompt": "When the alternate administrator is not filling in, who do they supervise?",
+      "help": "While they are acting as administrator, they supervise all staff. This answer is for the other times. Write None if they do not supervise anyone then.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY TO SET] who the alternate supervises when not acting as administrator"
+    },
+    {
+      "id": "alt_requirements",
+      "section": "jobs",
+      "prompt": "Any extra requirements for the alternate administrator, besides driving?",
+      "help": "If none, write None.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[ADDITIONAL AGENCY REQUIREMENTS, FOR EXAMPLE VALID DRIVER'S LICENSE] on the alternate job description"
+    },
+    {
+      "id": "alt_duties",
+      "section": "jobs",
+      "prompt": "When the alternate is not acting as administrator, are there extra duties?",
+      "help": "If none, write None.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[ADDITIONAL DUTIES WHEN NOT ACTING AS ADMINISTRATOR]"
+    },
+    {
+      "id": "alt_driving",
+      "section": "jobs",
+      "prompt": "What driving requirements apply to the alternate administrator?",
+      "help": "If none, write None.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY TO SET DRIVING REQUIREMENTS] for the alternate administrator"
+    },
+    {
+      "id": "alt_physical",
+      "section": "jobs",
+      "prompt": "What lifting or physical demands should the alternate administrator job description include?",
+      "help": "If you are not ready to set this, tap Not sure yet.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY TO SET] lifting and physical demands for the alternate administrator"
+    },
+    {
+      "id": "manager_requirements",
+      "section": "jobs",
+      "prompt": "What requirements do you want for a manager or supervisor?",
+      "help": "For example education, a driver's license, or supervisory experience. If you will not have a separate manager, write None.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY REQUIREMENTS, FOR EXAMPLE EDUCATION, DRIVER'S LICENSE, SUPERVISORY EXPERIENCE]"
+    },
+    {
+      "id": "manager_duties",
+      "section": "jobs",
+      "prompt": "Any extra duties for a manager or supervisor?",
+      "help": "If none, write None.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[ADDITIONAL DUTIES] on the manager job description"
+    },
+    {
+      "id": "manager_driving",
+      "section": "jobs",
+      "prompt": "What driving requirements apply to a manager or supervisor?",
+      "help": "If none, write None.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY TO SET DRIVING REQUIREMENTS] for the manager"
+    },
+    {
+      "id": "manager_physical",
+      "section": "jobs",
+      "prompt": "What lifting or physical demands should the manager job description include?",
+      "help": "If you will not have a separate manager, write None.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY TO SET] lifting and physical demands for the manager"
+    },
+    {
+      "id": "worker_min_age",
+      "section": "jobs",
+      "prompt": "What is the minimum age for a supportive care worker?",
+      "help": "The state rules reviewed for this packet do not set a minimum age. Your answer goes on the application and the job description. Your attorney can confirm it.",
+      "type": "number",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[MINIMUM AGE] and [AGENCY TO SET; STATE MINIMUM AGE NOT FOUND IN K.A.R. 28-51]",
+      "min": 16,
+      "max": 99,
+      "placeholder": "18"
+    },
+    {
+      "id": "worker_requirements",
+      "section": "jobs",
+      "prompt": "What else must a supportive care worker have before hire?",
+      "help": "For example a driver's license, insurance, reliable transportation, or prior experience. If none beyond the age rule, write None.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY REQUIREMENTS, FOR EXAMPLE DRIVER'S LICENSE, INSURANCE, RELIABLE TRANSPORTATION, PRIOR EXPERIENCE]"
+    },
+    {
+      "id": "worker_duties",
+      "section": "jobs",
+      "prompt": "Any extra duties for supportive care workers?",
+      "help": "If none, write None.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[ADDITIONAL DUTIES] on the supportive care worker job description"
+    },
+    {
+      "id": "worker_homes",
+      "section": "jobs",
+      "prompt": "How should the job description describe work in clients' homes?",
+      "help": "The draft says homes may include stairs, pets, smoke, and varied conditions.",
+      "type": "single",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY TO DESCRIBE]",
+      "options": [
+        {
+          "id": "draft",
+          "label": "Use that wording: stairs, pets, smoke, and varied conditions"
+        }
+      ],
+      "allowOther": true,
+      "otherLabel": "Use different wording"
+    },
+    {
+      "id": "worker_lift",
+      "section": "jobs",
+      "prompt": "How many pounds should a caregiver be able to lift, push, or pull?",
+      "help": "This number goes in the supportive care worker job description.",
+      "type": "number",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[NUMBER] pounds and the [AGENCY TO SET] tag on that lifting line",
+      "min": 1,
+      "placeholder": "25"
+    },
+    {
+      "id": "worker_driving",
+      "section": "jobs",
+      "prompt": "What driving requirements belong in the caregiver job description?",
+      "help": "For example a valid license, current insurance, and a reliable car. Mileage pay is a separate question.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY TO SET DRIVING AND MILEAGE RULES]"
+    },
+    {
+      "id": "jobs_posted",
+      "section": "hiring",
+      "prompt": "Where will you post open jobs?",
+      "help": "Select every place you expect to use.",
+      "type": "multi",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY TO LIST WHERE JOBS ARE POSTED]",
+      "options": [
+        {
+          "id": "indeed",
+          "label": "Indeed"
+        },
+        {
+          "id": "site",
+          "label": "The agency website"
+        },
+        {
+          "id": "facebook",
+          "label": "Facebook"
+        },
+        {
+          "id": "kansasworks",
+          "label": "KansasWorks"
+        },
+        {
+          "id": "paper",
+          "label": "A local newspaper"
+        },
+        {
+          "id": "word",
+          "label": "Word of mouth"
+        }
+      ],
+      "allowOther": true,
+      "otherLabel": "Other"
+    },
+    {
+      "id": "reference_count",
+      "section": "hiring",
+      "prompt": "How many references will you check for each new hire?",
+      "help": "The draft suggests at least two. Reference checks have to be written down before the hire date.",
+      "type": "number",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[NUMBER, FOR EXAMPLE TWO] and the first [NUMBER] in the reference policy",
+      "min": 1,
+      "placeholder": "2"
+    },
+    {
+      "id": "reference_employer_count",
+      "section": "hiring",
+      "prompt": "How many of those references must be a past employer or supervisor?",
+      "help": "Only when a past employer is available.",
+      "type": "number",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[NUMBER] of references from a past employer or supervisor",
+      "min": 1,
+      "placeholder": "1"
+    },
+    {
+      "id": "reference_attempts",
+      "section": "hiring",
+      "prompt": "If a reference does not answer, how many tries before you ask for another?",
+      "help": "Each try should be written down.",
+      "type": "number",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[NUMBER] attempts to reach a reference",
+      "min": 1,
+      "placeholder": "3"
+    },
+    {
+      "id": "background_vendor",
+      "section": "hiring",
+      "prompt": "Who will run criminal background checks?",
+      "help": "The draft policy uses the KDADS criminal record check portal. Tell us if you will use that portal or someone else. KDHE and KDADS will confirm the current portal and fee.",
+      "type": "single",
+      "required": true,
+      "notSure": true,
+      "maps_to": "Starter question for the background-check vendor. The portal sentence's verify tag is not a question.",
+      "options": [
+        {
+          "id": "kdads",
+          "label": "The KDADS criminal record check portal"
+        }
+      ],
+      "allowOther": true,
+      "otherLabel": "A different vendor"
+    },
+    {
+      "id": "other_registries",
+      "section": "hiring",
+      "prompt": "Besides the Kansas Nurse Aide Registry and the DCF adult abuse registry, which other registries will you check?",
+      "help": "If none, write None. KDHE or KDADS will confirm the exact list.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[OTHER REGISTRIES]"
+    },
+    {
+      "id": "background_recheck",
+      "section": "hiring",
+      "prompt": "How often will you run a new background check?",
+      "help": "A 2025 draft would require a new check every two years, or after an abuse allegation. That draft was not adopted when this packet was written. KDHE will confirm the rule. Choose what you intend.",
+      "type": "single",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY TO SET, FOR EXAMPLE EVERY TWO YEARS]",
+      "options": [
+        {
+          "id": "two",
+          "label": "Every two years, and after an abuse, neglect, or exploitation allegation"
+        },
+        {
+          "id": "year",
+          "label": "Every year, and after an allegation"
+        },
+        {
+          "id": "hire",
+          "label": "At hire, and again after an allegation"
+        }
+      ],
+      "allowOther": true,
+      "otherLabel": "A different schedule"
+    },
+    {
+      "id": "background_access",
+      "section": "hiring",
+      "prompt": "Who is allowed to see criminal history results?",
+      "help": "For example, the administrator only.",
+      "type": "text",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[ROLES] with access to criminal history information"
+    },
+    {
+      "id": "provisional_supervision",
+      "section": "hiring",
+      "prompt": "How will you supervise a new hire while the background check is still pending?",
+      "help": "KDHE will confirm whether a provisional worker may be alone in a client's home. Write the rule you intend to use.",
+      "type": "single",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY TO SET, FOR EXAMPLE PROVISIONAL EMPLOYEE WORKS ONLY ALONGSIDE A TRAINED EMPLOYEE]",
+      "options": [
+        {
+          "id": "alongside",
+          "label": "They work only alongside a trained employee"
+        }
+      ],
+      "allowOther": true,
+      "otherLabel": "A different plan"
+    },
+    {
+      "id": "interview_question",
+      "section": "hiring",
+      "prompt": "Is there an extra interview question you want on the form?",
+      "help": "If not, write None.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[ADDITIONAL QUESTION]"
+    },
+    {
+      "id": "probation_length",
+      "section": "hiring",
+      "prompt": "How long is your probation or tryout period for a new caregiver?",
+      "help": "The background check can take up to 60 days. If you only want that window, choose 60 days. If you also want a longer tryout, say so.",
+      "type": "single",
+      "required": true,
+      "notSure": true,
+      "maps_to": "Starter question. The 60 day provisional window is already in the policy text. This records any tryout period you want stated.",
+      "options": [
+        {
+          "id": "30",
+          "label": "30 days"
+        },
+        {
+          "id": "60",
+          "label": "60 days"
+        },
+        {
+          "id": "90",
+          "label": "90 days"
+        }
+      ],
+      "allowOther": true,
+      "otherLabel": "A different length"
+    },
+    {
+      "id": "orientation_length",
+      "section": "training",
+      "prompt": "How long is orientation, and what does it look like?",
+      "help": "For example, 8 hours on the first day, or two half days. The rules reviewed for this packet do not set a minimum number of hours.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY TO SET] orientation length and format"
+    },
+    {
+      "id": "orientation_topics",
+      "section": "training",
+      "prompt": "Which topics will orientation cover?",
+      "help": "Include any extra topic you want added. Safety, privacy, and respect for the client are a solid start.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[ADDITIONAL TOPIC]"
+    },
+    {
+      "id": "competency_method",
+      "section": "training",
+      "prompt": "How will a new caregiver show they can do the work?",
+      "help": "Hands-on skills are shown by return demonstration. You can add other methods too.",
+      "type": "multi",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY TO SET: DIRECT OBSERVATION, RETURN DEMONSTRATION, WRITTEN OR ORAL QUIZ]",
+      "options": [
+        {
+          "id": "observe",
+          "label": "Direct observation"
+        },
+        {
+          "id": "return",
+          "label": "Return demonstration"
+        },
+        {
+          "id": "written",
+          "label": "Written quiz"
+        },
+        {
+          "id": "oral",
+          "label": "Oral quiz"
+        }
+      ],
+      "allowOther": true,
+      "otherLabel": "Other"
+    },
+    {
+      "id": "competency_evaluator",
+      "section": "training",
+      "prompt": "Who evaluates a caregiver's competency?",
+      "help": "For example, the administrator or the manager.",
+      "type": "text",
+      "required": true,
+      "notSure": true,
+      "maps_to": "Starter question. No separate evaluator blank. Used on the competency form."
+    },
+    {
+      "id": "competency_other",
+      "section": "training",
+      "prompt": "Any other competency item to add to the checklist?",
+      "help": "If not, write None.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[OTHER] on the initial competency evaluation"
+    },
+    {
+      "id": "annual_hours",
+      "section": "training",
+      "prompt": "How many training hours do you want each year, at a minimum?",
+      "help": "The rules reviewed for this packet do not set a minimum. KDHE will confirm whether they expect a number.",
+      "type": "number",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY TO SET] minimum annual training hours",
+      "min": 0,
+      "placeholder": "12"
+    },
+    {
+      "id": "evaluation_schedule",
+      "section": "training",
+      "prompt": "How often will you evaluate employees?",
+      "help": "The draft evaluation form includes a quarterly supervisory visit. Tell us if you want a different schedule.",
+      "type": "single",
+      "required": true,
+      "notSure": true,
+      "maps_to": "Starter question. The evaluation form's dates use the shared review schedule. This records how often you want evaluations.",
+      "options": [
+        {
+          "id": "quarter",
+          "label": "Quarterly"
+        },
+        {
+          "id": "six",
+          "label": "Every six months"
+        },
+        {
+          "id": "year",
+          "label": "Once a year"
+        }
+      ],
+      "allowOther": true,
+      "otherLabel": "A different schedule"
+    },
+    {
+      "id": "ane_steps",
+      "section": "training",
+      "prompt": "After a report of abuse, neglect, or exploitation, what steps will you take?",
+      "help": "The draft already says the administrator makes sure a report was made, protects the client, and may remove the accused person from client contact. Add the steps you want, or write Use the draft steps.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY TO SET INVESTIGATION STEPS]"
+    },
+    {
+      "id": "tb_method",
+      "section": "training",
+      "prompt": "Which TB test do you plan to use for new hires?",
+      "help": "The draft policy uses a two-step skin test, which is the test named in the Kansas rule. KDHE will confirm whether a blood test is accepted. Choose what you intend to use.",
+      "type": "single",
+      "required": true,
+      "notSure": true,
+      "maps_to": "Starter question. The packet bracket is a KDHE confirmation, not a blank for Taylor to settle. This records the test she intends.",
+      "options": [
+        {
+          "id": "tst",
+          "label": "Two-step TB skin test"
+        },
+        {
+          "id": "igra",
+          "label": "TB blood test (IGRA)"
+        }
+      ],
+      "allowOther": true,
+      "otherLabel": "Something else"
+    },
+    {
+      "id": "tb_after",
+      "section": "training",
+      "prompt": "After the first TB test, what will you do?",
+      "help": "Routine annual testing is not the usual CDC advice. KDHE will confirm what they expect. Choose what you intend.",
+      "type": "multi",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY TO SET, FOR EXAMPLE ANNUAL SYMPTOM SCREEN FOR EMPLOYEES WITH UNTREATED LATENT TB INFECTION, TESTING AFTER KNOWN EXPOSURE, AND ANNUAL TB EDUCATION]",
+      "options": [
+        {
+          "id": "symptom",
+          "label": "Annual symptom screen for employees with untreated latent TB"
+        },
+        {
+          "id": "exposure",
+          "label": "Testing after a known exposure"
+        },
+        {
+          "id": "education",
+          "label": "Annual TB education"
+        },
+        {
+          "id": "none",
+          "label": "No routine repeat testing"
+        }
+      ],
+      "allowOther": true,
+      "otherLabel": "Other"
+    },
+    {
+      "id": "records_format",
+      "section": "records",
+      "prompt": "Will personnel files be on paper, electronic, or both?",
+      "help": "Policies stay at the parent office where staff can read them.",
+      "type": "single",
+      "required": true,
+      "notSure": true,
+      "maps_to": "Starter question. No paper-or-electronic bracket. Used wherever the packet describes where records are kept.",
+      "options": [
+        {
+          "id": "paper",
+          "label": "Paper"
+        },
+        {
+          "id": "electronic",
+          "label": "Electronic"
+        },
+        {
+          "id": "both",
+          "label": "Both"
+        }
+      ]
+    },
+    {
+      "id": "records_system",
+      "section": "records",
+      "prompt": "Where will those files live, or what system will you use?",
+      "help": "For example, a locked cabinet at the parent office, or a named electronic system.",
+      "type": "text",
+      "required": true,
+      "notSure": true,
+      "maps_to": "Starter question. Names the system or place next to the records-format answer."
+    },
+    {
+      "id": "confidential_records",
+      "section": "records",
+      "prompt": "How will you keep medical records and criminal history separate from the regular personnel file?",
+      "help": "Your attorney will confirm this meets privacy rules. Write what you intend, such as a locked folder or a separate electronic file with limited access.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY TO SET; ATTORNEY TO CONFIRM]"
+    },
+    {
+      "id": "records_retention",
+      "section": "records",
+      "prompt": "How long will you keep a personnel file after someone leaves?",
+      "help": "The supportive care rules reviewed for this packet do not set a number. Your attorney can confirm what you choose.",
+      "type": "single",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY TO SET] retention after separation",
+      "options": [
+        {
+          "id": "3",
+          "label": "3 years"
+        },
+        {
+          "id": "5",
+          "label": "5 years"
+        },
+        {
+          "id": "7",
+          "label": "7 years"
+        }
+      ],
+      "allowOther": true,
+      "otherLabel": "A different period"
+    },
+    {
+      "id": "health_frequency",
+      "section": "records",
+      "prompt": "Will you do health assessments more often than every two years?",
+      "help": "The rule asks for an assessment at hire and at least every two years. If every two years is enough, write No, every two years is enough.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY TO SET] schedule for health assessments more often than every two years"
+    },
+    {
+      "id": "health_payer",
+      "section": "records",
+      "prompt": "Who pays for those health assessments?",
+      "help": "The agency, the employee, or a split.",
+      "type": "single",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY TO SET] who pays for health assessments",
+      "options": [
+        {
+          "id": "agency",
+          "label": "The agency pays"
+        },
+        {
+          "id": "employee",
+          "label": "The employee pays"
+        },
+        {
+          "id": "shared",
+          "label": "The cost is shared"
+        }
+      ],
+      "allowOther": true,
+      "otherLabel": "A different arrangement"
+    },
+    {
+      "id": "ane_file_location",
+      "section": "records",
+      "prompt": "Where will you keep the abuse, neglect, and exploitation policy on file?",
+      "help": "The governing body section asks where that policy is filed. For example, the policy binder at the parent office.",
+      "type": "text",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[LOCATION] where the ANE policy is filed"
+    },
+    {
+      "id": "discipline_steps",
+      "section": "conduct",
+      "prompt": "What discipline steps do you want to use?",
+      "help": "A usual ladder is a verbal warning, a written warning, a final warning, then dismissal. You can skip steps when something is serious. This does not change at-will employment.",
+      "type": "single",
+      "required": true,
+      "notSure": true,
+      "maps_to": "Starter question. The step ladder is drafted in the policy. This confirms it or replaces it.",
+      "options": [
+        {
+          "id": "usual",
+          "label": "Use that usual ladder"
+        }
+      ],
+      "allowOther": true,
+      "otherLabel": "Use different steps"
+    },
+    {
+      "id": "nocall_define",
+      "section": "conduct",
+      "prompt": "What counts as a no call, no show?",
+      "help": "The discipline policy names leaving a client without coverage. Say what counts. For example, missing a shift without calling.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY TO DEFINE] no call, no show"
+    },
+    {
+      "id": "discipline_other",
+      "section": "conduct",
+      "prompt": "Any other conduct you want named as a reason for discipline?",
+      "help": "If not, write None.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[OTHER] on the disciplinary procedure"
+    },
+    {
+      "id": "removal_pay",
+      "section": "conduct",
+      "prompt": "If you pull someone off client visits while you look into a problem, is that time paid?",
+      "help": "This is only for the time you are reviewing the concern.",
+      "type": "single",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY TO SET] with or without pay when removed from client contact",
+      "options": [
+        {
+          "id": "paid",
+          "label": "With pay"
+        },
+        {
+          "id": "unpaid",
+          "label": "Without pay"
+        }
+      ],
+      "allowOther": true,
+      "otherLabel": "It depends"
+    },
+    {
+      "id": "resign_notice",
+      "section": "conduct",
+      "prompt": "How many days of notice do you ask for when someone resigns?",
+      "help": "The same number goes in the handbook and in the termination procedure.",
+      "type": "number",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[NUMBER] days notice to resign",
+      "min": 0,
+      "placeholder": "14"
+    },
+    {
+      "id": "termination_decider",
+      "section": "conduct",
+      "prompt": "Who decides an involuntary termination?",
+      "help": "The draft says the administrator. Name another role if someone else decides.",
+      "type": "single",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[OR ROLE]",
+      "options": [
+        {
+          "id": "admin",
+          "label": "The administrator"
+        }
+      ],
+      "allowOther": true,
+      "otherLabel": "A different role"
+    },
+    {
+      "id": "termination_confirm",
+      "section": "conduct",
+      "prompt": "After the facts are reviewed, who confirms that decision?",
+      "help": "The administrator, the governing body, or both.",
+      "type": "single",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[ADMINISTRATOR OR GOVERNING BODY]",
+      "options": [
+        {
+          "id": "admin",
+          "label": "The administrator"
+        },
+        {
+          "id": "body",
+          "label": "The governing body"
+        },
+        {
+          "id": "both",
+          "label": "Both"
+        }
+      ]
+    },
+    {
+      "id": "final_pay",
+      "section": "conduct",
+      "prompt": "How do you want to handle final pay when someone leaves?",
+      "help": "Your attorney or the Kansas Department of Labor will confirm the legal timing. This records what you intend.",
+      "type": "single",
+      "required": true,
+      "notSure": true,
+      "maps_to": "Starter question. The packet's final-pay bracket is a legal confirmation, not a choice Taylor settles alone.",
+      "options": [
+        {
+          "id": "next",
+          "label": "On the next regular payday"
+        }
+      ],
+      "allowOther": true,
+      "otherLabel": "A different timing"
+    },
+    {
+      "id": "nocall_consequences",
+      "section": "conduct",
+      "prompt": "What should happen after a no call, no show?",
+      "help": "For example, it moves straight to a final warning, or it can end employment.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY TO DEFINE CONSEQUENCES]"
+    },
+    {
+      "id": "welcome_message",
+      "section": "handbook",
+      "prompt": "What short welcome do you want at the start of the employee handbook?",
+      "help": "A few sentences in your own voice is plenty. The handbook already says the work helps people stay safe and comfortable at home.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[OWNER WELCOME MESSAGE]"
+    },
+    {
+      "id": "harassment_role",
+      "section": "handbook",
+      "prompt": "Who should an employee tell if they experience harassment?",
+      "help": "A role is enough, such as the administrator.",
+      "type": "text",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[ROLE] who receives harassment reports"
+    },
+    {
+      "id": "harassment_alternate",
+      "section": "handbook",
+      "prompt": "Who else can they tell?",
+      "help": "A second person, so they are not limited to one manager.",
+      "type": "text",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[ALTERNATE ROLE]"
+    },
+    {
+      "id": "schedule_setter",
+      "section": "handbook",
+      "prompt": "Who sets the work schedules?",
+      "help": "A name or a role.",
+      "type": "text",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[ROLE] who sets schedules"
+    },
+    {
+      "id": "schedule_how",
+      "section": "handbook",
+      "prompt": "How will schedules be shared?",
+      "help": "Pick the way staff will actually see the schedule.",
+      "type": "single",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[HOW] schedules are shared",
+      "options": [
+        {
+          "id": "text",
+          "label": "Text message"
+        },
+        {
+          "id": "phone",
+          "label": "Phone call"
+        },
+        {
+          "id": "email",
+          "label": "Email"
+        },
+        {
+          "id": "app",
+          "label": "A shared app or calendar"
+        },
+        {
+          "id": "print",
+          "label": "A printed schedule"
+        }
+      ],
+      "allowOther": true,
+      "otherLabel": "Another way"
+    },
+    {
+      "id": "callout_contact",
+      "section": "handbook",
+      "prompt": "If a caregiver will be late or cannot work, who do they call?",
+      "help": "A client must never be left without coverage.",
+      "type": "fields",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[ROLE AND NUMBER]",
+      "fields": [
+        {
+          "key": "role",
+          "label": "Role or name",
+          "type": "text",
+          "placeholder": "Manager"
+        },
+        {
+          "key": "phone",
+          "label": "Phone number",
+          "type": "tel",
+          "placeholder": "Include the area code"
+        }
+      ],
+      "line": "{role} at {phone}"
+    },
+    {
+      "id": "callout_hours",
+      "section": "handbook",
+      "prompt": "How many hours before the shift should they call?",
+      "help": "For example, 2 or 4.",
+      "type": "number",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[NUMBER] hours notice before a missed shift",
+      "min": 0,
+      "placeholder": "2"
+    },
+    {
+      "id": "gift_limit",
+      "section": "handbook",
+      "prompt": "Do you allow any small gifts from clients?",
+      "help": "The handbook will say staff may not borrow, lend, or accept money or gifts. If you want no exceptions, write None.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY TO SET ANY LIMIT ON SMALL GIFTS]"
+    },
+    {
+      "id": "client_money",
+      "section": "handbook",
+      "prompt": "When an assignment says a caregiver may handle a client's money, what is the procedure?",
+      "help": "For example, keep receipts and turn them in the same day.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY TO SET PROCEDURE]"
+    },
+    {
+      "id": "workers_comp",
+      "section": "handbook",
+      "prompt": "Who is your workers compensation insurer, and how should an employee file a claim?",
+      "help": "If you do not have a policy yet, tap Not sure yet.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[WORKERS COMPENSATION INSURER AND CLAIM STEPS]"
+    },
+    {
+      "id": "illness_rule",
+      "section": "handbook",
+      "prompt": "Anything else employees should do when they have a contagious illness?",
+      "help": "The handbook will already say: do not work, and call the manager. If nothing else, write None.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "Handbook [AGENCY TO SET] on contagious illness"
+    },
+    {
+      "id": "drive_clients",
+      "section": "handbook",
+      "prompt": "Will caregivers drive clients?",
+      "help": "If yes, say what license, insurance, and driving-record rules you want. If caregivers will not drive clients, write No.",
+      "type": "textarea",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[AGENCY TO SET: WHETHER EMPLOYEES DRIVE CLIENTS, LICENSE AND INSURANCE REQUIREMENTS, MOTOR VEHICLE RECORD REVIEW, AND MILEAGE.]"
+    },
+    {
+      "id": "policy_effective",
+      "section": "policies",
+      "prompt": "When should these policies take effect?",
+      "help": "We will use this date as the effective date, the handbook version date, the org chart date, and the date appointments begin. We will number the policies ourselves.",
+      "type": "date",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[EFFECTIVE DATE], [VERSION DATE], and the adoption dates that share one effective date"
+    },
+    {
+      "id": "policy_review",
+      "section": "policies",
+      "prompt": "How often will you review these policies?",
+      "help": "The draft says at least once a year. We will set the next review date from this answer, and the first change-log line will say the policies were adopted on the effective date.",
+      "type": "single",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[REVIEW DATE], [DATE AND SUMMARY OF CHANGES], and [AGENCY TO SET REVIEW TIMING]",
+      "options": [
+        {
+          "id": "year",
+          "label": "Once a year"
+        },
+        {
+          "id": "six",
+          "label": "Every six months"
+        }
+      ],
+      "allowOther": true,
+      "otherLabel": "A different rhythm"
+    },
+    {
+      "id": "policy_signer",
+      "section": "policies",
+      "prompt": "Who signs and adopts these policies?",
+      "help": "Name and title. This is also the person listed as preparing the org chart.",
+      "type": "fields",
+      "required": true,
+      "notSure": true,
+      "maps_to": "[NAME, TITLE]",
+      "fields": [
+        {
+          "key": "name",
+          "label": "Name",
+          "type": "text",
+          "placeholder": "Full name"
+        },
+        {
+          "key": "title",
+          "label": "Title",
+          "type": "text",
+          "placeholder": "Owner, or member"
+        }
+      ],
+      "line": "{name}, {title}"
+    }
+  ]
+}
