@@ -1,6 +1,9 @@
-/* Command Deck 2.0 — offline shell. Network-first for the app, cache-first for icons.
-   Does not cache ledger, vantage, weather, or mailbox calls. */
-const CACHE = 'deck-v2-13';
+/* Command Deck 2.0, offline shell. Network-first for the app, cache-first for icons.
+   Does not cache ledger, vantage, weather, or mailbox calls.
+   Scope is the site root, which is the folder this file lives in.
+   /golden-rule/ is excluded below so the public intake is not cached
+   and is never replaced by the Deck shell. */
+const CACHE = 'deck-v2-14';
 const ASSETS = [
   './',
   './index.html',
@@ -37,6 +40,7 @@ self.addEventListener('fetch', (event) => {
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
+  if (url.pathname.indexOf('/golden-rule/') !== -1) return;
 
   const icon = /\.(png|svg)$/.test(url.pathname);
   if (icon) {
