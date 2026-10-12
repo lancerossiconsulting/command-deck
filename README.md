@@ -61,6 +61,7 @@ a desktop browser to 393×852. Wider windows show the same UI in a phone column.
 | Capacity | Optional dimmer on More (1–2 dims projects and extras). Shares the `deck.cap` value with MK III |
 | Dispatch | Optional queue on More. Shares `deck.dq` with MK III |
 | Decisions | System of record in `data/decisions.json`. Open items that are not part of Weekly Sync render on Home as single-select choices. Weekly Sync streams render on the stage at `#weekly-sync`. A closed item with `choice` is a locked call, not an open ask. **Confirm** posts a Linear comment. The first confirm asks for a personal API key inline and saves it in `localStorage` (`deck.v2.linearKey`). The same key can be pasted under More → Sources. No backend, and no key in the repo. Confirm does not email |
+| Working Groups | Static list in `data/working-groups.json`, on the Groups tab. Folder names only. An empty chat URL shows "Chat link not set". No live Linear fetch. |
 
 Sample names, meetings, and dollar figures in early layout mocks are not
 in the product. Empty and offline states are intentional.
@@ -87,6 +88,7 @@ this `index.html`.
 - `index.html` — Command Deck 2.0 phone surface
 - `data/decisions.json` — decisions waiting on a choice, including the Weekly Sync stage
 - `data/toggles.json`: plans and work switches, plus the Oct 12 status lines (active, requisitions, asks, parked). A flip stays on this device in `localStorage` (`deck.v2.toggles`). It does not post and it does not email.
+- `data/working-groups.json`: one entry per trio. The Groups tab and the MK III nav both open this list.
 - `daily/YYYY-MM-DD Daily Priorities.pdf`: the morning priorities file. Example: `daily/2026-10-13 Daily Priorities.pdf`. The deck asks GitHub for the file list and opens the newest date. No other step.
 - `data/mail.json` — curated mail (attention and recent replies only)
 - `data/calendar.json` — curated appointments and holds
@@ -97,6 +99,20 @@ this `index.html`.
 - `robots.txt`
 
 No build step and no secret-bearing backend.
+
+## Working groups (`data/working-groups.json`)
+
+The Groups tab shows one card per trio. Adding a trio means adding one object to `groups`. The deck does not call Linear for this list.
+
+| Field | Meaning |
+| --- | --- |
+| `name` | Group name |
+| `members` | Names, in order |
+| `folder` | OneDrive folder name, shown as text. Do not put a link here. |
+| `chatUrl` | A `grokbot://app/v1/agent?id=...` URL, or empty. Empty shows "Chat link not set". The card notes that the link opens in the Grok Bot app. |
+| `openItems` | `{ id, title }` rows. Static Linear id and title. |
+
+The seeded group is Ops Coding (Lance, Morgan, Coder).
 
 ## Curated mail (`data/mail.json`)
 
