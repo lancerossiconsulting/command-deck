@@ -86,7 +86,7 @@ this `index.html`.
 
 - `index.html` — Command Deck 2.0 phone surface
 - `data/decisions.json` — decisions waiting on a choice, including the Weekly Sync stage
-- `data/toggles.json`: plans and work switches. A flip stays on this device in `localStorage` (`deck.v2.toggles`). It does not post and it does not email.
+- `data/toggles.json`: plans and work switches, plus the Oct 12 status lines (active, requisitions, asks, parked). A flip stays on this device in `localStorage` (`deck.v2.toggles`). It does not post and it does not email.
 - `data/mail.json` — curated mail (attention and recent replies only)
 - `data/calendar.json` — curated appointments and holds
 - `deck-mk3.html` — desktop MK III

@@ -352,14 +352,19 @@ a.quiet {
 }
 .exportline { margin-top: 6px; }
 .switchrow {
-  display: flex; align-items: center; gap: 12px;
+  display: flex; align-items: flex-start; gap: 12px;
   min-height: 52px; padding: 8px 0;
   border-top: 0.5px solid var(--sep);
 }
 .switchrow .what { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
-.switchrow .title { font-size: 17px; }
+.switchrow .ids { display: flex; flex-wrap: wrap; gap: 6px; }
+.switchrow .title { font-size: 17px; overflow-wrap: anywhere; }
+.switchrow .detail { font-size: 13px; line-height: 1.35; color: var(--ink-mute); overflow-wrap: anywhere; }
+.switchrow .stag { align-self: flex-start; margin-bottom: 2px; }
+.glead { margin: 0 0 2px; font-size: 13px; line-height: 1.35; color: var(--ink-mute); }
 .switch {
   width: 51px; height: 31px; border-radius: 16px; flex: none;
+  margin-top: 4px;
   background: rgba(255,255,255,.14); position: relative;
 }
 .switch.on { background: var(--ok); }
@@ -391,7 +396,7 @@ a.quiet {
 }
 .stag.started { color: var(--fire); background: rgba(232,145,58,.16); }
 .stag.done { color: var(--ok); background: rgba(74,222,128,.14); }
-.stag.backlog { color: var(--ink-mute); background: rgba(255,255,255,.08); }
+.stag.backlog, .stag.parked { color: var(--ink-mute); background: rgba(255,255,255,.08); }
 button.textlink {
   display: inline; padding: 0; min-height: 0; border-radius: 0;
   background: none; color: var(--cyan); font: inherit; font-weight: 600;
@@ -1030,15 +1035,13 @@ const PROJECTS = [
     desc: 'Facebook Marketplace chachkie sale. Backlog placeholder (ROS-23). No work until Lance calls it.',
     link: 'https://linear.app/rosscomm/issue/ROS-23/placeholder-meta-muse-fb-marketplace-chachkie-sale', linkLabel: 'ROS-23' },
   { id: 'who-picks-up', name: 'Who Picks Up the Phone', short: 'ESSAY', owner: 'firm', firmOwner: '', kind: 'progress', needsDecision: false,
-    desc: 'Essay package in progress (ROS-16). Substack was delivered clear Wednesday. Publish is on hold. Conclusion 16 is deferred. Social and PDF wait on a re-gate (ROS-21, backlog).',
+    statusLabel: 'Publishing on hold',
+    desc: 'Review the Who Picks Up the Phone redraft PDF (publishing on hold).',
     link: 'https://linear.app/rosscomm/issue/ROS-16/who-picks-up-the-phone-essay-package-wed-lance-handoff', linkLabel: 'ROS-16' },
-  { id: 'golden-rule', name: 'Golden Rule HCCS', short: 'HCCS', owner: 'firm', firmOwner: '', kind: 'active', needsDecision: false,
-    desc: 'Ongoing client site. Rebuild mock and the Taylor package are done (ROS-13). Preview is the Netlify share.',
+  { id: 'golden-rule', name: 'Golden Rule', short: 'GOLDEN', owner: 'firm', firmOwner: '', kind: 'active', needsDecision: false,
+    desc: 'The intake survey is live, and Taylor\'s answers are due today or tomorrow. Coder is building a one-question KDHE intake form.',
     preview: 'https://splendid-babka-8804a1.netlify.app',
-    link: 'https://linear.app/rosscomm/issue/ROS-13/golden-rule-hccs-rebuild-mock-scroll-taylor-presentation', linkLabel: 'ROS-13' },
-  { id: 'pages-catchup', name: 'Command Deck Pages', short: 'PAGES', owner: 'firm', firmOwner: '', kind: 'backlog', needsDecision: false,
-    desc: 'Stale Pages catch-up, owed (ROS-17). Backlog until it is reopened. The live phone surface stays on Command Deck.',
-    link: 'https://linear.app/rosscomm/issue/ROS-17/command-deck-pages-stale-catch-up-owed', linkLabel: 'ROS-17' }
+    link: 'https://linear.app/rosscomm/issue/ROS-28/golden-rule-intake-survey-one-question-at-a-time-form-for-kdhe-agency', linkLabel: 'ROS-28' }
 ];
 /* DECK DATA END */
 
@@ -1794,6 +1797,7 @@ function initialKind(p){
   return 'wait';
 }
 function initialLabel(p){
+  if (p.statusLabel) return p.statusLabel;
   if (p.kind === 'slot') return 'Slot';
   if (p.kind === 'live') return 'Live';
   if (p.kind === 'progress') return 'In progress';
@@ -2695,7 +2699,7 @@ function renderDecisions(){
   stickWeekly();
 }
 const TOGGLE_KEY = 'deck.v2.toggles';
-let toggleGroups = { plans: [], work: [] };
+let toggleGroups = [];
 let toggleState = 'loading';
 let toggleOn = {};
 function loadToggleOn(){
@@ -2706,40 +2710,77 @@ function loadToggleOn(){
   }
   toggleOn = next;
 }
-function cleanToggleItem(it){
-  if (!it || typeof it.id !== 'string' || !it.id || typeof it.title !== 'string' || !it.title) return null;
+function cleanIssueRef(iss){
+  if (!iss || typeof iss !== 'object') return null;
+  const id = cleanIssueId(iss.id);
+  const url = cleanHttpUrl(iss.url);
+  if (!id && !url) return null;
+  return { id: id, url: url };
+}
+function cleanBoardItem(it){
+  if (!it || typeof it.title !== 'string' || !it.title.trim()) return null;
+  const issues = Array.isArray(it.issues) ? it.issues.map(cleanIssueRef).filter(Boolean) : [];
   return {
-    id: it.id,
-    title: it.title.slice(0, 120),
-    linearIssueId: cleanIssueId(it.linearIssueId),
-    linearUrl: cleanHttpUrl(it.linearUrl)
+    id: typeof it.id === 'string' ? it.id.slice(0, 40) : '',
+    title: it.title.trim().slice(0, 180),
+    detail: typeof it.detail === 'string' ? it.detail.trim().slice(0, 700) : '',
+    parked: it.parked === true,
+    issues: issues
   };
 }
-function cleanToggleGroup(list){
+function cleanBoardGroups(list){
   if (!Array.isArray(list)) return [];
-  return list.map(cleanToggleItem).filter(Boolean);
+  return list.map((g) => {
+    if (!g || typeof g.title !== 'string' || !g.title.trim()) return null;
+    const items = Array.isArray(g.items) ? g.items.map(cleanBoardItem).filter(Boolean) : [];
+    if (!items.length) return null;
+    return {
+      title: g.title.trim().slice(0, 40),
+      lead: typeof g.lead === 'string' ? g.lead.trim().slice(0, 80) : '',
+      switches: g.switches === true,
+      items: items
+    };
+  }).filter(Boolean);
 }
-function toggleRow(item){
+function switchItems(){
+  const rows = [];
+  toggleGroups.forEach((g) => {
+    if (!g.switches) return;
+    g.items.forEach((item) => { if (item.id) rows.push(item); });
+  });
+  return rows;
+}
+function boardRow(item, switches){
   const row = el('div', 'switchrow');
   const what = el('span', 'what');
-  if (item.linearUrl) what.appendChild(extLink(item.linearUrl, item.linearIssueId || 'Linear', 'issueid'));
-  else if (item.linearIssueId) what.appendChild(el('span', 'issueid', item.linearIssueId));
+  if (item.parked) what.appendChild(el('span', 'stag parked', 'Parked'));
+  if (item.issues.length) {
+    const ids = el('span', 'ids');
+    item.issues.forEach((iss) => {
+      if (iss.url) ids.appendChild(extLink(iss.url, iss.id || 'Linear', 'issueid'));
+      else if (iss.id) ids.appendChild(el('span', 'issueid', iss.id));
+    });
+    what.appendChild(ids);
+  }
   what.appendChild(el('span', 'title', item.title));
+  if (item.detail) what.appendChild(el('span', 'detail', item.detail));
   row.appendChild(what);
-  const on = !!toggleOn[item.id];
-  const btn = el('button', 'switch' + (on ? ' on' : ''));
-  btn.type = 'button';
-  btn.setAttribute('role', 'switch');
-  btn.setAttribute('aria-checked', on ? 'true' : 'false');
-  btn.setAttribute('aria-label', item.title + (on ? ', on' : ', off'));
-  btn.appendChild(el('i', '', ''));
-  btn.addEventListener('click', () => {
-    if (toggleOn[item.id]) delete toggleOn[item.id];
-    else toggleOn[item.id] = true;
-    save(TOGGLE_KEY, toggleOn);
-    renderToggles();
-  });
-  row.appendChild(btn);
+  if (switches && item.id) {
+    const on = !!toggleOn[item.id];
+    const btn = el('button', 'switch' + (on ? ' on' : ''));
+    btn.type = 'button';
+    btn.setAttribute('role', 'switch');
+    btn.setAttribute('aria-checked', on ? 'true' : 'false');
+    btn.setAttribute('aria-label', item.title + (on ? ', on' : ', off'));
+    btn.appendChild(el('i', '', ''));
+    btn.addEventListener('click', () => {
+      if (toggleOn[item.id]) delete toggleOn[item.id];
+      else toggleOn[item.id] = true;
+      save(TOGGLE_KEY, toggleOn);
+      renderToggles();
+    });
+    row.appendChild(btn);
+  }
   return row;
 }
 function renderToggles(){
@@ -2760,15 +2801,16 @@ function renderToggles(){
     list.appendChild(el('p', 'empty', "This list didn't load."));
     return;
   }
-  const all = toggleGroups.plans.concat(toggleGroups.work);
-  const onCount = all.filter((it) => toggleOn[it.id]).length;
-  if (!all.length) {
+  const switches = switchItems();
+  const listed = toggleGroups.reduce((n, g) => n + g.items.length, 0);
+  if (!listed) {
     aside.textContent = 'None';
     aside.classList.add('mute');
     aside.classList.remove('settled');
     list.appendChild(el('p', 'empty', 'Nothing listed.'));
     return;
   }
+  const onCount = switches.filter((it) => toggleOn[it.id]).length;
   if (!onCount) {
     aside.textContent = 'None on';
     aside.classList.add('mute');
@@ -2778,14 +2820,11 @@ function renderToggles(){
     aside.classList.remove('mute');
     aside.classList.add('settled');
   }
-  if (toggleGroups.plans.length) {
-    list.appendChild(el('p', 'hsub', 'Plans'));
-    toggleGroups.plans.forEach((item) => list.appendChild(toggleRow(item)));
-  }
-  if (toggleGroups.work.length) {
-    list.appendChild(el('p', 'hsub', 'Work'));
-    toggleGroups.work.forEach((item) => list.appendChild(toggleRow(item)));
-  }
+  toggleGroups.forEach((g) => {
+    list.appendChild(el('p', 'hsub', g.title));
+    if (g.lead) list.appendChild(el('p', 'glead', g.lead));
+    g.items.forEach((item) => list.appendChild(boardRow(item, g.switches)));
+  });
 }
 async function loadToggles(){
   loadToggleOn();
@@ -2793,15 +2832,12 @@ async function loadToggles(){
     const r = await fetchTimeout('./data/toggles.json', 5000);
     if (!r.ok) throw new Error('status');
     const data = await r.json();
-    toggleGroups = {
-      plans: cleanToggleGroup(data && data.plans),
-      work: cleanToggleGroup(data && data.work)
-    };
+    toggleGroups = cleanBoardGroups(data && data.groups);
     toggleState = 'ready';
   } catch (e) {
     if (toggleState === 'ready') return;
     toggleState = 'error';
-    toggleGroups = { plans: [], work: [] };
+    toggleGroups = [];
   }
   renderToggles();
 }
