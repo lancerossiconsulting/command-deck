@@ -716,7 +716,7 @@ html.conserve .dimmable { opacity: .45; }
           <button type="button" class="cardhead" data-go="calendar">
             <span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14"><rect x="2" y="3" width="12" height="11" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M2 6.5h12M5 1.6v3M11 1.6v3" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
             <span class="idx">(1)</span><span class="name">Today</span>
-            <span class="aside" id="today-aside">.</span><span class="chev" aria-hidden="true">›</span>
+            <span class="aside" id="today-aside">None</span><span class="chev" aria-hidden="true">›</span>
           </button>
           <div id="today-list"></div>
         </article>
@@ -750,9 +750,9 @@ html.conserve .dimmable { opacity: .45; }
             <span class="aside mute" id="h-led-aside">Checking</span><span class="chev" aria-hidden="true">›</span>
           </button>
           <div class="stats">
-            <div><div class="k">Income</div><div class="n mute" id="h-in">()</div><div class="d" id="h-in-d">no signal</div></div>
-            <div><div class="k">Outflow</div><div class="n mute" id="h-out">()</div><div class="d" id="h-out-d">no signal</div></div>
-            <div><div class="k">Surplus</div><div class="n mute" id="h-sur">()</div><div class="d" id="h-sur-d">no signal</div></div>
+            <div><div class="k">Income</div><div class="n mute" id="h-in">Not set</div><div class="d" id="h-in-d">no signal</div></div>
+            <div><div class="k">Outflow</div><div class="n mute" id="h-out">Not set</div><div class="d" id="h-out-d">no signal</div></div>
+            <div><div class="k">Surplus</div><div class="n mute" id="h-sur">Not set</div><div class="d" id="h-sur-d">no signal</div></div>
           </div>
           <p class="foot" id="h-led-foot">Household Ledger · localhost:5181</p>
         </article>
@@ -797,7 +797,7 @@ html.conserve .dimmable { opacity: .45; }
 
     <section id="view-mail" class="view" aria-label="Mail" inert>
       <div class="scroller">
-        <div class="viewhead"><h2>Mail</h2><span class="meta" id="mail-count">.</span></div>
+        <div class="viewhead"><h2>Mail</h2><span class="meta" id="mail-count">None</span></div>
         <p class="stub calm">Only what needs you, and mail you just replied to. Tap a row to open it in Mail.</p>
         <div id="mail-list" style="margin:0 16px"></div>
       </div>
@@ -820,9 +820,9 @@ html.conserve .dimmable { opacity: .45; }
         <div class="viewhead"><h2>Ledger</h2><span class="meta" id="p-led-aside">Checking</span></div>
         <article class="card">
           <div class="stats">
-            <div><div class="k">Income</div><div class="n mute" id="p-in">()</div><div class="d" id="p-in-d">no signal</div></div>
-            <div><div class="k">Outflow</div><div class="n mute" id="p-out">()</div><div class="d" id="p-out-d">no signal</div></div>
-            <div><div class="k">Surplus</div><div class="n mute" id="p-sur">()</div><div class="d" id="p-sur-d">no signal</div></div>
+            <div><div class="k">Income</div><div class="n mute" id="p-in">Not set</div><div class="d" id="p-in-d">no signal</div></div>
+            <div><div class="k">Outflow</div><div class="n mute" id="p-out">Not set</div><div class="d" id="p-out-d">no signal</div></div>
+            <div><div class="k">Surplus</div><div class="n mute" id="p-sur">Not set</div><div class="d" id="p-sur-d">no signal</div></div>
           </div>
           <p class="foot" id="p-led-foot">Reaching the ledger host…</p>
           <div id="p-tiers"></div>
@@ -1015,7 +1015,7 @@ const BIBLE = [
     { date:"2026-10-28", ref:"Revelation 22", note:"Plan complete. Romans 5 to Revelation 22 with Pastor Brian." }
   ];
 const VERSES = [
-  { ref: 'Exodus 13:21', txt: 'By day in a pillar of cloud, by night in a pillar of fire — so they could travel by day or night.' },
+  { ref: '', txt: 'Exodus 13:21: By day in a pillar of cloud, by night in a pillar of fire, so they could travel by day or night.' },
   { ref: 'Romans 5:3-4', txt: 'Problems and trials help us develop endurance, and endurance develops strength of character.' },
   { ref: 'Acts 27:25', txt: 'Take courage. For I believe God. It will be just as he said.' }
 ];
@@ -1620,7 +1620,7 @@ async function loadCalendar(){
 function setStat(pre, key, value, detail, tone){
   const n = document.getElementById(pre + '-' + key);
   const d = document.getElementById(pre + '-' + key + '-d');
-  n.textContent = value == null ? '()' : money2(value);
+  n.textContent = value == null ? 'Not set' : money2(value);
   n.className = 'n' + (value == null ? ' mute' : (tone ? ' ' + tone : ''));
   d.textContent = detail || '';
   d.className = 'd' + (tone ? ' ' + tone : '');
@@ -1641,7 +1641,7 @@ function tierRow(t){
   mark.style.left = Math.min(100, exp / maxV * 100) + '%';
   track.appendChild(mark);
   row.appendChild(track);
-  row.appendChild(el('span', 'tv', (act != null ? money0(act) : '()') + ' / ' + money0(exp)));
+  row.appendChild(el('span', 'tv', (act != null ? money0(act) : 'Not set') + ' / ' + money0(exp)));
   return row;
 }
 function paintLedger(data, ok){
@@ -1665,7 +1665,7 @@ function paintLedger(data, ok){
     aside.classList.remove('mute');
     const projected = data.surplusIsProjected !== false;
     let surTone = '', surDetail = '';
-    if (data.surplus == null) surDetail = '.';
+    if (data.surplus == null) surDetail = 'Not set';
     else if (projected) { surTone = 'dim'; surDetail = 'projected'; }
     else if (data.metSavingsGoal) { surTone = 'ok'; surDetail = 'goal met'; }
     else { surTone = 'risk'; surDetail = 'below goal'; }
@@ -1713,7 +1713,7 @@ function paintVantage(data, ok){
   const port = data.portfolio || {};
   const pnl = (Number(port.realizedPnl) || 0) + (Number(port.unrealizedPnl) || 0);
   const stats = el('div', 'stats mini');
-  [['Equity', port.equity == null ? '()' : money0(port.equity), ''],
+  [['Equity', port.equity == null ? 'Not set' : money0(port.equity), ''],
    ['P&L', money0(pnl), pnl > 0 ? 'ok' : (pnl < 0 ? 'risk' : '')],
    ['Open', String(port.nOpen || 0), '']].forEach((s) => {
     const cell = el('div');
@@ -1994,7 +1994,7 @@ async function pollWeather(){
     const r = await fetchTimeout('https://api.open-meteo.com/v1/forecast?latitude=39.18&longitude=-96.57&current=temperature_2m,weather_code&temperature_unit=fahrenheit&timezone=America%2FChicago', 5000);
     if (!r.ok) throw new Error('status');
     const c = (await r.json()).current;
-    txt.textContent = Math.round(c.temperature_2m) + '°F · ' + (WX_CODES[c.weather_code] || '.');
+    txt.textContent = Math.round(c.temperature_2m) + '°F · ' + (WX_CODES[c.weather_code] || 'Not available');
     ico.innerHTML = WX_ICON[wxKind(c.weather_code)] || WX_ICON.cloud;
   } catch (e) {
     txt.textContent = 'Wire down';
