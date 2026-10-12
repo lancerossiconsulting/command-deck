@@ -130,7 +130,7 @@ h1.mark b { color: var(--fire); font-weight: 600; }
   scroll-padding-top: calc(var(--nav-h) + var(--safe-top) + 8px);
   scroll-padding-bottom: calc(var(--tab-h) + var(--safe-bot) + 12px);
 }
-#deconflict, #proj-cards, #dispatch-block, #bible-block, #cap-block, #install-block, #vantage-block, #plans-work, #weekly-sync, #sources, #weekly-sync .ditem {
+#deconflict, #proj-cards, #dispatch-block, #bible-block, #cap-block, #install-block, #vantage-block, #plans-work, #weekly-sync, #priorities, #sources, #weekly-sync .ditem {
   scroll-margin-top: calc(var(--nav-h) + var(--safe-top) + 12px);
 }
 
@@ -176,6 +176,12 @@ h1.mark b { color: var(--fire); font-weight: 600; }
 .aside.mute, .meta.mute { color: var(--ink-faint); }
 .chev { color: rgba(235,235,245,.3); font-size: 22px; font-weight: 400; line-height: 1; margin-left: 2px; }
 .empty { margin: 0; padding: 0 0 10px; color: var(--ink-mute); font-size: 15px; line-height: 1.35; }
+.pri-date { margin: 2px 0 8px; font-size: 17px; font-weight: 600; letter-spacing: -0.02em; }
+.pri-frame {
+  display: block; width: 100%; height: 440px; margin: 12px 0 8px;
+  border: 0; border-radius: 12px; background: #fff;
+}
+#priorities .name { min-width: 0; }
 .stub {
   margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px;
   background: rgba(232,145,58,.08); color: var(--ink-mute);
@@ -703,6 +709,15 @@ html.conserve .dimmable { opacity: .45; }
             <p class="subline"><span class="place">Manhattan, KS</span><span class="wx"><span id="wx-ico" aria-hidden="true"></span><span class="txt" id="wx-txt">Wiring…</span></span></p>
           </div>
         </div>
+        <article class="card" id="priorities">
+          <div class="cardhead" style="cursor:default">
+            <span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14"><path d="M4 2.5h5.2L12.5 5.8V13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M9 2.6V6h3.4M5.2 8.2h5.2M5.2 10.6h3.4" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+            <span class="name">Today's Priorities</span>
+            <span class="aside mute" id="pri-aside">Checking</span>
+          </div>
+          <div id="pri-body"></div>
+        </article>
+
         <article class="card" id="card-decisions">
           <div class="cardhead" style="cursor:default">
             <span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14"><circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="1.6" fill="currentColor"/></svg></span>
@@ -2841,6 +2856,84 @@ async function loadToggles(){
   }
   renderToggles();
 }
+const PRI_API = 'https://api.github.com/repos/lancerossiconsulting/command-deck/contents/daily';
+const PRI_NAME = /^(\d{4}-\d{2}-\d{2}) Daily Priorities\.pdf$/;
+let priorityReady = false;
+function validPriorityDate(iso){
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return false;
+  const parts = iso.split('-').map(Number);
+  const dt = new Date(parts[0], parts[1] - 1, parts[2]);
+  return dt.getFullYear() === parts[0] && dt.getMonth() === parts[1] - 1 && dt.getDate() === parts[2];
+}
+function newestPriority(files){
+  let best = null;
+  (Array.isArray(files) ? files : []).forEach((file) => {
+    if (!file || file.type !== 'file' || typeof file.name !== 'string') return;
+    const match = PRI_NAME.exec(file.name);
+    if (!match || !validPriorityDate(match[1])) return;
+    if (!best || match[1] > best.date) best = { date: match[1], name: file.name };
+  });
+  return best;
+}
+function priorityHref(name){
+  return new URL('daily/' + encodeURIComponent(name), document.baseURI).href;
+}
+function canPreviewPdf(){
+  const ua = navigator.userAgent || '';
+  if (/iPhone|iPad|iPod/i.test(ua)) return false;
+  if (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) return false;
+  return true;
+}
+function renderPriority(item){
+  const body = document.getElementById('pri-body');
+  const aside = document.getElementById('pri-aside');
+  if (!body || !aside) return;
+  clear(body);
+  if (!item) {
+    aside.textContent = 'None';
+    aside.classList.add('mute');
+    body.appendChild(el('p', 'empty', 'No priorities posted yet.'));
+    return;
+  }
+  const label = headDate(item.date) + ' ' + item.date.slice(0, 4);
+  aside.textContent = headDate(item.date);
+  aside.classList.remove('mute');
+  body.appendChild(el('p', 'pri-date', label));
+  const link = el('a', 'alink', 'Open PDF');
+  link.href = priorityHref(item.name);
+  link.target = '_blank';
+  link.rel = 'noopener noreferrer';
+  body.appendChild(link);
+  if (canPreviewPdf()) {
+    const frame = document.createElement('iframe');
+    frame.className = 'pri-frame';
+    frame.title = "Today's Priorities";
+    frame.src = priorityHref(item.name);
+    body.appendChild(frame);
+  }
+}
+async function loadPriorities(){
+  const body = document.getElementById('pri-body');
+  const aside = document.getElementById('pri-aside');
+  if (!body || !aside) return;
+  try {
+    const r = await fetchTimeout(PRI_API, 8000);
+    if (r.status === 404) {
+      priorityReady = true;
+      renderPriority(null);
+      return;
+    }
+    if (!r.ok) throw new Error('status');
+    priorityReady = true;
+    renderPriority(newestPriority(await r.json()));
+  } catch (e) {
+    if (priorityReady) return;
+    aside.textContent = 'Offline';
+    aside.classList.add('mute');
+    clear(body);
+    body.appendChild(el('p', 'empty', "This list didn't load."));
+  }
+}
 async function loadDecisions(){
   try {
     const r = await fetchTimeout('./data/decisions.json', 5000);
@@ -3026,7 +3119,7 @@ window.addEventListener('hashchange', () => {
 });
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) { timers.forEach(clearInterval); timers = []; return; }
-  tick(); pollWeather(); pollLedger(); pollVantage(); pollVKS(); loadDecisions(); loadToggles(); loadMail(); loadCalendar(); startTimers();
+  tick(); pollWeather(); pollLedger(); pollVantage(); pollVKS(); loadDecisions(); loadToggles(); loadPriorities(); loadMail(); loadCalendar(); startTimers();
 });
 
 buildProjects();
@@ -3056,6 +3149,7 @@ pollVantage();
 pollVKS();
 loadDecisions();
 loadToggles();
+loadPriorities();
 loadMail();
 loadCalendar();
 startTimers();
