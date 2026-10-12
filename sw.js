@@ -3,7 +3,7 @@
    Scope is the site root, which is the folder this file lives in.
    /golden-rule/ is excluded below so the public intake is not cached
    and is never replaced by the Deck shell. */
-const CACHE = 'deck-v2-18';
+const CACHE = 'deck-v2-19';
 const ASSETS = [
   './',
   './index.html',
@@ -42,6 +42,24 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
   if (url.pathname.indexOf('/golden-rule/') !== -1) return;
+
+  if (url.pathname.indexOf('/daily/') !== -1) {
+    event.respondWith((async () => {
+      try {
+        const fresh = await fetch(req, { cache: 'reload' });
+        if (fresh && fresh.ok) {
+          const copy = fresh.clone();
+          caches.open(CACHE).then((cache) => cache.put(req, copy)).catch(() => {});
+        }
+        return fresh;
+      } catch (e) {
+        const hit = await caches.match(req);
+        if (hit) return hit;
+        throw e;
+      }
+    })());
+    return;
+  }
 
   const icon = /\.(png|svg)$/.test(url.pathname);
   if (icon) {
