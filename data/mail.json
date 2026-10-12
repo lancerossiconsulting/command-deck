@@ -4,7 +4,7 @@
     {
       "id": "AAkALgAAAAAAHYQDEapmEc2byACqAC-EWg0AZNHJUS5VwUGb-B4HOt9PIQAJwvnqOwAA",
       "title": "Your payment is past due",
-      "snippet": "RKB Property Management: rent past due for 2514 Stagg Hill Rd #12. Due date 10/01/2026. Total due $475.00 — pay via DoorLoop.",
+      "snippet": "RKB Property Management: rent past due for 2514 Stagg Hill Rd #12. Due date 10/01/2026. Total due $475.00. Pay via DoorLoop.",
       "whyShown": "attention",
       "mailbox": "personal",
       "internetMessageId": "<010001a10d964c07-07ad5033-7f43-49e8-b0b9-baa7accbda9b-000000@email.amazonses.com>",
@@ -14,7 +14,7 @@
     {
       "id": "AAkALgAAAAAAHYQDEapmEc2byACqAC-EWg0AZNHJUS5VwUGb-B4HOt9PIQAJwvnqNAAA",
       "title": "Only intended for Lance Rossi, response requested",
-      "snippet": "Halsted Financial: Credit One / LVNV account flagged for review — pre-legal notice; balance $642.15 with settlement offer.",
+      "snippet": "Halsted Financial: Credit One / LVNV account flagged for review (pre-legal notice). Balance $642.15 with settlement offer.",
       "whyShown": "attention",
       "mailbox": "personal",
       "internetMessageId": "<hh_-xL0CQDmSnXjK7xCNEg@geopod-ismtpd-41>",
@@ -24,7 +24,7 @@
     {
       "id": "AAkALgAAAAAAHYQDEapmEc2byACqAC-EWg0AZNHJUS5VwUGb-B4HOt9PIQAJwvncjgAA",
       "title": "Re: PHONE NUMBER",
-      "snippet": "Gabriel Louw (Briggs Auto): needs most recent bank statement showing September VA deposit — last item the bank needs.",
+      "snippet": "Gabriel Louw (Briggs Auto): needs most recent bank statement showing September VA deposit. Last item the bank needs.",
       "whyShown": "attention",
       "mailbox": "personal",
       "internetMessageId": "<e283516091bc4c54a7d818ad2d999682@briggsauto.com>",
@@ -34,7 +34,7 @@
     {
       "id": "AAkALgAAAAAAHYQDEapmEc2byACqAC-EWg0AZNHJUS5VwUGb-B4HOt9PIQAJwvnYngAA",
       "title": "VA appointment on Wednesday October 07, 2026",
-      "snippet": "In-person Wed Oct 7, 2026 3:00 PM Junction City VA Clinic — PACT Team 4, Doctor Caycedo (Jc Cboc North).",
+      "snippet": "In-person Wed Oct 7, 2026 3:00 PM Junction City VA Clinic: PACT Team 4, Doctor Caycedo (Jc Cboc North).",
       "whyShown": "attention",
       "mailbox": "personal",
       "internetMessageId": "<010a01a10c674264-4aa94305-2290-469d-86ee-a2424500e211-000000@us-gov-west-1.amazonses.com>",
@@ -44,7 +44,7 @@
     {
       "id": "AAkALgAAAAAAHYQDEapmEc2byACqAC-EWg0AZNHJUS5VwUGb-B4HOt9PIQAJwvmnywAA",
       "title": "Today's sermon (out a little early)",
-      "snippet": "Brian Smith (Westview): Tangible Kingdom sermon notes attached — next step is invite people in; asks for feedback.",
+      "snippet": "Brian Smith (Westview): Tangible Kingdom sermon notes attached. Next step is invite people in; asks for feedback.",
       "whyShown": "attention",
       "mailbox": "personal",
       "internetMessageId": "<CAF5n9NTFqLo1Q9cLZ3T1d4raZ7XkUiCqqwii_Y0W7bkQ=15_fw@mail.gmail.com>",
@@ -54,7 +54,7 @@
     {
       "id": "AQMkADAwATMwMAItZDAwADYtMzY4MS0wMAItMDAKAEYAAAPloCSr0b5rSYXRQ3rrPqvvBwBk0clRLlXBQZv8Hgc6308hAAACAQwAAABk0clRLlXBQZv8Hgc6308hAAnC9mmdAAAA",
       "title": "Your card on file has expired",
-      "snippet": "Waste Management: AutoPay card expired — update payment method in My WM to stay enrolled.",
+      "snippet": "Waste Management: AutoPay card expired. Update payment method in My WM to stay enrolled.",
       "whyShown": "attention",
       "mailbox": "personal",
       "internetMessageId": "<-2k1bcPEQ06d3C6HDH1new@geopod-ismtpd-12>",
@@ -64,7 +64,7 @@
     {
       "id": "AQMkADAwATMwMAItZDAwADYtMzY4MS0wMAItMDAKAEYAAAPloCSr0b5rSYXRQ3rrPqvvBwBk0clRLlXBQZv8Hgc6308hAAACAQwAAABk0clRLlXBQZv8Hgc6308hAAnC9ml3AAAA",
       "title": "Appointment Confirmation",
-      "snippet": "Kansas DMV: driver's license appointment Tuesday Oct 27, 2026 at 11:00 AM — bring required documents.",
+      "snippet": "Kansas DMV: driver's license appointment Tuesday Oct 27, 2026 at 11:00 AM. Bring required documents.",
       "whyShown": "attention",
       "mailbox": "personal",
       "internetMessageId": "<44207fee-3452-4c04-9420-65a1a395d809@ORVEXCHANGE.kdor.ks.gov>",
