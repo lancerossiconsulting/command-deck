@@ -560,11 +560,71 @@ input[type=range] { width: 100%; accent-color: var(--fire); margin: 12px 0; }
 #host-note { margin: 8px 0 0; }
 .hsub { margin: 12px 0 4px; font-size: 13px; font-weight: 600; color: var(--ink-faint); }
 
+/* Working Groups. Brand on the cards, deck chrome unchanged.
+   Navy #1F3A4D, Flame #E07028, Gold #F2A857, Rust #9C5A2E, Parchment #F4EFE1. */
+#view-groups {
+  --navy: #1F3A4D;
+  --flame: #E07028;
+  --gold: #F2A857;
+  --rust: #9C5A2E;
+  --parchment: #F4EFE1;
+}
+#view-groups .stub { background: var(--parchment); color: var(--navy); }
+.wgcard {
+  margin: 0 16px 12px; padding: 14px 16px 8px;
+  background: var(--parchment); color: var(--navy);
+  border-radius: var(--radius);
+  border-top: 4px solid var(--flame);
+  box-shadow: 0 1px 0 rgba(255,255,255,.04), 0 8px 24px rgba(0,0,0,.18);
+}
+.wgcard h3 {
+  margin: 0 0 10px;
+  font-size: 22px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.2;
+  color: var(--navy);
+}
+.wgline { margin: 0 0 10px; font-size: 15px; line-height: 1.35; color: var(--navy); }
+.wgline .k {
+  display: block; margin-bottom: 2px;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--rust);
+}
+.wgfolder {
+  font-family: var(--mono); font-size: 13px; line-height: 1.45;
+  color: var(--navy); overflow-wrap: anywhere;
+  user-select: text; -webkit-user-select: text;
+}
+.wgchat {
+  color: var(--navy); font-weight: 700; font-size: 17px;
+  text-decoration: underline; text-underline-offset: 3px;
+}
+.wgunset { color: var(--rust); font-weight: 600; }
+.wgnote { margin: -4px 0 12px; font-size: 13px; line-height: 1.35; color: var(--rust); }
+.wgcard h4 {
+  margin: 2px 0 4px;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--rust);
+}
+.wgitems { list-style: none; margin: 0; padding: 0 0 6px; }
+.wgitems li {
+  display: flex; gap: 8px; align-items: baseline;
+  padding: 8px 0; border-top: 0.5px solid rgba(31,58,77,.16);
+  font-size: 15px; line-height: 1.35; color: var(--navy);
+}
+.wgid {
+  flex: none;
+  padding: 2px 6px; border-radius: 6px;
+  background: var(--navy); color: var(--gold);
+  font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 0;
+}
+.wgtitle { min-width: 0; overflow-wrap: anywhere; }
+.wgempty { margin: 0 0 8px; color: var(--rust); font-size: 15px; line-height: 1.35; }
+#wg-list > .wgempty { margin: 0 16px 12px; }
+
 .tabs {
   left: 0; right: 0; bottom: 0; z-index: 6;
   height: calc(var(--tab-h) + var(--safe-bot));
   padding: 2px 4px var(--safe-bot);
-  display: grid; grid-template-columns: repeat(5, 1fr);
+  display: grid; grid-template-columns: repeat(6, 1fr);
   background: rgba(7,10,16,.78);
   -webkit-backdrop-filter: saturate(180%) blur(22px);
   backdrop-filter: saturate(180%) blur(22px);
@@ -579,7 +639,8 @@ input[type=range] { width: 100%; accent-color: var(--fire); margin: 12px 0; }
 .tabs button svg { display: block; width: 25px; height: 25px; }
 .tabs button[aria-current="page"] { color: var(--cyan); }
 .tabs button[aria-current="page"] svg path,
-.tabs button[aria-current="page"] svg rect {
+.tabs button[aria-current="page"] svg rect,
+.tabs button[aria-current="page"] svg circle {
   fill: currentColor;
   fill-opacity: .2;
 }
@@ -872,6 +933,14 @@ html.conserve .dimmable { opacity: .45; }
       </div>
     </section>
 
+    <section id="view-groups" class="view" aria-label="Working Groups" inert>
+      <div class="scroller">
+        <div class="viewhead"><h2>Working Groups</h2><span class="meta" id="wg-aside">Checking</span></div>
+        <p class="stub">Each trio is one entry. Open items are a static list.</p>
+        <div id="wg-list"></div>
+      </div>
+    </section>
+
     <section id="view-more" class="view" aria-label="More" inert>
       <div class="scroller">
         <div class="viewhead"><h2>Projects</h2></div>
@@ -925,7 +994,7 @@ html.conserve .dimmable { opacity: .45; }
             <li>Share, then Add to Home Screen.</li>
             <li>Launch Deck. The passphrase is remembered on this phone.</li>
           </ol>
-          <p>Weather and the Bible plan are live. Mail is the curated list in data/mail.json. Calendar is the curated list in data/calendar.json. Todos stay on this device. Ledger and Vantage fill in only when their hosts answer. Weekly Sync on Home is the decision stage. Confirm posts the choice to Linear.</p>
+          <p>Weather and the Bible plan are live. Mail is the curated list in data/mail.json. Calendar is the curated list in data/calendar.json. Todos stay on this device. Ledger and Vantage fill in only when their hosts answer. Weekly Sync on Home is the decision stage. Confirm posts the choice to Linear. Working Groups is the Groups tab. Each trio is one entry in data/working-groups.json.</p>
           <a class="alink" href="./deck-mk3.html">Desktop MK III</a>
         </article>
 
@@ -964,6 +1033,10 @@ html.conserve .dimmable { opacity: .45; }
     <button type="button" data-tab="ledger" id="tab-ledger">
       <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 19V10M10 19V5M16 19v-6M21 19H3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
       <span>Ledger</span>
+    </button>
+    <button type="button" data-tab="groups" id="tab-groups" aria-label="Working Groups">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="8" cy="9" r="2.2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="16" cy="9" r="2.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M4.2 17.4c.7-2.4 2.3-3.6 3.8-3.6s3.1 1.2 3.8 3.6M12.2 17.4c.7-2.4 2.3-3.6 3.8-3.6s3.1 1.2 3.8 3.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span>Groups</span>
     </button>
     <button type="button" data-tab="more" id="tab-more">
       <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="6" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="18" cy="12" r="1.5" fill="currentColor"/></svg>
@@ -1089,7 +1162,7 @@ const WX_ICON = {
   fog: '<svg viewBox="0 0 16 16" width="14" height="14"><path d="M3 5.5h10M2.5 8h11M3.5 10.5h9" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>'
 };
 
-const TABS = ['home','mail','calendar','ledger','more'];
+const TABS = ['home','mail','calendar','ledger','groups','more'];
 let mailItems = [];
 let mailState = 'loading';
 let mailRaw = '';
@@ -1244,7 +1317,7 @@ DQ = cleanDQ(load('deck.dq', []));
 
 function tabFromHash(){
   let h = (location.hash || '#home').replace('#', '').toLowerCase();
-  const alias = { projects: 'more', attention: 'mail', inbox: 'mail', today: 'calendar', agenda: 'calendar' };
+  const alias = { projects: 'more', attention: 'mail', inbox: 'mail', today: 'calendar', agenda: 'calendar', 'working-groups': 'groups', workinggroups: 'groups' };
   h = alias[h] || h;
   return TABS.indexOf(h) >= 0 ? h : 'home';
 }
@@ -2841,6 +2914,110 @@ function renderToggles(){
     g.items.forEach((item) => list.appendChild(boardRow(item, g.switches)));
   });
 }
+let workingGroups = [];
+let groupsState = 'loading';
+function cleanGrokUrl(v){
+  if (typeof v !== 'string') return '';
+  const t = v.trim();
+  if (!t || /\s/.test(t) || /[<>"']/.test(t)) return '';
+  if (!/^grokbot:\/\//i.test(t)) return '';
+  return t;
+}
+function cleanWorkingGroups(list){
+  if (!Array.isArray(list)) return [];
+  return list.map((g) => {
+    if (!g || typeof g.name !== 'string' || !g.name.trim()) return null;
+    const members = Array.isArray(g.members)
+      ? g.members.filter((m) => typeof m === 'string' && m.trim()).map((m) => m.trim().slice(0, 80))
+      : [];
+    const folder = typeof g.folder === 'string' ? g.folder.trim().slice(0, 300) : '';
+    const openItems = Array.isArray(g.openItems) ? g.openItems.map((it) => {
+      if (!it || typeof it.title !== 'string' || !it.title.trim()) return null;
+      return { id: cleanIssueId(it.id), title: it.title.trim().slice(0, 180) };
+    }).filter(Boolean) : [];
+    return {
+      name: g.name.trim().slice(0, 80),
+      members: members,
+      folder: folder,
+      chatUrl: cleanGrokUrl(g.chatUrl),
+      openItems: openItems
+    };
+  }).filter(Boolean);
+}
+function renderWorkingGroups(){
+  const list = document.getElementById('wg-list');
+  const aside = document.getElementById('wg-aside');
+  if (!list || !aside) return;
+  clear(list);
+  if (groupsState === 'loading') {
+    aside.textContent = 'Checking';
+    return;
+  }
+  if (groupsState === 'error') {
+    aside.textContent = 'Offline';
+    list.appendChild(el('p', 'wgempty', "This list didn't load."));
+    return;
+  }
+  const n = workingGroups.length;
+  aside.textContent = n === 1 ? '1 group' : (n ? (n + ' groups') : 'None');
+  if (!n) {
+    list.appendChild(el('p', 'wgempty', 'No working groups yet.'));
+    return;
+  }
+  workingGroups.forEach((g) => {
+    const card = el('article', 'wgcard');
+    card.appendChild(el('h3', '', g.name));
+    const mem = el('p', 'wgline');
+    mem.appendChild(el('span', 'k', 'Members'));
+    mem.appendChild(document.createTextNode(g.members.length ? g.members.join(', ') : 'No members listed.'));
+    card.appendChild(mem);
+    const fold = el('p', 'wgline');
+    fold.appendChild(el('span', 'k', 'OneDrive folder'));
+    fold.appendChild(el('span', 'wgfolder', g.folder || 'Folder name not set'));
+    card.appendChild(fold);
+    const chat = el('p', 'wgline');
+    chat.appendChild(el('span', 'k', 'Chat'));
+    if (g.chatUrl) {
+      const a = document.createElement('a');
+      a.className = 'wgchat';
+      a.href = g.chatUrl;
+      a.textContent = 'Open chat';
+      chat.appendChild(a);
+    } else {
+      chat.appendChild(el('span', 'wgunset', 'Chat link not set'));
+    }
+    card.appendChild(chat);
+    card.appendChild(el('p', 'wgnote', 'Opens in the Grok Bot app.'));
+    card.appendChild(el('h4', '', 'Open items'));
+    if (!g.openItems.length) {
+      card.appendChild(el('p', 'wgempty', 'No open items.'));
+    } else {
+      const ul = el('ul', 'wgitems');
+      g.openItems.forEach((it) => {
+        const li = document.createElement('li');
+        if (it.id) li.appendChild(el('span', 'wgid', it.id));
+        li.appendChild(el('span', 'wgtitle', it.title));
+        ul.appendChild(li);
+      });
+      card.appendChild(ul);
+    }
+    list.appendChild(card);
+  });
+}
+async function loadWorkingGroups(){
+  try {
+    const r = await fetchTimeout('./data/working-groups.json', 5000);
+    if (!r.ok) throw new Error('status');
+    const data = await r.json();
+    workingGroups = cleanWorkingGroups(data && data.groups);
+    groupsState = 'ready';
+  } catch (e) {
+    if (groupsState === 'ready') return;
+    groupsState = 'error';
+    workingGroups = [];
+  }
+  renderWorkingGroups();
+}
 async function loadToggles(){
   loadToggleOn();
   try {
@@ -3100,7 +3277,7 @@ document.getElementById('dq-copy').addEventListener('click', () => {
 document.addEventListener('keydown', (e) => {
   if (e.target.closest && e.target.closest('input, textarea, select')) return;
   if (e.metaKey || e.ctrlKey || e.altKey) return;
-  const map = { '1': 'home', '2': 'mail', '3': 'calendar', '4': 'ledger', '5': 'more' };
+  const map = { '1': 'home', '2': 'mail', '3': 'calendar', '4': 'ledger', '5': 'more', '6': 'groups' };
   if (map[e.key]) { setTab(map[e.key]); return; }
   if (e.key === '/') {
     e.preventDefault();
@@ -3121,7 +3298,7 @@ window.addEventListener('hashchange', () => {
 });
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) { timers.forEach(clearInterval); timers = []; return; }
-  tick(); pollWeather(); pollLedger(); pollVantage(); pollVKS(); loadDecisions(); loadToggles(); loadPriorities(); loadMail(); loadCalendar(); startTimers();
+  tick(); pollWeather(); pollLedger(); pollVantage(); pollVKS(); loadDecisions(); loadToggles(); loadWorkingGroups(); loadPriorities(); loadMail(); loadCalendar(); startTimers();
 });
 
 buildProjects();
@@ -3151,6 +3328,7 @@ pollVantage();
 pollVKS();
 loadDecisions();
 loadToggles();
+loadWorkingGroups();
 loadPriorities();
 loadMail();
 loadCalendar();

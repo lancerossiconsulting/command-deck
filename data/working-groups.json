@@ -1,0 +1,14 @@
+{
+  "groups": [
+    {
+      "name": "Ops Coding",
+      "members": ["Lance", "Morgan", "Coder"],
+      "folder": "Desktop/Active/Working Groups/Ops Coding",
+      "chatUrl": "",
+      "openItems": [
+        { "id": "ROS-42", "title": "Deck toggles and report" },
+        { "id": "ROS-47", "title": "Working Groups page" }
+      ]
+    }
+  ]
+}
