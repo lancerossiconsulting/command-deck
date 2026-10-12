@@ -1,29 +1,10 @@
 {
-  "updatedAt": "2026-10-07T18:50:00.000Z",
+  "updatedAt": "2026-10-12T19:48:00.000Z",
   "stage": {
     "id": "weekly-sync",
     "title": "Weekly Sync",
     "asOf": "2026-10-07",
-    "notes": [
-      {
-        "id": "ros-13",
-        "role": "status",
-        "linearIssueId": "ROS-13",
-        "linearUrl": "https://linear.app/rosscomm/issue/ROS-13/golden-rule-hccs-rebuild-mock-scroll-taylor-presentation",
-        "title": "Golden Rule",
-        "status": "Done",
-        "detail": "Preview is live. Waiting on feedback from you and Taylor."
-      },
-      {
-        "id": "ros-17",
-        "role": "status",
-        "linearIssueId": "ROS-17",
-        "linearUrl": "https://linear.app/rosscomm/issue/ROS-17/command-deck-pages-stale-catch-up-owed",
-        "title": "Deck Pages catch-up",
-        "status": "Backlog",
-        "detail": ""
-      }
-    ]
+    "notes": []
   },
   "items": [
     {

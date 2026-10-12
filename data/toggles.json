@@ -1,55 +1,227 @@
 {
-  "updatedAt": "2026-10-12T17:00:00.000Z",
-  "plans": [
+  "updatedAt": "2026-10-12T19:48:00.000Z",
+  "groups": [
     {
-      "id": "ros-37",
-      "title": "Cloud and Fire strategic plan",
-      "linearIssueId": "ROS-37",
-      "linearUrl": "https://linear.app/rosscomm/issue/ROS-37/cloud-and-fire-strategic-plan-staff-feedback-sop-series-coa-plan-for"
+      "id": "active",
+      "title": "Active",
+      "switches": true,
+      "items": [
+        {
+          "id": "ros-30",
+          "title": "San Marcos and Truett plan",
+          "detail": "Editor CLEAR. With Patricia for Senior Leaders review. Waiting on Lance's review.",
+          "issues": [
+            {
+              "id": "ROS-30",
+              "url": "https://linear.app/rosscomm/issue/ROS-30/san-marcos-move-truett-mdiv-application-operations-plan-pdf"
+            }
+          ]
+        },
+        {
+          "id": "ros-28",
+          "title": "Golden Rule",
+          "detail": "The intake survey is live, and Taylor's answers are due today or tomorrow. Coder is building a one-question KDHE intake form.",
+          "issues": [
+            {
+              "id": "ROS-28",
+              "url": "https://linear.app/rosscomm/issue/ROS-28/golden-rule-intake-survey-one-question-at-a-time-form-for-kdhe-agency"
+            }
+          ]
+        },
+        {
+          "id": "ros-27",
+          "title": "Command Deck",
+          "detail": "The Weekly Sync confirm-to-Linear test happens before Wed and needs Lance's Linear key. The root cause of the lost Oct 7 picks is found. Toggles are live, and Generate report (to Lance's consulting Outlook) is planned. Morgan signs off.",
+          "issues": [
+            {
+              "id": "ROS-27",
+              "url": "https://linear.app/rosscomm/issue/ROS-27/deck-weekly-sync-confirm-writes-linear-without-courier-hop"
+            },
+            {
+              "id": "ROS-42",
+              "url": "https://linear.app/rosscomm/issue/ROS-42/command-deck-decision-toggles-generate-and-email-report-fix-answer"
+            }
+          ]
+        },
+        {
+          "id": "ros-31",
+          "title": "Logo directions",
+          "detail": "Ready for Lance's pick. Each comes in color, navy, and white on dark, and A is Split Pillar. The brand guide (ROS-32) and business cards (ROS-33) follow the primary logo.",
+          "issues": [
+            {
+              "id": "ROS-31",
+              "url": "https://linear.app/rosscomm/issue/ROS-31/cloud-and-fire-logo-suite-from-website-prototype-footer-logo"
+            }
+          ]
+        },
+        {
+          "id": "ros-44",
+          "title": "News brief",
+          "detail": "A branded Cloud & Fire newsletter, primary sources only, in AP style, archived on the deck by date. Seven sections: National politics and Congress; Faith and church; Veterans and VA; AI and tech; Kansas and Texas local; Business and home care; NCA. Awaiting Lance's go and a delivery time (7:55 AM CT proposed).",
+          "issues": [
+            {
+              "id": "ROS-44",
+              "url": "https://linear.app/rosscomm/issue/ROS-44/stand-up-current-events-bot-daily-curated-news-brief-for-lance"
+            }
+          ]
+        },
+        {
+          "id": "ros-37",
+          "title": "Strategic plan",
+          "detail": "Staff feedback is in, paced over 90 days to Jan 10. Founding articles talk Fri Oct 16, 9 AM CT.",
+          "issues": [
+            {
+              "id": "ROS-37",
+              "url": "https://linear.app/rosscomm/issue/ROS-37/cloud-and-fire-strategic-plan-staff-feedback-sop-series-coa-plan-for"
+            }
+          ]
+        },
+        {
+          "id": "ros-43",
+          "title": "30-day plan",
+          "detail": "Lance's draft-approval cycle by Nov 11.",
+          "issues": [
+            {
+              "id": "ROS-43",
+              "url": "https://linear.app/rosscomm/issue/ROS-43/30-day-plan-shared-context-by-default-lance-draft-approval-cycle-by"
+            }
+          ]
+        },
+        {
+          "id": "ros-38",
+          "title": "Command climate sheet",
+          "detail": "Answers due Wed.",
+          "issues": [
+            {
+              "id": "ROS-38",
+              "url": "https://linear.app/rosscomm/issue/ROS-38/command-climate-qualitative-response-sheet-all-bots"
+            }
+          ]
+        },
+        {
+          "id": "ros-40",
+          "title": "Consulting website (name pending)",
+          "detail": "roscom.com is taken, and a Houston ROSCOM PLLC is active in TX; KS is unverified. The build waits on Lance's name call.",
+          "issues": [
+            {
+              "id": "ROS-40",
+              "url": "https://linear.app/rosscomm/issue/ROS-40/check-roscom-llc-name-domain-and-hosting-options"
+            },
+            {
+              "id": "ROS-41",
+              "url": "https://linear.app/rosscomm/issue/ROS-41/build-roscom-consulting-site-state-of-the-industry"
+            }
+          ]
+        },
+        {
+          "id": "ros-39",
+          "title": "Writer to Zotero",
+          "detail": "Waiting on Lance's key.",
+          "issues": [
+            {
+              "id": "ROS-39",
+              "url": "https://linear.app/rosscomm/issue/ROS-39/connect-writer-to-lances-zotero-library"
+            }
+          ]
+        }
+      ]
     },
     {
-      "id": "ros-30",
-      "title": "San Marcos move and Truett application",
-      "linearIssueId": "ROS-30",
-      "linearUrl": "https://linear.app/rosscomm/issue/ROS-30/san-marcos-move-truett-mdiv-application-operations-plan-pdf"
+      "id": "requisitions",
+      "title": "Requisitions",
+      "lead": "Friday review",
+      "items": [
+        {
+          "id": "ros-34",
+          "title": "metal NFC card.",
+          "issues": [
+            {
+              "id": "ROS-34",
+              "url": "https://linear.app/rosscomm/issue/ROS-34/req-metal-nfc-contact-card-for-lance"
+            }
+          ]
+        },
+        {
+          "id": "ros-35",
+          "title": "HDX totes, $79.98, by Oct 27.",
+          "issues": [
+            {
+              "id": "ROS-35",
+              "url": "https://linear.app/rosscomm/issue/ROS-35/req-personal-hdx-27-gal-totes-4-pack"
+            }
+          ]
+        },
+        {
+          "id": "ros-36",
+          "title": "Truett application fee, after Oct 27.",
+          "issues": [
+            {
+              "id": "ROS-36",
+              "url": "https://linear.app/rosscomm/issue/ROS-36/req-personal-truett-seminary-application-fee"
+            }
+          ]
+        },
+        {
+          "id": "ros-45",
+          "title": "NCA membership, by Oct 26/27, cost TBD.",
+          "issues": [
+            {
+              "id": "ROS-45",
+              "url": "https://linear.app/rosscomm/issue/ROS-45/req-national-communication-association-membership"
+            }
+          ]
+        }
+      ]
     },
     {
-      "id": "ros-7",
-      "title": "Content workflow",
-      "linearIssueId": "ROS-7",
-      "linearUrl": "https://linear.app/rosscomm/issue/ROS-7/rosscomm-content-workflow-v1"
-    }
-  ],
-  "work": [
-    {
-      "id": "ros-41",
-      "title": "ROSCOM consulting site",
-      "linearIssueId": "ROS-41",
-      "linearUrl": "https://linear.app/rosscomm/issue/ROS-41/build-roscom-consulting-site-state-of-the-industry"
+      "id": "asks",
+      "title": "Lance's asks",
+      "items": [
+        {
+          "id": "ask-san-marcos",
+          "title": "Review the San Marcos and Truett plan."
+        },
+        {
+          "id": "ask-essay",
+          "title": "Review the Who Picks Up the Phone redraft PDF (publishing on hold)."
+        }
+      ]
     },
     {
-      "id": "ros-40",
-      "title": "ROSCOM name, domain, and hosting",
-      "linearIssueId": "ROS-40",
-      "linearUrl": "https://linear.app/rosscomm/issue/ROS-40/check-roscom-llc-name-domain-and-hosting-options"
-    },
-    {
-      "id": "ros-28",
-      "title": "Golden Rule intake survey",
-      "linearIssueId": "ROS-28",
-      "linearUrl": "https://linear.app/rosscomm/issue/ROS-28/golden-rule-intake-survey-one-question-at-a-time-form-for-kdhe-agency"
-    },
-    {
-      "id": "ros-32",
-      "title": "Cloud and Fire brand guide",
-      "linearIssueId": "ROS-32",
-      "linearUrl": "https://linear.app/rosscomm/issue/ROS-32/cloud-and-fire-brand-guide-from-website-prototype-landing-page"
-    },
-    {
-      "id": "ros-25",
-      "title": "Weekly Sync brief",
-      "linearIssueId": "ROS-25",
-      "linearUrl": "https://linear.app/rosscomm/issue/ROS-25/ops-weekly-sync-brief-format-room"
+      "id": "parked",
+      "title": "Parked",
+      "items": [
+        {
+          "id": "park-entrp",
+          "title": "ENTRP 340, until the posting goes live.",
+          "parked": true
+        },
+        {
+          "id": "park-social",
+          "title": "Social and PDF handouts.",
+          "parked": true
+        },
+        {
+          "id": "park-lights",
+          "title": "Christmas lights.",
+          "parked": true
+        },
+        {
+          "id": "park-ops",
+          "title": "Practice Ops.",
+          "parked": true
+        },
+        {
+          "id": "park-pms",
+          "title": "Practice Management System (P-ROS-3).",
+          "parked": true
+        },
+        {
+          "id": "park-digest",
+          "title": "Friends-only social digest.",
+          "parked": true
+        }
+      ]
     }
   ]
 }
