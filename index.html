@@ -2895,8 +2895,10 @@ function renderPriority(item){
     body.appendChild(el('p', 'empty', 'No priorities posted yet.'));
     return;
   }
-  const label = headDate(item.date) + ' ' + item.date.slice(0, 4);
-  aside.textContent = headDate(item.date);
+  const d = parseISO(item.date);
+  const shortDate = WD[d.getDay()] + ', ' + MO[d.getMonth()] + ' ' + d.getDate();
+  const label = shortDate + ', ' + d.getFullYear();
+  aside.textContent = shortDate;
   aside.classList.remove('mute');
   body.appendChild(el('p', 'pri-date', label));
   const link = el('a', 'alink', 'Open PDF');
