@@ -1,0 +1,55 @@
+{
+  "updatedAt": "2026-10-12T17:00:00.000Z",
+  "plans": [
+    {
+      "id": "ros-37",
+      "title": "Cloud and Fire strategic plan",
+      "linearIssueId": "ROS-37",
+      "linearUrl": "https://linear.app/rosscomm/issue/ROS-37/cloud-and-fire-strategic-plan-staff-feedback-sop-series-coa-plan-for"
+    },
+    {
+      "id": "ros-30",
+      "title": "San Marcos move and Truett application",
+      "linearIssueId": "ROS-30",
+      "linearUrl": "https://linear.app/rosscomm/issue/ROS-30/san-marcos-move-truett-mdiv-application-operations-plan-pdf"
+    },
+    {
+      "id": "ros-7",
+      "title": "Content workflow",
+      "linearIssueId": "ROS-7",
+      "linearUrl": "https://linear.app/rosscomm/issue/ROS-7/rosscomm-content-workflow-v1"
+    }
+  ],
+  "work": [
+    {
+      "id": "ros-41",
+      "title": "ROSCOM consulting site",
+      "linearIssueId": "ROS-41",
+      "linearUrl": "https://linear.app/rosscomm/issue/ROS-41/build-roscom-consulting-site-state-of-the-industry"
+    },
+    {
+      "id": "ros-40",
+      "title": "ROSCOM name, domain, and hosting",
+      "linearIssueId": "ROS-40",
+      "linearUrl": "https://linear.app/rosscomm/issue/ROS-40/check-roscom-llc-name-domain-and-hosting-options"
+    },
+    {
+      "id": "ros-28",
+      "title": "Golden Rule intake survey",
+      "linearIssueId": "ROS-28",
+      "linearUrl": "https://linear.app/rosscomm/issue/ROS-28/golden-rule-intake-survey-one-question-at-a-time-form-for-kdhe-agency"
+    },
+    {
+      "id": "ros-32",
+      "title": "Cloud and Fire brand guide",
+      "linearIssueId": "ROS-32",
+      "linearUrl": "https://linear.app/rosscomm/issue/ROS-32/cloud-and-fire-brand-guide-from-website-prototype-landing-page"
+    },
+    {
+      "id": "ros-25",
+      "title": "Weekly Sync brief",
+      "linearIssueId": "ROS-25",
+      "linearUrl": "https://linear.app/rosscomm/issue/ROS-25/ops-weekly-sync-brief-format-room"
+    }
+  ]
+}
