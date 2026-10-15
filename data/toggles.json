@@ -1,6 +1,103 @@
 {
-  "updatedAt": "2026-10-12T19:48:00.000Z",
+  "updatedAt": "2026-10-15T23:40:00.000Z",
   "groups": [
+    {
+      "id": "golden-rule-binder",
+      "title": "Golden Rule binder",
+      "lead": "Decisions due from Lance with Taylor by Tue Oct 20.",
+      "items": [
+        {
+          "id": "grb-kickoff",
+          "title": "Mon Oct 19: kickoff, 30 minutes. Confirm the table of contents and send Taylor the decision list. Owner: Lance.",
+          "issues": [
+            {
+              "id": "ROS-65",
+              "url": "https://linear.app/rosscomm/issue/ROS-65/plan-of-attack-taylors-golden-rule-binder-review-starts-mon-oct-19"
+            }
+          ]
+        },
+        {
+          "id": "grb-block-1",
+          "title": "Mon Oct 19 to Tue Oct 20: Block 1, client rights, abuse/neglect/exploitation (ANE), and client records (sections F, J, K). Writer drafts, Editor checks.",
+          "issues": [
+            {
+              "id": "ROS-65",
+              "url": "https://linear.app/rosscomm/issue/ROS-65/plan-of-attack-taylors-golden-rule-binder-review-starts-mon-oct-19"
+            }
+          ]
+        },
+        {
+          "id": "grb-block-2",
+          "title": "Tue Oct 20 to Wed Oct 21: Block 2, client services and medications (G), with help after surgery bracketed. Writer, then Editor.",
+          "issues": [
+            {
+              "id": "ROS-65",
+              "url": "https://linear.app/rosscomm/issue/ROS-65/plan-of-attack-taylors-golden-rule-binder-review-starts-mon-oct-19"
+            }
+          ]
+        },
+        {
+          "id": "grb-block-3",
+          "title": "Wed Oct 21 to Thu Oct 22: Block 3, hiring, training and supervision, on-call, and staffing (D, I, H, C). Writer, then Editor.",
+          "issues": [
+            {
+              "id": "ROS-65",
+              "url": "https://linear.app/rosscomm/issue/ROS-65/plan-of-attack-taylors-golden-rule-binder-review-starts-mon-oct-19"
+            }
+          ]
+        },
+        {
+          "id": "grb-block-4",
+          "title": "Thu Oct 22 to Fri Oct 23: Block 4, handbook and non-licensed services (M, L), with pay items bracketed. Writer, then Editor.",
+          "issues": [
+            {
+              "id": "ROS-65",
+              "url": "https://linear.app/rosscomm/issue/ROS-65/plan-of-attack-taylors-golden-rule-binder-review-starts-mon-oct-19"
+            }
+          ]
+        },
+        {
+          "id": "grb-block-5",
+          "title": "Week of Oct 26: Block 5, governing body, administration, and contracts (A, B, E) once Taylor decides. Writer, then Editor.",
+          "issues": [
+            {
+              "id": "ROS-65",
+              "url": "https://linear.app/rosscomm/issue/ROS-65/plan-of-attack-taylors-golden-rule-binder-review-starts-mon-oct-19"
+            }
+          ]
+        },
+        {
+          "id": "grb-legal",
+          "title": "Ongoing: legal verify list. Owner: Lance.",
+          "issues": [
+            {
+              "id": "ROS-65",
+              "url": "https://linear.app/rosscomm/issue/ROS-65/plan-of-attack-taylors-golden-rule-binder-review-starts-mon-oct-19"
+            }
+          ]
+        },
+        {
+          "id": "grb-pdf",
+          "title": "Fri Oct 30: full draft assembled as a branded PDF. Owner: Digital Production.",
+          "issues": [
+            {
+              "id": "ROS-65",
+              "url": "https://linear.app/rosscomm/issue/ROS-65/plan-of-attack-taylors-golden-rule-binder-review-starts-mon-oct-19"
+            }
+          ]
+        },
+        {
+          "id": "grb-send-fix",
+          "title": "Mon Oct 19: survey send button fix. Owner: Coder.",
+          "issues": [
+            {
+              "id": "ROS-65",
+              "url": "https://linear.app/rosscomm/issue/ROS-65/plan-of-attack-taylors-golden-rule-binder-review-starts-mon-oct-19"
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "active",
       "title": "Active",
