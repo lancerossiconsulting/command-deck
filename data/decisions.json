@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-12T19:48:00.000Z",
+  "updatedAt": "2026-10-15T23:40:00.000Z",
   "stage": {
     "id": "weekly-sync",
     "title": "Weekly Sync",
@@ -71,6 +71,66 @@
         { "id": "A", "label": "Queue ROS-21: DP rebuilds social + stylized PDF from cleared Substack → Editor hard re-gate" },
         { "id": "B", "label": "Park ROS-21 until asked" },
         { "id": "C", "label": "Skip social. PDF handout only when you ask." }
+      ]
+    },
+    {
+      "id": "gr-alt-admin",
+      "section": "",
+      "title": "Alternate administrator",
+      "gloss": "Taylor has not named anyone yet. This blocks binder section A.",
+      "prompt": "KDHE requires one, appointed in writing: 21+, one year of related experience, a degree or approved certificate, living within 200 miles. Taylor has not named anyone yet. This blocks binder section A. Due from Lance with Taylor by Tue Oct 20. Owner: Taylor. Source: Golden Rule pre-review, Oct 15, 2026.",
+      "owner": "Taylor",
+      "leftOff": "Taylor has not named anyone yet.",
+      "where": "Blocks binder section A.",
+      "linearIssueId": "ROS-65",
+      "linearUrl": "https://linear.app/rosscomm/issue/ROS-65/plan-of-attack-taylors-golden-rule-binder-review-starts-mon-oct-19",
+      "previewUrl": "",
+      "allowNote": true,
+      "status": "open",
+      "options": [
+        { "id": "A", "label": "Appoint the alternate in writing under the KDHE rules" },
+        { "id": "B", "label": "Hold binder section A until Taylor names someone" },
+        { "id": "C", "label": "Still unnamed" }
+      ]
+    },
+    {
+      "id": "gr-employment-pay",
+      "section": "",
+      "title": "Employment model and pay basics",
+      "gloss": "W-2 or contractors, plus the pay blanks. This blocks binder sections E and M.",
+      "prompt": "Decide between W-2 employees and contractors. Contractors require a contract staff policy, and the Oct 8 brief advised 1099 caregivers are hard to defend. Also needed: pay ranges, workweek, pay frequency, breaks, travel time between clients, and mileage. All blank. This blocks binder sections E and M. Due from Lance with Taylor by Tue Oct 20. Owner: Taylor. Source: Golden Rule pre-review, Oct 15, 2026.",
+      "owner": "Taylor",
+      "leftOff": "Pay ranges, workweek, pay frequency, breaks, travel time, and mileage are blank.",
+      "where": "Blocks binder sections E and M.",
+      "linearIssueId": "ROS-65",
+      "linearUrl": "https://linear.app/rosscomm/issue/ROS-65/plan-of-attack-taylors-golden-rule-binder-review-starts-mon-oct-19",
+      "previewUrl": "",
+      "allowNote": true,
+      "status": "open",
+      "options": [
+        { "id": "A", "label": "W-2 employees" },
+        { "id": "B", "label": "Contractors, with a contract staff policy" },
+        { "id": "C", "label": "Hold sections E and M until pay basics are filled in" }
+      ]
+    },
+    {
+      "id": "gr-scope-license",
+      "section": "",
+      "title": "Service scope and license status",
+      "gloss": "Where help after surgery stops, what stays unlicensed, license status, and the effective date.",
+      "prompt": "Confirm where help after surgery stops (no nursing, no medication set-up), how concierge and downsizing stay separate from licensed care, whether a KDHE license is held or pending, and the policy effective date. Due from Lance with Taylor by Tue Oct 20. Owner: Taylor. Source: Golden Rule pre-review, Oct 15, 2026.",
+      "owner": "Taylor",
+      "leftOff": "Scope, license status, and the policy effective date are open.",
+      "where": "Help after surgery, concierge, and downsizing.",
+      "linearIssueId": "ROS-65",
+      "linearUrl": "https://linear.app/rosscomm/issue/ROS-65/plan-of-attack-taylors-golden-rule-binder-review-starts-mon-oct-19",
+      "previewUrl": "",
+      "allowNote": true,
+      "status": "open",
+      "options": [
+        { "id": "A", "label": "KDHE license is held" },
+        { "id": "B", "label": "KDHE license is pending" },
+        { "id": "C", "label": "Scope or effective date still open" }
       ]
     }
   ]
