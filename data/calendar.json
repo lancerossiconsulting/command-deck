@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-05T15:04:00-05:00",
+  "updatedAt": "2026-10-23T17:14:00-05:00",
   "items": [
     {
       "id": "AQMkADAwATNiZmYAZS04ZjZkLTY3YTctMDACLTAwCgBGAAADv1dWxAn6-0a3zA-yKfryJQcALtB5gNqz6E2z_ebDz2pfowAAAgENAAAALtB5gNqz6E2z_ebDz2pfowABjxDb2wAAAAA=",
@@ -23,7 +23,7 @@
       "updatedAt": "2026-10-05T15:04:00-05:00",
       "endsAt": "2026-10-07T19:30:00-05:00",
       "location": "Westview Community Church",
-      "note": "Meal 5:30 PM; classes ~6:00–7:30 PM."
+      "note": "Meal 5:30 PM; classes ~6:00\u20137:30 PM."
     },
     {
       "id": "AQMkADAwATNiZmYAZS04ZjZkLTY3YTctMDACLTAwCgBGAAADv1dWxAn6-0a3zA-yKfryJQcALtB5gNqz6E2z_ebDz2pfowAAAgENAAAALtB5gNqz6E2z_ebDz2pfowABiWRuwgAAAA==",
@@ -59,7 +59,7 @@
       "updatedAt": "2026-10-05T15:04:00-05:00",
       "endsAt": "2026-10-14T19:30:00-05:00",
       "location": "Westview Community Church",
-      "note": "Meal 5:30 PM; classes ~6:00–7:30 PM."
+      "note": "Meal 5:30 PM; classes ~6:00\u20137:30 PM."
     },
     {
       "id": "AQMkADAwATNiZmYAZS04ZjZkLTY3YTctMDACLTAwCgBGAAADv1dWxAn6-0a3zA-yKfryJQcALtB5gNqz6E2z_ebDz2pfowAAAgENAAAALtB5gNqz6E2z_ebDz2pfowABiWRuwwAAAA==",
@@ -95,7 +95,7 @@
       "updatedAt": "2026-10-05T15:04:00-05:00",
       "endsAt": "2026-10-21T19:30:00-05:00",
       "location": "Westview Community Church",
-      "note": "Meal 5:30 PM; classes ~6:00–7:30 PM."
+      "note": "Meal 5:30 PM; classes ~6:00\u20137:30 PM."
     },
     {
       "id": "AQMkADAwATNiZmYAZS04ZjZkLTY3YTctMDACLTAwCgBGAAADv1dWxAn6-0a3zA-yKfryJQcALtB5gNqz6E2z_ebDz2pfowAAAgENAAAALtB5gNqz6E2z_ebDz2pfowABiWRuxAAAAA==",
@@ -133,6 +133,17 @@
       "note": "Date locked Oct 27; license appointment 11:00 AM per KS DMV email."
     },
     {
+      "id": "taylor-meeting-2026-10-28",
+      "title": "Taylor meeting",
+      "startsAt": "2026-10-28T11:30:00-05:00",
+      "endsAt": "2026-10-28T12:30:00-05:00",
+      "whyShown": "appointment",
+      "calendar": "consulting",
+      "deepLink": "",
+      "updatedAt": "2026-10-23T17:14:00-05:00",
+      "note": "Golden Rule binder. 11:30 a.m. to 12:30 p.m. CT."
+    },
+    {
       "id": "AQMkADAwATNiZmYAZS04ZjZkLTY3YTctMDACLTAwCgBGAAADv1dWxAn6-0a3zA-yKfryJQcALtB5gNqz6E2z_ebDz2pfowAAAgENAAAALtB5gNqz6E2z_ebDz2pfowABiWRuuQAAAA==",
       "title": "Life Group: Pastor Dylan Meyer",
       "startsAt": "2026-10-28T17:30:00-05:00",
@@ -142,7 +153,7 @@
       "updatedAt": "2026-10-05T15:04:00-05:00",
       "endsAt": "2026-10-28T19:30:00-05:00",
       "location": "Westview Community Church",
-      "note": "Meal 5:30 PM; classes ~6:00–7:30 PM."
+      "note": "Meal 5:30 PM; classes ~6:00\u20137:30 PM."
     }
   ]
 }

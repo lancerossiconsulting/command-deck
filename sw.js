@@ -3,7 +3,7 @@
    Scope is the site root, which is the folder this file lives in.
    /golden-rule/ is excluded below so the public intake is not cached
    and is never replaced by the Deck shell. */
-const CACHE = 'deck-v2-20';
+const CACHE = 'deck-v2-21';
 const ASSETS = [
   './',
   './index.html',
@@ -12,6 +12,7 @@ const ASSETS = [
   './data/toggles.json',
   './data/mail.json',
   './data/calendar.json',
+  './data/next-week.json',
   './icon.svg',
   './icon-180.png',
   './icon-192.png',
