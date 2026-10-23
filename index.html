@@ -530,6 +530,8 @@ input[type=range] { width: 100%; accent-color: var(--fire); margin: 12px 0; }
 .dqitem .tx { flex: 1; overflow-wrap: anywhere; font-size: 17px; }
 .dqacts { display: flex; gap: 8px; margin-top: 8px; }
 .mic { min-width: 44px; }
+#copy-picks { margin-top: 10px; min-height: 44px; font-size: 17px; }
+#picks-out { white-space: pre-wrap; overflow-wrap: anywhere; user-select: text; -webkit-user-select: text; margin-top: 8px; font-size: 15px; }
 
 .tier { display: grid; grid-template-columns: 72px minmax(0,1fr) auto; gap: 8px; align-items: center; min-height: 28px; margin: 6px 0; font-size: 13px; }
 .tn { color: var(--ink-mute); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -814,6 +816,9 @@ html.conserve .dimmable { opacity: .45; }
           <div id="sync-notes"></div>
           <div id="sync-list"></div>
           <div class="foot" id="sync-foot"></div>
+          <button type="button" id="copy-picks">Copy my picks</button>
+          <p class="dstatus" id="copy-picks-status"></p>
+          <pre id="picks-out" hidden></pre>
         </article>
       </div>
     </section>
@@ -3092,6 +3097,26 @@ applyCapacity(+(loadStr('deck.cap', '3')));
 })();
 tick();
 pollWeather();
+/* Copy my picks: one text block of every pick saved on this device, to paste in chat. */
+document.getElementById('copy-picks').addEventListener('click', function () {
+  const btn = this;
+  const out = document.getElementById('picks-out');
+  const stat = document.getElementById('copy-picks-status');
+  const store = loadPicks();
+  const lines = store.picks.filter(function (p) { return p.choice || p.note; }).map(function (p) {
+    const it = decisionItems.find(function (i) { return i.id === p.id; });
+    const opt = it ? it.options.find(function (o) { return o.id === p.choice; }) : null;
+    let line = '- ' + (it ? it.title : p.id) + ': ' + (opt ? opt.label : (p.choice || 'no pick'));
+    if (p.note) line += ' (note: ' + p.note + ')';
+    return line;
+  });
+  const txt = lines.length ? 'My Deck picks:\n' + lines.join('\n') : 'No picks are saved on this device.';
+  out.textContent = txt;
+  out.hidden = false;
+  copyText(txt).then(function (ok) {
+    stat.textContent = ok ? 'Copied. Paste it in the chat.' : 'Copy was blocked. Press and hold the text below to copy it.';
+  });
+});
 pollLedger();
 pollVantage();
 pollVKS();
