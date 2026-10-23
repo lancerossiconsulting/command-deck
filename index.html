@@ -810,7 +810,7 @@ html.conserve .dimmable { opacity: .45; }
             <span class="name">Weekly Sync</span>
             <span class="aside mute" id="sync-aside">Checking</span>
           </div>
-          <p class="dprompt" id="sync-lead">Courses of action from this sync. Confirm posts the choice on the Linear issue.</p>
+          <p class="dprompt" id="sync-lead">Courses of action from this sync. Tell Morgan your pick.</p>
           <div id="sync-notes"></div>
           <div id="sync-list"></div>
           <div class="foot" id="sync-foot"></div>
@@ -933,23 +933,10 @@ html.conserve .dimmable { opacity: .45; }
             <li>Share, then Add to Home Screen.</li>
             <li>Launch Deck. The passphrase is remembered on this phone.</li>
           </ol>
-          <p>Weather and the Bible plan are live. Mail is the curated list in data/mail.json. Calendar is the curated list in data/calendar.json. Todos stay on this device. Ledger and Vantage fill in only when their hosts answer. Weekly Sync on Home is the decision stage. Confirm posts the choice to Linear.</p>
+          <p>Weather and the Bible plan are live. Mail is the curated list in data/mail.json. Calendar is the curated list in data/calendar.json. Todos stay on this device. Ledger and Vantage fill in only when their hosts answer. Weekly Sync on Home is the decision stage. Tell Morgan your pick.</p>
           <a class="alink" href="./deck-mk3.html">Desktop MK III</a>
         </article>
 
-        <details class="src" id="sources">
-          <summary>Sources</summary>
-          <form id="linear-form" novalidate>
-            <label>Linear API key
-              <input id="linear-key" type="password" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Paste a personal API key">
-            </label>
-            <div class="keyacts">
-              <button type="submit">Save key</button>
-              <button type="button" id="linear-clear">Clear key</button>
-            </div>
-            <p class="foot" id="linear-note">Optional. Saved on this phone only. Used as the Authorization header to api.linear.app when you confirm a COA. Nothing here is stored in the repo.</p>
-          </form>
-        </details>
       </div>
     </section>
   </main>
@@ -2026,7 +2013,7 @@ async function pollWeather(){
 }
 /* Decisions. data/decisions.json is the record. Picks stay on this phone.
    Weekly Sync items (section weekly-sync) render on #weekly-sync.
-   Confirm posts a Linear comment when a key is saved under More → Sources. */
+   Tell Morgan your pick. This page does not post the choice. */
 const PICKS_KEY = 'cf-deck-picks';
 const LINEAR_KEY = 'deck.v2.linearKey';
 const LINEAR_API = 'https://api.linear.app/graphql';
@@ -2231,10 +2218,10 @@ async function postDecisionComment(issueKey, body){
   return res.comment || {};
 }
 function streamView(pick){
-  if (!pick || !pick.choice) return { btn: 'Confirm on Linear', disabled: true, status: 'Choose A, B, or C.', kind: '' };
+  if (!pick || !pick.choice) return { btn: '', disabled: true, status: 'Choose A, B, or C.', kind: '' };
   const same = pick.linearChoice === pick.choice && (pick.linearNote || '') === (pick.note || '') && pick.linearAt;
-  if (same) return { btn: 'Confirm again', disabled: false, status: 'On Linear.', kind: 'ok', href: pick.linearCommentUrl || '' };
-  return { btn: 'Confirm on Linear', disabled: false, status: 'Saved on this phone. Confirm posts it to Linear.', kind: '' };
+  if (same) return { btn: '', disabled: true, status: 'Saved on this phone.', kind: 'ok', href: '' };
+  return { btn: '', disabled: true, status: 'Saved on this phone.', kind: '' };
 }
 function paintPickChrome(id){
   const pick = loadPicks().picks.find((p) => p.id === id) || null;
@@ -2313,7 +2300,7 @@ function showPostError(root, item, body, code){
   root.dataset.hold = '1';
   delete root.dataset.busy;
   const main = root.querySelector('.mainconfirm');
-  if (main) { main.hidden = false; main.disabled = false; main.textContent = 'Confirm on Linear'; }
+  if (main) main.hidden = true;
   const stat = root.querySelector('.cardstatus');
   if (stat) {
     clear(stat);
@@ -2330,6 +2317,7 @@ function showPostError(root, item, body, code){
   }
 }
 async function confirmStream(item){
+  return;
   const root = document.getElementById('stream-' + safeId(item.id));
   if (!root || root.dataset.busy === '1' || item.status === 'closed') return;
   const pick = loadPicks().picks.find((p) => p.id === item.id);
@@ -2348,7 +2336,7 @@ async function confirmStream(item){
     if (stat) {
       clear(stat);
       stat.className = 'dstatus cardstatus';
-      stat.textContent = 'Paste the key above. Confirm posts this comment. Nothing is emailed.';
+      stat.textContent = 'Saved on this phone.';
     }
     return;
   }
@@ -2444,46 +2432,6 @@ function bindChoice(item, input, optId){
     paintPickChrome(item.id);
   });
 }
-function keyPrompt(item){
-  const box = el('form', 'keyprompt');
-  box.noValidate = true;
-  box.appendChild(el('p', 'keylead', 'Paste your Linear key once. It\'s saved on this device only. Saving also posts this pick to Linear.'));
-  const input = document.createElement('input');
-  input.type = 'password';
-  input.autocomplete = 'off';
-  input.autocapitalize = 'off';
-  input.spellcheck = false;
-  input.placeholder = 'Personal API key';
-  input.setAttribute('aria-label', 'Linear API key');
-  box.appendChild(input);
-  const save = el('button', 'dconfirm', 'Save and post');
-  save.type = 'submit';
-  box.appendChild(save);
-  const err = el('p', 'dstatus', '');
-  box.appendChild(err);
-  box.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const key = normalizeLinearKey(input.value);
-    if (!key) {
-      err.className = 'dstatus warn';
-      err.textContent = 'That key has spaces or is too short. Paste the token Linear showed once.';
-      input.focus();
-      return;
-    }
-    try { localStorage.setItem(LINEAR_KEY, key); }
-    catch (ex) {
-      err.className = 'dstatus warn';
-      err.textContent = 'This phone blocked saving the key. The pick is still here.';
-      return;
-    }
-    input.value = '';
-    err.textContent = '';
-    paintLinearNote();
-    syncFoot();
-    confirmStream(item);
-  });
-  return box;
-}
 function settledCard(item){
   const card = el('article', 'ditem');
   card.id = 'stream-' + safeId(item.id);
@@ -2547,19 +2495,6 @@ function streamCard(item){
     });
     card.appendChild(note);
   }
-  const view = streamView(pick);
-  const confirm = el('button', 'dconfirm mainconfirm', view.btn);
-  confirm.type = 'button';
-  confirm.disabled = !!view.disabled;
-  confirm.addEventListener('click', () => { confirmStream(item); });
-  card.appendChild(confirm);
-  card.appendChild(keyPrompt(item));
-  const stat = el('p', 'dstatus cardstatus' + (view.kind ? ' ' + view.kind : ''), view.href ? '' : view.status);
-  if (view.href) {
-    stat.appendChild(document.createTextNode('On Linear. '));
-    stat.appendChild(extLink(view.href, 'Open comment'));
-  }
-  card.appendChild(stat);
   return card;
 }
 function decisionCard(item){
@@ -2604,22 +2539,9 @@ function syncFoot(){
   const closedWeekly = decisionItems.filter((it) => it.status === 'closed' && it.section === 'weekly-sync');
   if (decisionsState === 'ready' && !openWeekly.length && closedWeekly.length) {
     foot.appendChild(document.createTextNode('All three are locked. Nothing here is waiting on you.'));
-  } else {
-    foot.appendChild(document.createTextNode('Confirm posts the comment on the Linear issue. The first time, paste the key on the card. It is also under '));
-    const jump = el('button', 'textlink', 'More → Sources');
-    jump.type = 'button';
-    jump.setAttribute('data-go', 'more');
-    jump.setAttribute('data-anchor', 'sources');
-    foot.appendChild(jump);
-    foot.appendChild(document.createTextNode('.'));
+  } else if (openWeekly.length) {
+    foot.appendChild(document.createTextNode('Tell Morgan your pick.'));
   }
-}
-function paintLinearNote(){
-  const note = document.getElementById('linear-note');
-  if (!note) return;
-  note.textContent = linearKey()
-    ? 'A key is saved on this phone. It is sent only to api.linear.app when you confirm a COA.'
-    : 'No key yet. Confirm asks for it on the card, once. You can also paste it here. Saved on this phone only.';
 }
 function renderStage(){
   const list = document.getElementById('sync-list');
@@ -2650,7 +2572,7 @@ function renderStage(){
     aside.textContent = weeklyOpen.length + ' open';
     aside.classList.remove('mute');
     aside.classList.remove('settled');
-    if (lead) lead.textContent = 'Courses of action from this sync. Confirm posts the choice on the Linear issue.';
+    if (lead) lead.textContent = 'Courses of action from this sync. Tell Morgan your pick.';
   } else if (weeklyClosed.length) {
     aside.textContent = 'Settled';
     aside.classList.remove('mute');
@@ -2865,10 +2787,19 @@ function renderNextWeek(data){
   }
   const text = data && typeof data.text === 'string' ? data.text : '';
   if (!text) return;
+  const urls = Array.isArray(data && data.decisions)
+    ? data.decisions.map((d) => cleanHttpUrl(d && d.linearUrl)).filter(Boolean)
+    : [];
+  let n = 0;
   const p = el('p', 'gloss');
   text.replace(/\r\n/g, '\n').split('\n').forEach((line, i) => {
     if (i) p.appendChild(document.createElement('br'));
     p.appendChild(document.createTextNode(line));
+    if (line.trim() === 'Tell Morgan your pick.' && urls[n]) {
+      p.appendChild(document.createTextNode(' '));
+      p.appendChild(extLink(urls[n], 'View in Linear', 'quiet'));
+      n += 1;
+    }
   });
   body.appendChild(p);
 }
@@ -3066,33 +2997,6 @@ document.getElementById('host-form').addEventListener('submit', (e) => {
   pollLedger();
   pollVantage();
 });
-document.getElementById('linear-form').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const note = document.getElementById('linear-note');
-  const input = document.getElementById('linear-key');
-  const raw = input.value;
-  if (!raw.trim()) {
-    paintLinearNote();
-    return;
-  }
-  const key = normalizeLinearKey(raw);
-  if (!key) {
-    note.textContent = 'That key has spaces or is too short. Paste the token Linear showed once.';
-    return;
-  }
-  try { localStorage.setItem(LINEAR_KEY, key); }
-  catch (err) { note.textContent = 'This phone blocked saving the key.'; return; }
-  input.value = '';
-  paintLinearNote();
-  syncFoot();
-});
-document.getElementById('linear-clear').addEventListener('click', () => {
-  try { localStorage.removeItem(LINEAR_KEY); } catch (e) {}
-  const input = document.getElementById('linear-key');
-  if (input) input.value = '';
-  paintLinearNote();
-  syncFoot();
-});
 document.getElementById('bible-more').addEventListener('click', () => { bibleAll = !bibleAll; renderBible(); });
 document.getElementById('cap').addEventListener('input', (e) => applyCapacity(+e.target.value));
 document.getElementById('dq-form').addEventListener('submit', (e) => {
@@ -3186,7 +3090,6 @@ applyCapacity(+(loadStr('deck.cap', '3')));
   if (raw === 'weekly-sync') setTab('home', { silent: true, anchor: 'weekly-sync', instant: true });
   else setTab(tabFromHash(), { silent: true });
 })();
-paintLinearNote();
 tick();
 pollWeather();
 pollLedger();
