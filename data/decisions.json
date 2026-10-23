@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T23:40:00.000Z",
+  "updatedAt": "2026-10-23T22:14:00.000Z",
   "stage": {
     "id": "weekly-sync",
     "title": "Weekly Sync",
@@ -8,31 +8,38 @@
   },
   "items": [
     {
-      "id": "ros-16",
       "section": "weekly-sync",
-      "title": "Essay · Who Picks Up the Phone",
       "gloss": "Your Substack essay and whether it publishes.",
       "prompt": "After Substack PDF read.",
       "owner": "Patricia",
-      "leftOff": "Cleared Substack PDF delivered to Lance; ROS-20 Done.",
-      "where": "Publish on hold; conclusion deferred; social/PDF re-gate is ROS-21.",
+      "leftOff": "Cleared Substack PDF delivered to Lance.",
+      "where": "Publish on hold. Conclusion deferred. Social and PDF re-gate follows.",
       "linearIssueId": "ROS-16",
       "linearUrl": "https://linear.app/rosscomm/issue/ROS-16/who-picks-up-the-phone-essay-package-wed-lance-handoff",
       "previewUrl": "",
       "allowNote": true,
       "status": "closed",
-      "choice": "C",
-      "decidedAt": "2026-10-07",
       "options": [
-        { "id": "A", "label": "Mark Substack for publish when ready" },
-        { "id": "B", "label": "Hold publish and open markup round" },
-        { "id": "C", "label": "Park the essay until you've read it." }
-      ]
+        {
+          "id": "A",
+          "label": "Mark Substack for publish when ready"
+        },
+        {
+          "id": "B",
+          "label": "Hold publish and open markup round"
+        },
+        {
+          "id": "C",
+          "label": "Park the essay until you've read it."
+        }
+      ],
+      "id": "ros-16",
+      "title": "Essay \u00b7 Who Picks Up the Phone",
+      "choice": "C",
+      "decidedAt": "2026-10-07"
     },
     {
-      "id": "ros-8",
       "section": "weekly-sync",
-      "title": "ENTRP 340 teaching packet",
       "gloss": "Your resume and cover letter for the ENTRP 340 teaching job.",
       "prompt": "",
       "owner": "Writer",
@@ -43,44 +50,233 @@
       "previewUrl": "",
       "allowNote": true,
       "status": "closed",
-      "choice": "B",
-      "decidedAt": "2026-10-07",
       "options": [
-        { "id": "A", "label": "Answer remaining GAPS ready for, then stylized PDF leave-behind (ROS-24)" },
-        { "id": "B", "label": "Park packet until posting goes live" },
-        { "id": "C", "label": "Hold GAPS open; no PDF until asked" }
-      ]
+        {
+          "id": "A",
+          "label": "Answer remaining GAPS ready for, then stylized PDF leave-behind"
+        },
+        {
+          "id": "B",
+          "label": "Park packet until posting goes live"
+        },
+        {
+          "id": "C",
+          "label": "Hold GAPS open; no PDF until asked"
+        }
+      ],
+      "id": "ros-8",
+      "title": "ENTRP 340 teaching packet",
+      "choice": "B",
+      "decidedAt": "2026-10-07"
     },
     {
-      "id": "ros-21",
       "section": "weekly-sync",
-      "title": "Essay PDF handout",
       "gloss": "A PDF handout made from the cleared essay. No social posts.",
       "prompt": "",
       "owner": "Editor / Digital Production",
-      "leftOff": "Substack CLEAR (ROS-19 Done); social/PDF held for rebuild from cleared Substack.",
+      "leftOff": "Substack clear. Social and PDF held for rebuild from the cleared Substack.",
       "where": "",
       "linearIssueId": "ROS-21",
       "linearUrl": "https://linear.app/rosscomm/issue/ROS-21/follow-on-social-pdf-re-gate-from-cleared-substack",
       "previewUrl": "",
       "allowNote": true,
       "status": "closed",
-      "choice": "C",
-      "decidedAt": "2026-10-07",
       "options": [
-        { "id": "A", "label": "Queue ROS-21: DP rebuilds social + stylized PDF from cleared Substack → Editor hard re-gate" },
-        { "id": "B", "label": "Park ROS-21 until asked" },
-        { "id": "C", "label": "Skip social. PDF handout only when you ask." }
-      ]
+        {
+          "id": "A",
+          "label": "Digital Production rebuilds social and a stylized PDF from the cleared Substack, then Editor hard re-gate"
+        },
+        {
+          "id": "B",
+          "label": "Park social and PDF until asked"
+        },
+        {
+          "id": "C",
+          "label": "Skip social. PDF handout only when you ask."
+        }
+      ],
+      "id": "ros-21",
+      "title": "Essay PDF handout",
+      "choice": "C",
+      "decidedAt": "2026-10-07"
     },
     {
-      "id": "gr-alt-admin",
       "section": "",
-      "title": "Alternate administrator",
-      "gloss": "Taylor has not named anyone yet. This blocks binder section A.",
-      "prompt": "KDHE requires one, appointed in writing: 21+, one year of related experience, a degree or approved certificate, living within 200 miles. Taylor has not named anyone yet. This blocks binder section A. Due from Lance with Taylor by Tue Oct 20. Owner: Taylor. Source: Golden Rule pre-review, Oct 15, 2026.",
+      "gloss": "The brief recommends KDADS. Section D stays as it is until Lance chooses.",
+      "prompt": "Which vendor to use for Taylor's hiring section. The brief recommends KDADS as the vendor, after an OIG exclusion search and a sex offender registry search. Morgan's lean: take the brief's pick. Section D background check part stays as it is until Lance chooses. This unblocks the hiring section.",
+      "owner": "Lance",
+      "leftOff": "Cleared brief is waiting on Lance.",
+      "where": "Section D background check part stays as it is.",
+      "linearIssueId": "",
+      "linearUrl": "",
+      "previewUrl": "",
+      "allowNote": true,
+      "status": "open",
+      "options": [
+        {
+          "id": "A",
+          "label": "KDADS, after an OIG exclusion search and a sex offender registry search"
+        }
+      ],
+      "id": "gr-bg-vendor",
+      "title": "Background check vendor"
+    },
+    {
+      "section": "",
+      "gloss": "The brief recommends keeping this check.",
+      "prompt": "Whether to keep the Nurse Aide Registry check for Taylor's hiring section. The brief recommends keeping it. Morgan's lean: take the brief's pick. Section D stays as it is until Lance chooses.",
+      "owner": "Lance",
+      "leftOff": "Cleared brief is waiting on Lance.",
+      "where": "Section D background check part stays as it is.",
+      "linearIssueId": "",
+      "linearUrl": "",
+      "previewUrl": "",
+      "allowNote": true,
+      "status": "open",
+      "options": [
+        {
+          "id": "A",
+          "label": "Keep the Nurse Aide Registry check"
+        },
+        {
+          "id": "B",
+          "label": "Do not keep the Nurse Aide Registry check"
+        }
+      ],
+      "id": "gr-bg-nurse-aide",
+      "title": "Nurse Aide Registry check"
+    },
+    {
+      "section": "",
+      "gloss": "Morgan's lean is one shared list Taylor can see.",
+      "prompt": "Options: (a) one shared list Taylor can see, or (b) items stay inside the binder emails only. Morgan's lean: (a), so we can review it at the Wednesday, Oct. 28, meeting.",
+      "owner": "Lance",
+      "leftOff": "Still open.",
+      "where": "Wednesday, Oct. 28, meeting.",
+      "linearIssueId": "",
+      "linearUrl": "",
+      "previewUrl": "",
+      "allowNote": true,
+      "status": "open",
+      "options": [
+        {
+          "id": "A",
+          "label": "One shared list Taylor can see"
+        },
+        {
+          "id": "B",
+          "label": "Items stay inside the binder emails only"
+        }
+      ],
+      "id": "gr-shared-todo",
+      "title": "Taylor's shared to-do list"
+    },
+    {
+      "section": "",
+      "gloss": "Editor cleared them at 5:03 p.m. Digital Production recommends Option B.",
+      "prompt": "The three options Digital Production sent to Lance's chat tonight, each with a short guide, cleared by Editor at 5:03 p.m. Digital Production's lean: Option B. The paid image tool plan only matters if Lance picks C. After the pick, choose a logo designer.",
+      "owner": "Lance",
+      "leftOff": "Delivered, with short guides.",
+      "where": "Ready for Lance.",
+      "linearIssueId": "",
+      "linearUrl": "",
+      "previewUrl": "",
+      "allowNote": true,
+      "status": "open",
+      "options": [
+        {
+          "id": "A",
+          "label": "Option A"
+        },
+        {
+          "id": "B",
+          "label": "Option B"
+        },
+        {
+          "id": "C",
+          "label": "Option C"
+        }
+      ],
+      "id": "gr-branding",
+      "title": "Branding options"
+    },
+    {
+      "section": "",
+      "gloss": "Choose one after the branding pick.",
+      "prompt": "After the branding pick, choose a logo designer.",
+      "owner": "Lance",
+      "leftOff": "Waits on the branding pick.",
+      "where": "",
+      "linearIssueId": "",
+      "linearUrl": "",
+      "previewUrl": "",
+      "allowNote": true,
+      "status": "open",
+      "options": [
+        {
+          "id": "A",
+          "label": "Name the designer in the note"
+        }
+      ],
+      "id": "gr-logo-designer",
+      "title": "Logo designer"
+    },
+    {
+      "section": "",
+      "gloss": "Confirm it covers November and is due Dec. 20.",
+      "prompt": "Confirm the first full $200 covers November and is due Dec. 20. The retainer is $200 on the 20th of each month. Morgan's lean: yes.",
+      "owner": "Lance",
+      "leftOff": "First invoice is already paid.",
+      "where": "Next retainer date is Dec. 20.",
+      "linearIssueId": "",
+      "linearUrl": "",
+      "previewUrl": "",
+      "allowNote": true,
+      "status": "open",
+      "options": [
+        {
+          "id": "A",
+          "label": "Yes. The first full $200 covers November and is due Dec. 20."
+        },
+        {
+          "id": "B",
+          "label": "Not yet"
+        }
+      ],
+      "id": "gr-retainer",
+      "title": "First full retainer"
+    },
+    {
+      "section": "",
+      "gloss": "Morgan's lean is to resume two of the five.",
+      "prompt": "Five paused routines: the morning firm brief, the usage forecast, the Weekly Sync cue, the monthly LPD essay cue, and the Friday requisition review. Options: resume the morning firm brief and the usage forecast only, or keep all five paused. Morgan's lean: resume those two.",
+      "owner": "Lance",
+      "leftOff": "All five are paused.",
+      "where": "Binder-only order.",
+      "linearIssueId": "",
+      "linearUrl": "",
+      "previewUrl": "",
+      "allowNote": true,
+      "status": "open",
+      "options": [
+        {
+          "id": "A",
+          "label": "Resume the morning firm brief and the usage forecast only"
+        },
+        {
+          "id": "B",
+          "label": "Keep all five paused"
+        }
+      ],
+      "id": "gr-morgan-routines",
+      "title": "Morgan's paused routines"
+    },
+    {
+      "section": "",
+      "gloss": "The job description is drafted. Taylor has not named anyone yet.",
+      "prompt": "KDHE requires one, appointed in writing: 21+, one year of related experience, a degree or approved certificate, living within 200 miles. The alternate administrator job description is drafted, with the driving and insurance requirement, and is ready for Taylor to share with Joslyn and Haley. Taylor has not named anyone yet. This blocks binder section A. Owner: Taylor.",
       "owner": "Taylor",
-      "leftOff": "Taylor has not named anyone yet.",
+      "leftOff": "The job description is drafted. Taylor has not named anyone yet.",
       "where": "Blocks binder section A.",
       "linearIssueId": "ROS-65",
       "linearUrl": "https://linear.app/rosscomm/issue/ROS-65/plan-of-attack-taylors-golden-rule-binder-review-starts-mon-oct-19",
@@ -88,17 +284,26 @@
       "allowNote": true,
       "status": "open",
       "options": [
-        { "id": "A", "label": "Appoint the alternate in writing under the KDHE rules" },
-        { "id": "B", "label": "Hold binder section A until Taylor names someone" },
-        { "id": "C", "label": "Still unnamed" }
-      ]
+        {
+          "id": "A",
+          "label": "Appoint the alternate in writing under the KDHE rules"
+        },
+        {
+          "id": "B",
+          "label": "Hold binder section A until Taylor names someone"
+        },
+        {
+          "id": "C",
+          "label": "Still unnamed"
+        }
+      ],
+      "id": "gr-alt-admin",
+      "title": "Alternate administrator"
     },
     {
-      "id": "gr-employment-pay",
       "section": "",
-      "title": "Employment model and pay basics",
       "gloss": "W-2 or contractors, plus the pay blanks. This blocks binder sections E and M.",
-      "prompt": "Decide between W-2 employees and contractors. Contractors require a contract staff policy, and the Oct 8 brief advised 1099 caregivers are hard to defend. Also needed: pay ranges, workweek, pay frequency, breaks, travel time between clients, and mileage. All blank. This blocks binder sections E and M. Due from Lance with Taylor by Tue Oct 20. Owner: Taylor. Source: Golden Rule pre-review, Oct 15, 2026.",
+      "prompt": "Decide between W-2 employees and contractors. Contractors require a contract staff policy, and the Oct. 8 brief advised that 1099 caregivers are hard to defend. Also needed: pay ranges, workweek, pay frequency, breaks, travel time between clients, and mileage. Those are still blank. This blocks binder sections E and M. Owner: Taylor.",
       "owner": "Taylor",
       "leftOff": "Pay ranges, workweek, pay frequency, breaks, travel time, and mileage are blank.",
       "where": "Blocks binder sections E and M.",
@@ -108,17 +313,26 @@
       "allowNote": true,
       "status": "open",
       "options": [
-        { "id": "A", "label": "W-2 employees" },
-        { "id": "B", "label": "Contractors, with a contract staff policy" },
-        { "id": "C", "label": "Hold sections E and M until pay basics are filled in" }
-      ]
+        {
+          "id": "A",
+          "label": "W-2 employees"
+        },
+        {
+          "id": "B",
+          "label": "Contractors, with a contract staff policy"
+        },
+        {
+          "id": "C",
+          "label": "Hold sections E and M until pay basics are filled in"
+        }
+      ],
+      "id": "gr-employment-pay",
+      "title": "Employment model and pay basics"
     },
     {
-      "id": "gr-scope-license",
       "section": "",
-      "title": "Service scope and license status",
       "gloss": "Where help after surgery stops, what stays unlicensed, license status, and the effective date.",
-      "prompt": "Confirm where help after surgery stops (no nursing, no medication set-up), how concierge and downsizing stay separate from licensed care, whether a KDHE license is held or pending, and the policy effective date. Due from Lance with Taylor by Tue Oct 20. Owner: Taylor. Source: Golden Rule pre-review, Oct 15, 2026.",
+      "prompt": "Confirm where help after surgery stops (no nursing, no medication set-up), how concierge and downsizing stay separate from licensed care, whether a KDHE license is held or pending, and the policy effective date. Still open. Owner: Taylor.",
       "owner": "Taylor",
       "leftOff": "Scope, license status, and the policy effective date are open.",
       "where": "Help after surgery, concierge, and downsizing.",
@@ -128,10 +342,21 @@
       "allowNote": true,
       "status": "open",
       "options": [
-        { "id": "A", "label": "KDHE license is held" },
-        { "id": "B", "label": "KDHE license is pending" },
-        { "id": "C", "label": "Scope or effective date still open" }
-      ]
+        {
+          "id": "A",
+          "label": "KDHE license is held"
+        },
+        {
+          "id": "B",
+          "label": "KDHE license is pending"
+        },
+        {
+          "id": "C",
+          "label": "Scope or effective date still open"
+        }
+      ],
+      "id": "gr-scope-license",
+      "title": "Service scope and license status"
     }
   ]
 }

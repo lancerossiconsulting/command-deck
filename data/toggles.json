@@ -1,100 +1,95 @@
 {
-  "updatedAt": "2026-10-15T23:40:00.000Z",
+  "updatedAt": "2026-10-23T22:14:00.000Z",
   "groups": [
     {
       "id": "golden-rule-binder",
       "title": "Golden Rule binder",
-      "lead": "Decisions due from Lance with Taylor by Tue Oct 20.",
+      "lead": "Cleared pieces are staged for tonight's email to Taylor.",
       "items": [
         {
-          "id": "grb-kickoff",
-          "title": "Mon Oct 19: kickoff, 30 minutes. Confirm the table of contents and send Taylor the decision list. Owner: Lance.",
-          "issues": [
-            {
-              "id": "ROS-65",
-              "url": "https://linear.app/rosscomm/issue/ROS-65/plan-of-attack-taylors-golden-rule-binder-review-starts-mon-oct-19"
-            }
-          ]
+          "id": "grb-cleared",
+          "title": "Cleared by Editor, staged for tonight's email to Taylor.",
+          "detail": "Section C, organization and staffing. Section D, hiring and personnel, including driver verification. Section I, training and supervision. Lifting assistance equipment sheet. Lifting products buyer's comparison. Alternate administrator job description. Attorney options sheet. Binder overview. Questions for Taylor meeting notes. Background check brief."
         },
         {
-          "id": "grb-block-1",
-          "title": "Mon Oct 19 to Tue Oct 20: Block 1, client rights, abuse/neglect/exploitation (ANE), and client records (sections F, J, K). Writer drafts, Editor checks.",
-          "issues": [
-            {
-              "id": "ROS-65",
-              "url": "https://linear.app/rosscomm/issue/ROS-65/plan-of-attack-taylors-golden-rule-binder-review-starts-mon-oct-19"
-            }
-          ]
+          "id": "grb-a",
+          "title": "A. Governing body. Partial draft. Can finish with the appendix.",
+          "detail": "Filing waits on the alternate administrator name. The job description is drafted, with the driving and insurance requirement, and is ready for Taylor to share with Joslyn and Haley. Taylor has not named anyone yet. Taylor still has 7 decisions in this section."
         },
         {
-          "id": "grb-block-2",
-          "title": "Tue Oct 20 to Wed Oct 21: Block 2, client services and medications (G), with help after surgery bracketed. Writer, then Editor.",
-          "issues": [
-            {
-              "id": "ROS-65",
-              "url": "https://linear.app/rosscomm/issue/ROS-65/plan-of-attack-taylors-golden-rule-binder-review-starts-mon-oct-19"
-            }
-          ]
+          "id": "grb-b",
+          "title": "B. Administration. Partial draft. Can finish with the appendix.",
+          "detail": "Filing waits on the alternate administrator name. Taylor still has 12 decisions. 1 item to verify."
         },
         {
-          "id": "grb-block-3",
-          "title": "Wed Oct 21 to Thu Oct 22: Block 3, hiring, training and supervision, on-call, and staffing (D, I, H, C). Writer, then Editor.",
-          "issues": [
-            {
-              "id": "ROS-65",
-              "url": "https://linear.app/rosscomm/issue/ROS-65/plan-of-attack-taylors-golden-rule-binder-review-starts-mon-oct-19"
-            }
-          ]
+          "id": "grb-c",
+          "title": "C. Organization and staffing. Cleared.",
+          "detail": "Taylor's answers were written in on Oct. 23. Editor cleared it. Lance set it Oct. 23. Revised copy goes to Taylor Oct. 23. Taylor still has 3 decisions. 1 item to verify."
         },
         {
-          "id": "grb-block-4",
-          "title": "Thu Oct 22 to Fri Oct 23: Block 4, handbook and non-licensed services (M, L), with pay items bracketed. Writer, then Editor.",
-          "issues": [
-            {
-              "id": "ROS-65",
-              "url": "https://linear.app/rosscomm/issue/ROS-65/plan-of-attack-taylors-golden-rule-binder-review-starts-mon-oct-19"
-            }
-          ]
+          "id": "grb-d",
+          "title": "D. Hiring and personnel. Cleared, including driver verification.",
+          "detail": "Taylor's answers were written in on Oct. 23, and D-11 driver verification was added. Editor cleared it. Lance set it Oct. 23. Revised copy goes to Taylor Oct. 23, and D-11 follows with the next email. The background check part stays as it is until Lance answers the two questions in the cleared brief. Taylor still has 4 decisions. 5 items to verify."
         },
         {
-          "id": "grb-block-5",
-          "title": "Week of Oct 26: Block 5, governing body, administration, and contracts (A, B, E) once Taylor decides. Writer, then Editor.",
-          "issues": [
-            {
-              "id": "ROS-65",
-              "url": "https://linear.app/rosscomm/issue/ROS-65/plan-of-attack-taylors-golden-rule-binder-review-starts-mon-oct-19"
-            }
-          ]
+          "id": "grb-e",
+          "title": "E. Contracts. Blocked.",
+          "detail": "Needs the employee or contractor call. Taylor still has 1 decision. 1 item to verify."
         },
         {
-          "id": "grb-legal",
-          "title": "Ongoing: legal verify list. Owner: Lance.",
-          "issues": [
-            {
-              "id": "ROS-65",
-              "url": "https://linear.app/rosscomm/issue/ROS-65/plan-of-attack-taylors-golden-rule-binder-review-starts-mon-oct-19"
-            }
-          ]
+          "id": "grb-f",
+          "title": "F. Abuse, neglect, and exploitation. Cleared.",
+          "detail": "Revised from Taylor's notes. Editor cleared it. Lance approved it Oct. 21. Taylor replied Oct. 20. Staged for legal review once the full packet is complete. Taylor still has 1 decision. 1 item to verify."
+        },
+        {
+          "id": "grb-g",
+          "title": "G. Client services. Cleared.",
+          "detail": "Taylor's answers are in, and the manager does the assessment. Editor cleared it. Lance sent it Oct. 21. Taylor replied Oct. 21. Still open: visit log, assessment form, mileage, and money log signature. The G-5 assessment form is still to draft. Taylor still has 4 decisions. 2 items to verify."
+        },
+        {
+          "id": "grb-h",
+          "title": "H. On-call. Cleared.",
+          "detail": "Call-back times and the schedule are set. Editor cleared it, and the table is fixed. Lance set it Oct. 22. Taylor replied Oct. 21. It is a meeting topic. Taylor still has 1 decision."
+        },
+        {
+          "id": "grb-i",
+          "title": "I. Training and supervision. Cleared.",
+          "detail": "Taylor's answers were written in on Oct. 23. Editor cleared it. Lance set it Oct. 23. Revised copy goes to Taylor Oct. 23. Taylor still has 1 decision."
+        },
+        {
+          "id": "grb-j",
+          "title": "J. Client records. Cleared.",
+          "detail": "Revised, and charting tiers were added. Editor cleared it. Lance approved it Oct. 21. Taylor has not seen the tier review paragraph. Staged for legal review. Legal question 1 is open. Taylor still has 7 decisions. 2 items to verify."
+        },
+        {
+          "id": "grb-k",
+          "title": "K. Client rights. Cleared.",
+          "detail": "Revised, and Appendix K-A was added. Editor cleared it. Lance approved it Oct. 21. Taylor replied Oct. 20. Staged for legal review once the full packet is complete. Taylor still has 1 decision."
+        },
+        {
+          "id": "grb-l",
+          "title": "L. Non-licensed services. Blocked.",
+          "detail": "The rewrite waits on legal question 1. Lance sent it Oct. 21. Taylor replied Oct. 21 and wants mixed visits on one invoice. Taylor still has 1 decision. 1 item to verify."
+        },
+        {
+          "id": "grb-m",
+          "title": "M. Employee handbook. Partial draft.",
+          "detail": "Still to draft. Taylor still has 16 decisions. 7 items to verify."
+        },
+        {
+          "id": "grb-next",
+          "title": "Next: cover email, then Lance sends.",
+          "detail": "Writer and Editor finish the cover email and the revised copies. Lance approves the package in order and sends it himself. Still to draft: governing body, administration, contracts, the employee handbook, and the assessment form. Taylor meeting Wednesday, Oct. 28, 11:30 a.m. to 12:30 p.m. CT. Full binder draft is still due Friday, Oct. 30."
         },
         {
           "id": "grb-pdf",
-          "title": "Fri Oct 30: full draft assembled as a branded PDF. Owner: Digital Production.",
-          "issues": [
-            {
-              "id": "ROS-65",
-              "url": "https://linear.app/rosscomm/issue/ROS-65/plan-of-attack-taylors-golden-rule-binder-review-starts-mon-oct-19"
-            }
-          ]
+          "title": "Friday, Oct. 30: full draft assembled as a branded PDF.",
+          "detail": "Owner: Digital Production. The full binder draft is still due that day."
         },
         {
-          "id": "grb-send-fix",
-          "title": "Mon Oct 19: survey send button fix. Owner: Coder.",
-          "issues": [
-            {
-              "id": "ROS-65",
-              "url": "https://linear.app/rosscomm/issue/ROS-65/plan-of-attack-taylors-golden-rule-binder-review-starts-mon-oct-19"
-            }
-          ]
+          "id": "grb-legal",
+          "title": "Legal review waits on the full packet.",
+          "detail": "Abuse and neglect, client records, and client rights are staged for legal review once the full packet is complete. Owner: Lance."
         }
       ]
     },
@@ -117,7 +112,7 @@
         {
           "id": "ros-28",
           "title": "Golden Rule",
-          "detail": "The intake survey is live, and Taylor's answers are due today or tomorrow. KDHE intake form: not started, waiting on an order.",
+          "detail": "Binder sections are in review. Cleared pieces are staged for tonight's email to Taylor. The full draft is still due Friday, Oct. 30.",
           "issues": [
             {
               "id": "ROS-28",
@@ -128,7 +123,7 @@
         {
           "id": "ros-27",
           "title": "Command Deck",
-          "detail": "The Weekly Sync confirm-to-Linear test happens before Wed and needs Lance's Linear key. The root cause of the lost Oct 7 picks is found. Toggles are live, and Generate report (to Lance's consulting Outlook) is planned. Morgan signs off.",
+          "detail": "Data updates only. The Deck redesign is on hold under the binder-only order. No new builds without Lance's approval.",
           "issues": [
             {
               "id": "ROS-27",
@@ -142,8 +137,8 @@
         },
         {
           "id": "ros-31",
-          "title": "Logo directions",
-          "detail": "Ready for Lance's pick. Each comes in color, navy, and white on dark, and A is Split Pillar. The brand guide (ROS-32) and business cards (ROS-33) follow the primary logo.",
+          "title": "Branding",
+          "detail": "Digital Production delivered three branding options and short guides to Lance's chat. Editor cleared them at 5:03 p.m. Digital Production recommends Option B. The paid image tool plan only matters if Lance picks Option C. After the pick, he chooses a logo designer.",
           "issues": [
             {
               "id": "ROS-31",
@@ -220,6 +215,61 @@
               "url": "https://linear.app/rosscomm/issue/ROS-39/connect-writer-to-lances-zotero-library"
             }
           ]
+        }
+      ]
+    },
+    {
+      "id": "billing",
+      "title": "Billing",
+      "lead": "First invoice is paid. Retainer is $200 on the 20th.",
+      "items": [
+        {
+          "id": "bill-invoice",
+          "title": "Golden Rule invoice $129.03 for Oct. 12 to 31. Sent and paid."
+        },
+        {
+          "id": "bill-retainer",
+          "title": "$200 retainer is due the 20th of each month. Next one is Dec. 20.",
+          "detail": "Confirm the first full $200 covers November and is due Dec. 20."
+        },
+        {
+          "id": "bill-ar",
+          "title": "Accounts Receivable is a new bot.",
+          "detail": "Due-date checks run on the 13th and the 21st. The next check is Nov. 13. Nothing is due this week."
+        }
+      ]
+    },
+    {
+      "id": "bots",
+      "title": "Bots",
+      "lead": "Binder-only order. Data updates only.",
+      "items": [
+        {
+          "id": "bot-hold",
+          "title": "Ops Planner, Market Scout, and Onboarder are on hold.",
+          "detail": "They stay on hold under the binder-only order. Onboarder resumes grading and orients Accounts Receivable once Taylor's package ships."
+        },
+        {
+          "id": "bot-morgan",
+          "title": "Morgan's five routines are paused.",
+          "detail": "The morning firm brief, the usage forecast, the Weekly Sync cue, the monthly LPD essay cue, and the Friday requisition review."
+        },
+        {
+          "id": "bot-coder",
+          "title": "Coder is on data updates only.",
+          "detail": "The survey send-button fix, the Deck redesign, and the survey autosave change are on hold under the binder-only order. No new builds without Lance's approval."
+        }
+      ]
+    },
+    {
+      "id": "grants",
+      "title": "Grants",
+      "lead": "Ready to walk through. Due Nov. 18.",
+      "items": [
+        {
+          "id": "grant-kdhe",
+          "title": "KDHE transportation grant research is ready for Lance.",
+          "detail": "Due Nov. 18, noon CT. Ready to walk through whenever he asks. No drafting until he says go."
         }
       ]
     },
@@ -310,7 +360,7 @@
         },
         {
           "id": "park-pms",
-          "title": "Practice Management System (P-ROS-3).",
+          "title": "Practice Management System.",
           "parked": true
         },
         {

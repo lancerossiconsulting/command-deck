@@ -130,7 +130,7 @@ h1.mark b { color: var(--fire); font-weight: 600; }
   scroll-padding-top: calc(var(--nav-h) + var(--safe-top) + 8px);
   scroll-padding-bottom: calc(var(--tab-h) + var(--safe-bot) + 12px);
 }
-#deconflict, #proj-cards, #dispatch-block, #bible-block, #cap-block, #install-block, #vantage-block, #plans-work, #weekly-sync, #priorities, #sources, #weekly-sync .ditem {
+#deconflict, #proj-cards, #dispatch-block, #bible-block, #cap-block, #install-block, #vantage-block, #plans-work, #weekly-sync, #priorities, #next-week, #sources, #weekly-sync .ditem {
   scroll-margin-top: calc(var(--nav-h) + var(--safe-top) + 12px);
 }
 
@@ -709,6 +709,14 @@ html.conserve .dimmable { opacity: .45; }
             <p class="subline"><span class="place">Manhattan, KS</span><span class="wx"><span id="wx-ico" aria-hidden="true"></span><span class="txt" id="wx-txt">Wiring…</span></span></p>
           </div>
         </div>
+        <article class="card" id="next-week">
+          <div class="cardhead" style="cursor:default">
+            <span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14"><circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="1.6" fill="currentColor"/></svg></span>
+            <span class="name" id="next-week-name">Next week: options and decisions</span>
+          </div>
+          <div id="next-week-body"></div>
+        </article>
+
         <article class="card" id="priorities">
           <div class="cardhead" style="cursor:default">
             <span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14"><path d="M4 2.5h5.2L12.5 5.8V13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M9 2.6V6h3.4M5.2 8.2h5.2M5.2 10.6h3.4" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
@@ -1047,16 +1055,16 @@ const PROJECTS = [
   { id: 'rossi-kitchen', name: 'Rossi Kitchen', short: 'KITCHEN', owner: 'personal', kind: 'slot',
     desc: 'Reserved personal slot. No link is wired yet.' },
   { id: 'meta-muse', name: 'Meta Muse', short: 'MUSE', owner: 'personal', kind: 'backlog',
-    desc: 'Facebook Marketplace chachkie sale. Backlog placeholder (ROS-23). No work until Lance calls it.',
-    link: 'https://linear.app/rosscomm/issue/ROS-23/placeholder-meta-muse-fb-marketplace-chachkie-sale', linkLabel: 'ROS-23' },
+    desc: 'Facebook Marketplace chachkie sale. Backlog placeholder. No work until Lance calls it.',
+    link: 'https://linear.app/rosscomm/issue/ROS-23/placeholder-meta-muse-fb-marketplace-chachkie-sale', linkLabel: 'Linear' },
   { id: 'who-picks-up', name: 'Who Picks Up the Phone', short: 'ESSAY', owner: 'firm', firmOwner: '', kind: 'progress', needsDecision: false,
     statusLabel: 'Publishing on hold',
     desc: 'Review the Who Picks Up the Phone redraft PDF (publishing on hold).',
-    link: 'https://linear.app/rosscomm/issue/ROS-16/who-picks-up-the-phone-essay-package-wed-lance-handoff', linkLabel: 'ROS-16' },
+    link: 'https://linear.app/rosscomm/issue/ROS-16/who-picks-up-the-phone-essay-package-wed-lance-handoff', linkLabel: 'Linear' },
   { id: 'golden-rule', name: 'Golden Rule', short: 'GOLDEN', owner: 'firm', firmOwner: '', kind: 'active', needsDecision: false,
-    desc: 'The intake survey is live, and Taylor\'s answers are due today or tomorrow. KDHE intake form: not started, waiting on an order.',
+    desc: 'Cleared binder sections are staged for tonight\'s email to Taylor. The full draft is still due Friday, Oct. 30.',
     preview: 'https://splendid-babka-8804a1.netlify.app',
-    link: 'https://linear.app/rosscomm/issue/ROS-28/golden-rule-intake-survey-one-question-at-a-time-form-for-kdhe-agency', linkLabel: 'ROS-28' }
+    link: 'https://linear.app/rosscomm/issue/ROS-28/golden-rule-intake-survey-one-question-at-a-time-form-for-kdhe-agency', linkLabel: 'Linear' }
 ];
 /* DECK DATA END */
 
@@ -2841,6 +2849,41 @@ function renderToggles(){
     g.items.forEach((item) => list.appendChild(boardRow(item, g.switches)));
   });
 }
+let nextWeekState = 'loading';
+function renderNextWeek(data){
+  const name = document.getElementById('next-week-name');
+  const body = document.getElementById('next-week-body');
+  if (!name || !body) return;
+  const title = data && typeof data.title === 'string' && data.title.trim()
+    ? data.title.trim()
+    : 'Next week: options and decisions';
+  name.textContent = title;
+  clear(body);
+  if (nextWeekState === 'error') {
+    body.appendChild(el('p', 'empty', "This list didn't load."));
+    return;
+  }
+  const text = data && typeof data.text === 'string' ? data.text : '';
+  if (!text) return;
+  const p = el('p', 'gloss');
+  text.replace(/\r\n/g, '\n').split('\n').forEach((line, i) => {
+    if (i) p.appendChild(document.createElement('br'));
+    p.appendChild(document.createTextNode(line));
+  });
+  body.appendChild(p);
+}
+async function loadNextWeek(){
+  try {
+    const r = await fetchTimeout('./data/next-week.json', 5000);
+    if (!r.ok) throw new Error('status');
+    nextWeekState = 'ready';
+    renderNextWeek(await r.json());
+  } catch (e) {
+    if (nextWeekState === 'ready') return;
+    nextWeekState = 'error';
+    renderNextWeek(null);
+  }
+}
 async function loadToggles(){
   loadToggleOn();
   try {
@@ -3121,7 +3164,7 @@ window.addEventListener('hashchange', () => {
 });
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) { timers.forEach(clearInterval); timers = []; return; }
-  tick(); pollWeather(); pollLedger(); pollVantage(); pollVKS(); loadDecisions(); loadToggles(); loadPriorities(); loadMail(); loadCalendar(); startTimers();
+  tick(); pollWeather(); pollLedger(); pollVantage(); pollVKS(); loadDecisions(); loadToggles(); loadNextWeek(); loadPriorities(); loadMail(); loadCalendar(); startTimers();
 });
 
 buildProjects();
@@ -3151,6 +3194,7 @@ pollVantage();
 pollVKS();
 loadDecisions();
 loadToggles();
+loadNextWeek();
 loadPriorities();
 loadMail();
 loadCalendar();
