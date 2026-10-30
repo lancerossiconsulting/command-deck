@@ -175,6 +175,25 @@ h1.mark b { color: var(--fire); font-weight: 600; }
 }
 .aside.mute, .meta.mute { color: var(--ink-faint); }
 .chev { color: rgba(235,235,245,.3); font-size: 22px; font-weight: 400; line-height: 1; margin-left: 2px; }
+.gsec {
+  margin: 12px 0 2px;
+  font-size: 15px; font-weight: 600; letter-spacing: -0.01em; color: var(--ink-faint);
+}
+.gbody {
+  margin: 0 0 4px;
+  font-size: 17px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.35;
+  color: var(--ink); overflow-wrap: anywhere;
+}
+.gitem, .gchat {
+  display: flex; align-items: center; min-height: 44px; padding: 10px 0;
+  border-top: 0.5px solid var(--sep);
+  color: var(--cyan); font-size: 17px; font-weight: 600; letter-spacing: -0.02em;
+  line-height: 1.3; text-decoration: none; overflow-wrap: anywhere;
+}
+.gnote {
+  margin: 6px 0 8px;
+  font-size: 15px; line-height: 1.35; color: var(--ink-faint);
+}
 .empty { margin: 0; padding: 0 0 10px; color: var(--ink-mute); font-size: 15px; line-height: 1.35; }
 .pri-date { margin: 2px 0 8px; font-size: 17px; font-weight: 600; letter-spacing: -0.02em; }
 .pri-frame {
@@ -639,6 +658,33 @@ input[type=range] { width: 100%; accent-color: var(--fire); margin: 12px 0; }
     --safe-bot: 34px;
   }
 }
+@media (min-width: 1000px) {
+  #app.wg-wide {
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    border-radius: 0;
+    border: 0;
+    box-shadow: none;
+    --safe-top: 0px;
+    --safe-bot: 0px;
+  }
+  #app.wg-wide #view-groups .scroller {
+    width: 100%;
+    max-width: 1680px;
+    min-width: 0;
+    margin-left: auto;
+    margin-right: auto;
+    align-self: center;
+  }
+  #app.wg-wide #view-groups .groupgrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 12px;
+    margin: 0 16px;
+  }
+  #app.wg-wide #view-groups .groupgrid > .card { margin: 0; }
+}
 @media (prefers-reduced-motion: reduce) {
   .lockcard.shake { animation: none; }
 }
@@ -796,6 +842,14 @@ html.conserve .dimmable { opacity: .45; }
           </button>
         </article>
 
+        <article class="card" id="card-groups">
+          <button type="button" class="cardhead" data-go="groups">
+            <span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14"><circle cx="5.5" cy="5.2" r="1.7" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="10.7" cy="5.8" r="1.3" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M1.9 12.3c.4-2 1.8-3.1 3.6-3.1s3.2 1.1 3.6 3.1M9.2 9.4c1.3-.2 2.5.4 3.1 2.1" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+            <span class="name">Working Groups</span>
+            <span class="aside mute" id="groups-aside">1 group</span><span class="chev" aria-hidden="true">›</span>
+          </button>
+        </article>
+
         <article class="card" id="plans-work">
           <div class="cardhead" style="cursor:default">
             <span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14"><rect x="1.5" y="5" width="13" height="6" rx="3" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="5" cy="8" r="2" fill="currentColor"/></svg></span>
@@ -820,6 +874,13 @@ html.conserve .dimmable { opacity: .45; }
           <p class="dstatus" id="copy-picks-status"></p>
           <pre id="picks-out" hidden></pre>
         </article>
+      </div>
+    </section>
+
+    <section id="view-groups" class="view" aria-label="Working Groups" inert>
+      <div class="scroller">
+        <div class="viewhead"><h2>Working Groups</h2></div>
+        <div id="group-list" class="groupgrid"></div>
       </div>
     </section>
 
@@ -974,6 +1035,19 @@ html.conserve .dimmable { opacity: .45; }
 
 <script>
 'use strict';
+/* One entry per working group. folder is a OneDrive folder name, never a link. */
+const WORKING_GROUPS = [
+  {
+    name: 'Ops Coding',
+    members: ['Lance', 'Morgan', 'Coder'],
+    folder: 'Working Groups / Ops Coding',
+    chat: 'grokbot://app/v1/agent?id=93d9a6c0-29ac-4ebb-9188-b1a5a01afe23',
+    items: [
+      { title: 'Deck report button: build a styled report and email it', url: 'https://linear.app/rosscomm/issue/ROS-42' },
+      { title: 'Deck Working Groups page', url: 'https://linear.app/rosscomm/issue/ROS-47' }
+    ]
+  }
+];
 /* DECK DATA START. Phone surface.
    Personal is the default owner. A project is firm only when owner === "firm".
    firmOwner stays blank until a real person owns that work.
@@ -1090,6 +1164,7 @@ const WX_ICON = {
 };
 
 const TABS = ['home','mail','calendar','ledger','more'];
+const VIEWS = TABS.concat(['groups']);
 let mailItems = [];
 let mailState = 'loading';
 let mailRaw = '';
@@ -1246,11 +1321,13 @@ function tabFromHash(){
   let h = (location.hash || '#home').replace('#', '').toLowerCase();
   const alias = { projects: 'more', attention: 'mail', inbox: 'mail', today: 'calendar', agenda: 'calendar' };
   h = alias[h] || h;
-  return TABS.indexOf(h) >= 0 ? h : 'home';
+  return VIEWS.indexOf(h) >= 0 ? h : 'home';
 }
 function setTab(tab, opts){
   opts = opts || {};
-  if (TABS.indexOf(tab) < 0) tab = 'home';
+  if (VIEWS.indexOf(tab) < 0) tab = 'home';
+  const app = document.getElementById('app');
+  if (app) app.classList.toggle('wg-wide', tab === 'groups');
   document.querySelectorAll('.view').forEach((v) => {
     const on = v.id === 'view-' + tab;
     v.classList.toggle('on', on);
@@ -2957,6 +3034,70 @@ function startTimers(){
   ];
 }
 
+function httpUrl(url){
+  try {
+    const u = new URL(String(url || '').trim());
+    if (u.protocol !== 'https:' && u.protocol !== 'http:') return '';
+    return u.href;
+  } catch (e) { return ''; }
+}
+function chatUrl(url){
+  const raw = String(url || '').trim();
+  if (!/^grokbot:\/\//i.test(raw) || /[\s<>"']/.test(raw)) return '';
+  return raw;
+}
+function renderWorkingGroups(){
+  const groups = Array.isArray(WORKING_GROUPS) ? WORKING_GROUPS : [];
+  const aside = document.getElementById('groups-aside');
+  if (aside) aside.textContent = groups.length === 1 ? '1 group' : groups.length + ' groups';
+  const list = document.getElementById('group-list');
+  if (!list) return;
+  clear(list);
+  const icon = '<svg viewBox="0 0 16 16" width="14" height="14"><circle cx="5.5" cy="5.2" r="1.7" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="10.7" cy="5.8" r="1.3" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M1.9 12.3c.4-2 1.8-3.1 3.6-3.1s3.2 1.1 3.6 3.1M9.2 9.4c1.3-.2 2.5.4 3.1 2.1" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>';
+  groups.forEach((g) => {
+    if (!g || typeof g !== 'object') return;
+    const name = typeof g.name === 'string' && g.name.trim() ? g.name.trim() : 'Group';
+    const card = el('article', 'card');
+    const head = el('div', 'cardhead');
+    head.style.cursor = 'default';
+    const ico = el('span', 'ico');
+    ico.setAttribute('aria-hidden', 'true');
+    ico.innerHTML = icon;
+    head.appendChild(ico);
+    head.appendChild(el('span', 'name', name));
+    card.appendChild(head);
+
+    const members = Array.isArray(g.members) ? g.members.filter((m) => typeof m === 'string' && m.trim()).map((m) => m.trim()) : [];
+    card.appendChild(el('h3', 'gsec', 'Members'));
+    card.appendChild(el('p', 'gbody', members.length ? members.join(', ') : 'None'));
+
+    card.appendChild(el('h3', 'gsec', 'Folder'));
+    card.appendChild(el('p', 'gbody', typeof g.folder === 'string' && g.folder.trim() ? g.folder.trim() : 'None'));
+
+    card.appendChild(el('h3', 'gsec', 'Open items'));
+    (Array.isArray(g.items) ? g.items : []).forEach((it) => {
+      const title = it && typeof it.title === 'string' ? it.title.trim() : '';
+      const href = httpUrl(it && it.url);
+      if (!title || !href) return;
+      const a = el('a', 'gitem', title);
+      a.setAttribute('href', href);
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      card.appendChild(a);
+    });
+    card.appendChild(el('p', 'gnote', 'Coder keeps this list current.'));
+
+    const chat = chatUrl(g.chat);
+    if (chat) {
+      const a = el('a', 'gchat', 'Open the ' + name + ' chat');
+      a.setAttribute('href', chat);
+      card.appendChild(a);
+      card.appendChild(el('p', 'gnote', 'Opens in Grok Bot.'));
+    }
+    list.appendChild(card);
+  });
+}
+
 document.body.addEventListener('click', (e) => {
   const tabBtn = e.target.closest('[data-tab]');
   if (tabBtn && tabBtn.closest('.tabs')) { setTab(tabBtn.dataset.tab); return; }
@@ -3077,6 +3218,7 @@ document.addEventListener('visibilitychange', () => {
 });
 
 buildProjects();
+renderWorkingGroups();
 renderTodos();
 renderMail();
 renderAgenda();
