@@ -659,8 +659,7 @@ input[type=range] { width: 100%; accent-color: var(--fire); margin: 12px 0; }
   }
 }
 @media (min-width: 1000px) {
-  body { display: block; background: var(--bg); }
-  #app {
+  #app.wg-wide {
     width: 100%;
     height: 100vh;
     height: 100dvh;
@@ -670,19 +669,7 @@ input[type=range] { width: 100%; accent-color: var(--fire); margin: 12px 0; }
     --safe-top: 0px;
     --safe-bot: 0px;
   }
-  #view-home .scroller,
-  #view-mail .scroller,
-  #view-calendar .scroller,
-  #view-ledger .scroller,
-  #view-more .scroller {
-    width: 100%;
-    max-width: 760px;
-    min-width: 0;
-    margin-left: auto;
-    margin-right: auto;
-    align-self: center;
-  }
-  #view-groups .scroller {
+  #app.wg-wide #view-groups .scroller {
     width: 100%;
     max-width: 1680px;
     min-width: 0;
@@ -690,13 +677,13 @@ input[type=range] { width: 100%; accent-color: var(--fire); margin: 12px 0; }
     margin-right: auto;
     align-self: center;
   }
-  #view-groups .groupgrid {
+  #app.wg-wide #view-groups .groupgrid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
     gap: 12px;
     margin: 0 16px;
   }
-  #view-groups .groupgrid > .card { margin: 0; }
+  #app.wg-wide #view-groups .groupgrid > .card { margin: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   .lockcard.shake { animation: none; }
@@ -1339,6 +1326,8 @@ function tabFromHash(){
 function setTab(tab, opts){
   opts = opts || {};
   if (VIEWS.indexOf(tab) < 0) tab = 'home';
+  const app = document.getElementById('app');
+  if (app) app.classList.toggle('wg-wide', tab === 'groups');
   document.querySelectorAll('.view').forEach((v) => {
     const on = v.id === 'view-' + tab;
     v.classList.toggle('on', on);
@@ -3103,7 +3092,7 @@ function renderWorkingGroups(){
       const a = el('a', 'gchat', 'Open the ' + name + ' chat');
       a.setAttribute('href', chat);
       card.appendChild(a);
-      card.appendChild(el('p', 'gnote', 'Opens in the Grok Bot app.'));
+      card.appendChild(el('p', 'gnote', 'Opens in Grok Bot'));
     }
     list.appendChild(card);
   });
