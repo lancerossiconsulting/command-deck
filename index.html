@@ -3085,14 +3085,14 @@ function renderWorkingGroups(){
       a.rel = 'noopener noreferrer';
       card.appendChild(a);
     });
-    card.appendChild(el('p', 'gnote', 'Fixed list for now. It goes live once the Deck has a Linear key.'));
+    card.appendChild(el('p', 'gnote', 'Coder keeps this list current.'));
 
     const chat = chatUrl(g.chat);
     if (chat) {
       const a = el('a', 'gchat', 'Open the ' + name + ' chat');
       a.setAttribute('href', chat);
       card.appendChild(a);
-      card.appendChild(el('p', 'gnote', 'Opens in Grok Bot'));
+      card.appendChild(el('p', 'gnote', 'Opens in Grok Bot.'));
     }
     list.appendChild(card);
   });
