@@ -1,0 +1,9 @@
+# Matilda script for m8-health-conduct-safety
+# Voice: ElevenLabs Matilda
+# Target file: public/assets/audio/chapter-m8.mp3
+
+Never enter a client's home with symptoms of a contagious illness.
+
+You must be fever-free under 100 degrees Fahrenheit without fever reducers before returning. For flu or suspected flu, remain home at least 5 days if still contagious.
+
+If you are injured on duty, report it to the administrator the same day. Harassment is prohibited. Report concerns to the administrator or the alternate administrator. Retaliation for reporting is prohibited. Serious offenses can lead to immediate suspension or termination.

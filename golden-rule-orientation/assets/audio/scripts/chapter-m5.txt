@@ -1,0 +1,9 @@
+# Matilda script for m5-care-visits-breaks
+# Voice: ElevenLabs Matilda
+# Target file: public/assets/audio/chapter-m5.mp3
+
+During every visit, read the client's written assignment before starting care.
+
+Never attempt an unfamiliar task or medical equipment alone. Call the manager first. Document visit times and care provided in Section J.
+
+If the relief caregiver has not arrived and leaving would leave the client unsafe, call the administrator for direction before leaving. Rest breaks are paid. Meal periods are typically paid because caregivers are usually the sole provider on site; a meal is unpaid only when you are fully relieved of duty.

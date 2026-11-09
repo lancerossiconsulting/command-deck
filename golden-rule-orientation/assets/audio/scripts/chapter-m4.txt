@@ -1,0 +1,9 @@
+# Matilda script for m4-travel-mileage
+# Voice: ElevenLabs Matilda
+# Target file: public/assets/audio/chapter-m4.mp3
+
+Let's cover travel and mileage. Driving between clients during your shift is paid at your regular hourly wage.
+
+Home-to-first-client and last-client-to-home are normal commutes and are unpaid. For mid-shift travel, keep an accurate mileage log.
+
+The agency reimburses you at the IRS standard rate of 72.5 cents per mile. Tell your auto insurer that you use the vehicle for business, and give the administrator insurance proof.

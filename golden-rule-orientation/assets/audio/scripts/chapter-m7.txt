@@ -1,0 +1,9 @@
+# Matilda script for m7-gifts-media-boundaries
+# Voice: ElevenLabs Matilda
+# Target file: public/assets/audio/chapter-m7.mp3
+
+Professional boundaries protect you and our clients.
+
+Small tokens under ten dollars, like a seasonal card or cup of coffee, are acceptable. Decline all cash, loans, and valuable gifts every time.
+
+If a client or family asks you to take a photo, check with the administrator first. Do not take or share unauthorized images of clients or their homes. Marketing use needs a signed Section N release. Refer thrift, donation, or resale requests to the administrator.

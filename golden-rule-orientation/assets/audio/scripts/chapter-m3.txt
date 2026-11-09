@@ -1,0 +1,9 @@
+# Matilda script for m3-scheduling-punctuality
+# Voice: ElevenLabs Matilda
+# Target file: public/assets/audio/chapter-m3.mp3
+
+Check your schedule spreadsheet before each shift.
+
+If you are going to be late or cannot work, call the administrator at seven eight five, three two three, zero one zero four as soon as you know.
+
+For predictable absences, give at least 24 hours notice. For an unplanned call-out, aim for 4 to 6 hours. Two hours is the absolute minimum. If a sudden problem leaves less time, call right away. Missing a shift without calling results in a final warning.
