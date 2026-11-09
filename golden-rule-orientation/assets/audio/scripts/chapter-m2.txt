@@ -1,0 +1,9 @@
+# Matilda script for m2-employment-status
+# Voice: ElevenLabs Matilda
+# Target file: public/assets/audio/chapter-m2.mp3
+
+Let's review your employment status. At Golden Rule Home Care, all caregivers are W-2 agency employees, not independent 1099 contractors.
+
+Full-time status is 32 hours per week, and part-time is under 32 hours. All new caregivers complete a 90-day probation period.
+
+Our workweek runs Sunday through Saturday. Paychecks are issued bi-weekly on alternating Fridays for 26 pay periods per year. All mandatory training is paid time.

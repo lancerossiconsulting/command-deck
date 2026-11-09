@@ -1,0 +1,9 @@
+# Matilda script for m6-medication-reporting
+# Voice: ElevenLabs Matilda
+# Target file: public/assets/audio/chapter-m6.mp3
+
+If you see a medication concern or missed dose, call the manager right away.
+
+Never attempt to correct or alter medications yourself. Always remain within your supportive care scope.
+
+If you suspect abuse, neglect, or financial exploitation, act right away. Call 911 for danger. For agency-related concerns, call K-DADS at 1-800-842-0078, weekdays 8 a.m. to 5 p.m. After hours or for someone outside the agency, call the Kansas DCF 24-hour hotline. You do not need agency permission before making a report. File your report, then notify the administrator the same day.

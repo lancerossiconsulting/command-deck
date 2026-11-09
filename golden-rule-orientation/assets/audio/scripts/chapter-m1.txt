@@ -1,0 +1,9 @@
+# Matilda script for m1-welcome
+# Voice: ElevenLabs Matilda
+# Target file: public/assets/audio/chapter-m1.mp3
+
+Welcome to Golden Rule Home Care and Concierge Services. We are thrilled to have you join the Care Team in Manhattan, Kansas.
+
+You have chosen a path that requires immense compassion, patience, and heart. We are honored that you chose to share those gifts with us and the individuals we serve.
+
+This orientation video walks you through Section M of our Employee Handbook: how our day runs, how we protect our clients, and how we look after you.

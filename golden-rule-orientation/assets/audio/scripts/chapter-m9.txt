@@ -1,0 +1,9 @@
+# Matilda script for m9-resignation-acknowledgment
+# Voice: ElevenLabs Matilda
+# Target file: public/assets/audio/chapter-m9.mp3
+
+You have finished the video orientation for Golden Rule Home Care. Employment with the agency is at-will.
+
+When resigning, the agency requests 21 days notice to ensure smooth client transitions. Earned wages are always paid on the next regular payday.
+
+Please complete your Section M-18 employee acknowledgment below. You can print a completion certificate for your personnel file. Thank you for joining the Care Team.
