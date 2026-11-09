@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Concierge services | Golden Rule</title>
+<meta name="robots" content="noindex">
+<style>
+  :root {
+    --bg: #f7f5f0;
+    --text: #1d2b3a;
+    --gold: #C5A46D;
+    --card: #ffffff;
+    --border: #ddd;
+    --muted: #667;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+  main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 28px 18px 56px;
+  }
+  .logo {
+    display: block;
+    max-width: 200px;
+    width: 100%;
+    height: auto;
+    margin: 0 0 12px;
+  }
+  .eyebrow {
+    color: var(--gold);
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
+    margin: 0 0 4px;
+  }
+  h1 {
+    font-size: 1.7rem;
+    margin: 0 0 6px;
+    font-weight: normal;
+  }
+  .biz {
+    color: var(--muted);
+    margin: 0 0 18px;
+    font-size: 0.98rem;
+  }
+  .intro {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin: 0 0 22px;
+  }
+  .intro p { margin: 0; }
+  fieldset.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin: 0 0 14px;
+    padding: 16px 18px 18px;
+  }
+  legend {
+    padding: 0;
+    font-size: 1.05rem;
+    float: left;
+    width: 100%;
+    margin: 0 0 12px;
+  }
+  legend + * { clear: both; }
+  .qnum {
+    color: var(--gold);
+    font-weight: bold;
+    margin-right: 4px;
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .choice {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid #e4e0d8;
+    border-radius: 6px;
+    background: #fbfaf7;
+    cursor: pointer;
+    min-height: 44px;
+  }
+  .choice input[type="checkbox"],
+  .choice input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+  .choice span { flex: 1; }
+  .other-line {
+    flex-direction: column;
+    gap: 6px;
+    cursor: default;
+  }
+  .other-label {
+    font-size: 0.95rem;
+  }
+  input[type="text"],
+  textarea {
+    width: 100%;
+    font: inherit;
+    color: var(--text);
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 10px 12px;
+    background: #fff;
+  }
+  textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+  .note {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--gold);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 8px 0 22px;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .note p { margin: 0; }
+  .actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+  button[type="submit"] {
+    appearance: none;
+    border: none;
+    background: var(--text);
+    color: #fff;
+    font: inherit;
+    font-size: 1.05rem;
+    padding: 14px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    min-height: 48px;
+  }
+  button[type="submit"]:hover {
+    background: #152232;
+  }
+  .skip-hint {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin: 0;
+    text-align: center;
+  }
+  .honey {
+    position: absolute;
+    left: -9999px;
+    height: 0;
+    overflow: hidden;
+  }
+</style>
+</head>
+<body>
+<main>
+  <img class="logo" src="./logo.png" alt="Golden Rule Home Care and Concierge Services">
+  <p class="eyebrow">Policy questions</p>
+  <h1>Concierge services</h1>
+  <p class="biz">Golden Rule Home Care & Concierge Services LLC</p>
+
+  <div class="intro">
+    <p>These questions help write the concierge part of the policies so it matches how you want that side of the business to run. Concierge is the work outside licensed home assistance. Skip anything you are not ready to answer. Nothing new will be added to the binder until you name it.</p>
+  </div>
+
+  <form method="POST" action="https://formsubmit.co/lance.rossi.consulting@gmail.com">
+    <input type="hidden" name="_subject" value="Golden Rule concierge survey">
+    <input type="hidden" name="_template" value="table">
+    <input type="hidden" name="_next" value="https://lancerossiconsulting.github.io/command-deck/golden-rule-concierge-survey/thanks.html">
+    <input type="hidden" name="_captcha" value="false">
+    <div class="honey" aria-hidden="true">
+      <label>Leave blank <input type="text" name="_honey" tabindex="-1" autocomplete="off"></label>
+    </div>
+
+      <fieldset class="card" id="q1">
+        <legend><span class="qnum">1.</span> Which of these should count as concierge services? Check all that apply.</legend>
+        <div class="options">
+          <label class="choice">
+            <input type="checkbox" name="01 Which of these should count as concierge services? Check all that apply." value="Errands">
+            <span>Errands</span>
+          </label>
+          <label class="choice">
+            <input type="checkbox" name="01 Which of these should count as concierge services? Check all that apply." value="Catering pickup">
+            <span>Catering pickup</span>
+          </label>
+          <label class="choice">
+            <input type="checkbox" name="01 Which of these should count as concierge services? Check all that apply." value="Car service">
+            <span>Car service</span>
+          </label>
+          <label class="choice">
+            <input type="checkbox" name="01 Which of these should count as concierge services? Check all that apply." value="Organizing">
+            <span>Organizing</span>
+          </label>
+          <label class="choice">
+            <input type="checkbox" name="01 Which of these should count as concierge services? Check all that apply." value="Downsizing">
+            <span>Downsizing</span>
+          </label>
+          <label class="choice">
+            <input type="checkbox" name="01 Which of these should count as concierge services? Check all that apply." value="Transition support">
+            <span>Transition support</span>
+          </label>
+          <label class="choice">
+            <input type="checkbox" name="01 Which of these should count as concierge services? Check all that apply." value="Communication with adult children">
+            <span>Communication with adult children</span>
+          </label>
+          <label class="choice other-line">
+            <span class="other-label">Something else (please name it)</span>
+            <input type="text" name="menu_other" autocomplete="off">
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="card" id="q2">
+        <legend><span class="qnum">2.</span> Licensed home assistance already includes transportation and errands and shopping for the client. In your own words, when is a ride or an errand home assistance, and when is it concierge?</legend>
+        <textarea name="02 Licensed home assistance already includes transportation and errands and shopping for the client. In your own words, when is a ride or an errand home assistance, and when is it concierge?" rows="5" autocomplete="off"></textarea>
+      </fieldset>
+
+      <fieldset class="card" id="q3">
+        <legend><span class="qnum">3.</span> Where does concierge work happen?</legend>
+        <div class="options">
+          <label class="choice">
+            <input type="radio" name="03 Where does concierge work happen?" value="In the client's home">
+            <span>In the client's home</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="03 Where does concierge work happen?" value="Outside the client's home">
+            <span>Outside the client's home</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="03 Where does concierge work happen?" value="Both">
+            <span>Both</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="card" id="q4">
+        <legend><span class="qnum">4.</span> Who can receive concierge services?</legend>
+        <div class="options">
+          <label class="choice">
+            <input type="radio" name="04 Who can receive concierge services?" value="Only people who already receive home assistance">
+            <span>Only people who already receive home assistance</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="04 Who can receive concierge services?" value="People who want concierge even if they do not receive home assistance">
+            <span>People who want concierge even if they do not receive home assistance</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="04 Who can receive concierge services?" value="Both">
+            <span>Both</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="card" id="q5">
+        <legend><span class="qnum">5.</span> Who should do the concierge work? Check all that apply.</legend>
+        <div class="options">
+          <label class="choice">
+            <input type="checkbox" name="05 Who should do the concierge work? Check all that apply." value="The same caregivers who provide home assistance">
+            <span>The same caregivers who provide home assistance</span>
+          </label>
+          <label class="choice">
+            <input type="checkbox" name="05 Who should do the concierge work? Check all that apply." value="Taylor">
+            <span>Taylor</span>
+          </label>
+          <label class="choice other-line">
+            <span class="other-label">Someone else (please name the role or person if you can)</span>
+            <input type="text" name="who_does_other" autocomplete="off">
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="card" id="q6">
+        <legend><span class="qnum">6.</span> Should anyone who does concierge work meet the same screening as a caregiver, including the background check?</legend>
+        <div class="options">
+          <label class="choice">
+            <input type="radio" name="06 Should anyone who does concierge work meet the same screening as a caregiver, including the background check?" value="Yes">
+            <span>Yes</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="06 Should anyone who does concierge work meet the same screening as a caregiver, including the background check?" value="No">
+            <span>No</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="06 Should anyone who does concierge work meet the same screening as a caregiver, including the background check?" value="Yes, but only when the work is in the client's home">
+            <span>Yes, but only when the work is in the client's home</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="06 Should anyone who does concierge work meet the same screening as a caregiver, including the background check?" value="__other__">
+            <span>Comment</span>
+          </label>
+          <label class="choice other-line">
+            <span class="other-label">Comment</span>
+            <input type="text" name="screening_other" autocomplete="off">
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="card" id="q7">
+        <legend><span class="qnum">7.</span> On Oct. 21 you said you do not want separate sessions or separate invoices, and that downsizing and caregiving are mixed in the same visit. You asked to "keep it simple, keep it together." Does that still hold?</legend>
+        <div class="options">
+          <label class="choice">
+            <input type="radio" name="07 On Oct. 21 you said you do not want separate sessions or separate invoices, and that downsizing and caregiving are mixed in the same visit. You asked to &quot;keep it simple, keep it together.&quot; Does that still hold?" value="Yes, keep mixed visits together whenever possible">
+            <span>Yes, keep mixed visits together whenever possible</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="07 On Oct. 21 you said you do not want separate sessions or separate invoices, and that downsizing and caregiving are mixed in the same visit. You asked to &quot;keep it simple, keep it together.&quot; Does that still hold?" value="Yes for work in the home; schedule out-of-home work separately">
+            <span>Yes for work in the home; schedule out-of-home work separately</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="07 On Oct. 21 you said you do not want separate sessions or separate invoices, and that downsizing and caregiving are mixed in the same visit. You asked to &quot;keep it simple, keep it together.&quot; Does that still hold?" value="No, I want concierge on its own sessions">
+            <span>No, I want concierge on its own sessions</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="07 On Oct. 21 you said you do not want separate sessions or separate invoices, and that downsizing and caregiving are mixed in the same visit. You asked to &quot;keep it simple, keep it together.&quot; Does that still hold?" value="__other__">
+            <span>Another way</span>
+          </label>
+          <label class="choice other-line">
+            <span class="other-label">Another way</span>
+            <input type="text" name="mixed_visits_other" autocomplete="off">
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="card" id="q8">
+        <legend><span class="qnum">8.</span> If a catering pickup or car service trip cannot share a visit with in-home care, how should that work be scheduled?</legend>
+        <div class="options">
+          <label class="choice">
+            <input type="radio" name="08 If a catering pickup or car service trip cannot share a visit with in-home care, how should that work be scheduled?" value="As its own appointment">
+            <span>As its own appointment</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="08 If a catering pickup or car service trip cannot share a visit with in-home care, how should that work be scheduled?" value="Added onto a home-assistance visit when the timing works">
+            <span>Added onto a home-assistance visit when the timing works</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="08 If a catering pickup or car service trip cannot share a visit with in-home care, how should that work be scheduled?" value="Either way, depending on the day">
+            <span>Either way, depending on the day</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="08 If a catering pickup or car service trip cannot share a visit with in-home care, how should that work be scheduled?" value="__other__">
+            <span>Another way</span>
+          </label>
+          <label class="choice other-line">
+            <span class="other-label">Another way</span>
+            <input type="text" name="out_of_home_schedule_other" autocomplete="off">
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="card" id="q9">
+        <legend><span class="qnum">9.</span> How should concierge work appear on the bill?</legend>
+        <div class="options">
+          <label class="choice">
+            <input type="radio" name="09 How should concierge work appear on the bill?" value="One invoice with home assistance, with separate line items">
+            <span>One invoice with home assistance, with separate line items</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="09 How should concierge work appear on the bill?" value="A separate invoice from home assistance">
+            <span>A separate invoice from home assistance</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="09 How should concierge work appear on the bill?" value="One invoice, with no separate line items">
+            <span>One invoice, with no separate line items</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="09 How should concierge work appear on the bill?" value="__other__">
+            <span>Another way</span>
+          </label>
+          <label class="choice other-line">
+            <span class="other-label">Another way</span>
+            <input type="text" name="billing_other" autocomplete="off">
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="card" id="q10">
+        <legend><span class="qnum">10.</span> How should concierge work be priced?</legend>
+        <div class="options">
+          <label class="choice">
+            <input type="radio" name="10 How should concierge work be priced?" value="Hourly">
+            <span>Hourly</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="10 How should concierge work be priced?" value="A flat fee per task">
+            <span>A flat fee per task</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="10 How should concierge work be priced?" value="The same rate as home assistance">
+            <span>The same rate as home assistance</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="10 How should concierge work be priced?" value="Hourly for mixed visits, and a flat fee for organizing-only work such as an estate cleanout">
+            <span>Hourly for mixed visits, and a flat fee for organizing-only work such as an estate cleanout</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="10 How should concierge work be priced?" value="__other__">
+            <span>Another way, and any rates you already use</span>
+          </label>
+          <label class="choice other-line">
+            <span class="other-label">Another way, and any rates you already use</span>
+            <input type="text" name="pricing_other" autocomplete="off">
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="card" id="q11">
+        <legend><span class="qnum">11.</span> How should notes on concierge work be kept?</legend>
+        <div class="options">
+          <label class="choice">
+            <input type="radio" name="11 How should notes on concierge work be kept?" value="In a separate file, not in the licensed client record">
+            <span>In a separate file, not in the licensed client record</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="11 How should notes on concierge work be kept?" value="In the same client record, clearly marked as concierge">
+            <span>In the same client record, clearly marked as concierge</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="11 How should notes on concierge work be kept?" value="Separate notes even when the visit also includes home assistance">
+            <span>Separate notes even when the visit also includes home assistance</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="11 How should notes on concierge work be kept?" value="__other__">
+            <span>Another way</span>
+          </label>
+          <label class="choice other-line">
+            <span class="other-label">Another way</span>
+            <input type="text" name="notes_other" autocomplete="off">
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="card" id="q12">
+        <legend><span class="qnum">12.</span> Should concierge errands and catering pickup follow the same money-handling steps already used for licensed errands (receipts, change, and a money log)?</legend>
+        <div class="options">
+          <label class="choice">
+            <input type="radio" name="12 Should concierge errands and catering pickup follow the same money-handling steps already used for licensed errands (receipts, change, and a money log)?" value="Yes">
+            <span>Yes</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="12 Should concierge errands and catering pickup follow the same money-handling steps already used for licensed errands (receipts, change, and a money log)?" value="No">
+            <span>No</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="12 Should concierge errands and catering pickup follow the same money-handling steps already used for licensed errands (receipts, change, and a money log)?" value="__other__">
+            <span>Yes, with this change</span>
+          </label>
+          <label class="choice other-line">
+            <span class="other-label">Yes, with this change</span>
+            <input type="text" name="money_other" autocomplete="off">
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="card" id="q13">
+        <legend><span class="qnum">13.</span> Should concierge car service follow the same driving and insurance rules already used for agency driving?</legend>
+        <div class="options">
+          <label class="choice">
+            <input type="radio" name="13 Should concierge car service follow the same driving and insurance rules already used for agency driving?" value="Yes">
+            <span>Yes</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="13 Should concierge car service follow the same driving and insurance rules already used for agency driving?" value="No">
+            <span>No</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="13 Should concierge car service follow the same driving and insurance rules already used for agency driving?" value="__other__">
+            <span>Yes, with this change</span>
+          </label>
+          <label class="choice other-line">
+            <span class="other-label">Yes, with this change</span>
+            <input type="text" name="driving_other" autocomplete="off">
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="card" id="q14">
+        <legend><span class="qnum">14.</span> How do you want to offer concierge services right now?</legend>
+        <div class="options">
+          <label class="choice">
+            <input type="radio" name="14 How do you want to offer concierge services right now?" value="Not advertised yet; offer them only when someone asks">
+            <span>Not advertised yet; offer them only when someone asks</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="14 How do you want to offer concierge services right now?" value="Offer them first to current home-assistance clients">
+            <span>Offer them first to current home-assistance clients</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="14 How do you want to offer concierge services right now?" value="Name them publicly">
+            <span>Name them publicly</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="14 How do you want to offer concierge services right now?" value="__other__">
+            <span>Another way</span>
+          </label>
+          <label class="choice other-line">
+            <span class="other-label">Another way</span>
+            <input type="text" name="offering_other" autocomplete="off">
+          </label>
+        </div>
+      </fieldset>
+
+    <div class="note">
+      <p>The check with KDHE, to confirm that offering these services under the same LLC does not affect the license, stays on the existing list. You do not need to answer that here.</p>
+    </div>
+
+    <div class="actions">
+      <button type="submit">Send answers</button>
+      <p class="skip-hint">Every question is optional. You can skip any you are not ready to answer.</p>
+    </div>
+  </form>
+</main>
+</body>
+</html>
