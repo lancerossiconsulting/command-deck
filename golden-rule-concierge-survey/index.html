@@ -110,6 +110,12 @@
   .other-label {
     font-size: 0.95rem;
   }
+  .other-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+  }
   input[type="text"],
   textarea {
     width: 100%;
@@ -173,7 +179,6 @@
 <body>
 <main>
   <img class="logo" src="./logo.png" alt="Golden Rule Home Care and Concierge Services">
-  <p class="eyebrow">Policy questions</p>
   <h1>Concierge services</h1>
   <p class="biz">Golden Rule Home Care & Concierge Services LLC</p>
 
@@ -302,12 +307,11 @@
             <input type="radio" name="06 Should anyone who does concierge work meet the same screening as a caregiver, including the background check?" value="Yes, but only when the work is in the client's home">
             <span>Yes, but only when the work is in the client's home</span>
           </label>
-          <label class="choice">
-            <input type="radio" name="06 Should anyone who does concierge work meet the same screening as a caregiver, including the background check?" value="__other__">
-            <span>Comment</span>
-          </label>
           <label class="choice other-line">
-            <span class="other-label">Comment</span>
+            <span class="other-head">
+              <input type="radio" name="06 Should anyone who does concierge work meet the same screening as a caregiver, including the background check?" value="__other__">
+              <span>Comment</span>
+            </span>
             <input type="text" name="screening_other" autocomplete="off">
           </label>
         </div>
@@ -328,12 +332,11 @@
             <input type="radio" name="07 On Oct. 21 you said you do not want separate sessions or separate invoices, and that downsizing and caregiving are mixed in the same visit. You asked to &quot;keep it simple, keep it together.&quot; Does that still hold?" value="No, I want concierge on its own sessions">
             <span>No, I want concierge on its own sessions</span>
           </label>
-          <label class="choice">
-            <input type="radio" name="07 On Oct. 21 you said you do not want separate sessions or separate invoices, and that downsizing and caregiving are mixed in the same visit. You asked to &quot;keep it simple, keep it together.&quot; Does that still hold?" value="__other__">
-            <span>Another way</span>
-          </label>
           <label class="choice other-line">
-            <span class="other-label">Another way</span>
+            <span class="other-head">
+              <input type="radio" name="07 On Oct. 21 you said you do not want separate sessions or separate invoices, and that downsizing and caregiving are mixed in the same visit. You asked to &quot;keep it simple, keep it together.&quot; Does that still hold?" value="__other__">
+              <span>Another way</span>
+            </span>
             <input type="text" name="mixed_visits_other" autocomplete="off">
           </label>
         </div>
@@ -354,12 +357,11 @@
             <input type="radio" name="08 If a catering pickup or car service trip cannot share a visit with in-home care, how should that work be scheduled?" value="Either way, depending on the day">
             <span>Either way, depending on the day</span>
           </label>
-          <label class="choice">
-            <input type="radio" name="08 If a catering pickup or car service trip cannot share a visit with in-home care, how should that work be scheduled?" value="__other__">
-            <span>Another way</span>
-          </label>
           <label class="choice other-line">
-            <span class="other-label">Another way</span>
+            <span class="other-head">
+              <input type="radio" name="08 If a catering pickup or car service trip cannot share a visit with in-home care, how should that work be scheduled?" value="__other__">
+              <span>Another way</span>
+            </span>
             <input type="text" name="out_of_home_schedule_other" autocomplete="off">
           </label>
         </div>
@@ -380,12 +382,11 @@
             <input type="radio" name="09 How should concierge work appear on the bill?" value="One invoice, with no separate line items">
             <span>One invoice, with no separate line items</span>
           </label>
-          <label class="choice">
-            <input type="radio" name="09 How should concierge work appear on the bill?" value="__other__">
-            <span>Another way</span>
-          </label>
           <label class="choice other-line">
-            <span class="other-label">Another way</span>
+            <span class="other-head">
+              <input type="radio" name="09 How should concierge work appear on the bill?" value="__other__">
+              <span>Another way</span>
+            </span>
             <input type="text" name="billing_other" autocomplete="off">
           </label>
         </div>
@@ -410,12 +411,11 @@
             <input type="radio" name="10 How should concierge work be priced?" value="Hourly for mixed visits, and a flat fee for organizing-only work such as an estate cleanout">
             <span>Hourly for mixed visits, and a flat fee for organizing-only work such as an estate cleanout</span>
           </label>
-          <label class="choice">
-            <input type="radio" name="10 How should concierge work be priced?" value="__other__">
-            <span>Another way, and any rates you already use</span>
-          </label>
           <label class="choice other-line">
-            <span class="other-label">Another way, and any rates you already use</span>
+            <span class="other-head">
+              <input type="radio" name="10 How should concierge work be priced?" value="__other__">
+              <span>Another way, and any rates you already use</span>
+            </span>
             <input type="text" name="pricing_other" autocomplete="off">
           </label>
         </div>
@@ -436,12 +436,11 @@
             <input type="radio" name="11 How should notes on concierge work be kept?" value="Separate notes even when the visit also includes home assistance">
             <span>Separate notes even when the visit also includes home assistance</span>
           </label>
-          <label class="choice">
-            <input type="radio" name="11 How should notes on concierge work be kept?" value="__other__">
-            <span>Another way</span>
-          </label>
           <label class="choice other-line">
-            <span class="other-label">Another way</span>
+            <span class="other-head">
+              <input type="radio" name="11 How should notes on concierge work be kept?" value="__other__">
+              <span>Another way</span>
+            </span>
             <input type="text" name="notes_other" autocomplete="off">
           </label>
         </div>
@@ -458,12 +457,11 @@
             <input type="radio" name="12 Should concierge errands and catering pickup follow the same money-handling steps already used for licensed errands (receipts, change, and a money log)?" value="No">
             <span>No</span>
           </label>
-          <label class="choice">
-            <input type="radio" name="12 Should concierge errands and catering pickup follow the same money-handling steps already used for licensed errands (receipts, change, and a money log)?" value="__other__">
-            <span>Yes, with this change</span>
-          </label>
           <label class="choice other-line">
-            <span class="other-label">Yes, with this change</span>
+            <span class="other-head">
+              <input type="radio" name="12 Should concierge errands and catering pickup follow the same money-handling steps already used for licensed errands (receipts, change, and a money log)?" value="__other__">
+              <span>Yes, with this change</span>
+            </span>
             <input type="text" name="money_other" autocomplete="off">
           </label>
         </div>
@@ -480,12 +478,11 @@
             <input type="radio" name="13 Should concierge car service follow the same driving and insurance rules already used for agency driving?" value="No">
             <span>No</span>
           </label>
-          <label class="choice">
-            <input type="radio" name="13 Should concierge car service follow the same driving and insurance rules already used for agency driving?" value="__other__">
-            <span>Yes, with this change</span>
-          </label>
           <label class="choice other-line">
-            <span class="other-label">Yes, with this change</span>
+            <span class="other-head">
+              <input type="radio" name="13 Should concierge car service follow the same driving and insurance rules already used for agency driving?" value="__other__">
+              <span>Yes, with this change</span>
+            </span>
             <input type="text" name="driving_other" autocomplete="off">
           </label>
         </div>
@@ -506,12 +503,11 @@
             <input type="radio" name="14 How do you want to offer concierge services right now?" value="Name them publicly">
             <span>Name them publicly</span>
           </label>
-          <label class="choice">
-            <input type="radio" name="14 How do you want to offer concierge services right now?" value="__other__">
-            <span>Another way</span>
-          </label>
           <label class="choice other-line">
-            <span class="other-label">Another way</span>
+            <span class="other-head">
+              <input type="radio" name="14 How do you want to offer concierge services right now?" value="__other__">
+              <span>Another way</span>
+            </span>
             <input type="text" name="offering_other" autocomplete="off">
           </label>
         </div>
@@ -523,7 +519,6 @@
 
     <div class="actions">
       <button type="submit">Send answers</button>
-      <p class="skip-hint">Every question is optional. You can skip any you are not ready to answer.</p>
     </div>
   </form>
 </main>
