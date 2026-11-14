@@ -383,6 +383,8 @@ ol.movements li strong {
 }
 .leader-link a { color: var(--muted); }
 
+.slide-deck img {display:block; width:100%; height:auto; margin: 0 0 1rem; border:1px solid #C4C4C4;}
+
 /* Desktop: sidebar + reading column, sized for about 960px viewport */
 @media (min-width: 760px) {
   .page {
@@ -415,7 +417,7 @@ ol.movements li strong {
 @media print {
   body { background: #fff; color: #000; font-size: 11pt; }
   .page { max-width: none; padding: 0; }
-  .week-nav, .pager-bar, .leader-link { display: none; }
+  .week-nav, .pager-bar, .leader-link, .slide-deck { display: none; }
   .layout { display: block; }
   a { color: inherit; text-decoration: none; }
   .copyright { color: #333; }
