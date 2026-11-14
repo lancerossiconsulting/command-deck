@@ -1,31 +1,36 @@
-/* Hardened Ground course supplement. Palette and rules follow the cleared PDF HTML. */
+/* Hardened Ground course supplement, restyled to the Westview Community Church kit.
+   Headings: Helvetica Neue system stack. Body: self-hosted Nunito Sans (SIL OFL).
+   Deep teal #149B9B for headings, rules, and links. Bright teal #63E8E7 for small accents only.
+   Charcoal #332C2B on white. Gray #C4C4C4 for soft rules. */
 
 @font-face {
-  font-family: "EB Garamond";
-  src: url("fonts/EBGaramond-VariableFont_wght.ttf") format("truetype");
-  font-weight: 400 800;
+  font-family: "Nunito Sans";
+  src: url("fonts/NunitoSans-VariableFont.ttf") format("truetype");
+  font-weight: 200 900;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "EB Garamond";
-  src: url("fonts/EBGaramond-Italic-VariableFont_wght.ttf") format("truetype");
-  font-weight: 400 800;
+  font-family: "Nunito Sans";
+  src: url("fonts/NunitoSans-Italic-VariableFont.ttf") format("truetype");
+  font-weight: 200 900;
   font-style: italic;
   font-display: swap;
 }
 
 :root {
-  --ink: #2c241c;
-  --heading: #3a2a1a;
-  --gold: #8a6a3a;
-  --rule: #b0803a;
-  --muted: #6a5a48;
-  --rule-soft: #d4c4a8;
-  --row: #f8f3ea;
-  --page: #fbf8f2;
-  --link: #6a4e28;
-  --link-hover: #3a2a1a;
+  --ink: #332C2B;
+  --heading: #149B9B;
+  --accent: #63E8E7;
+  --rule: #149B9B;
+  --rule-soft: #C4C4C4;
+  --muted: rgba(51, 44, 43, 0.68);
+  --page: #ffffff;
+  --row: #f5fbfb;
+  --link: #149B9B;
+  --link-hover: #0e7373;
+  --heading-font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --body-font: "Nunito Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -33,10 +38,10 @@
 html, body { margin: 0; padding: 0; }
 
 body {
-  font-family: "EB Garamond", Georgia, "Times New Roman", serif;
+  font-family: var(--body-font);
   font-size: 1.125rem;
   font-weight: 400;
-  line-height: 1.5;
+  line-height: 1.55;
   color: var(--ink);
   background: var(--page);
   hyphens: none;
@@ -45,40 +50,44 @@ body {
 a {
   color: var(--link);
   text-decoration-thickness: 1px;
-  text-underline-offset: 0.15em;
+  text-underline-offset: 0.18em;
 }
 a:hover { color: var(--link-hover); }
 a:focus-visible {
-  outline: 2px solid var(--rule);
-  outline-offset: 2px;
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
 .page {
   width: 100%;
   margin: 0 auto;
-  padding: 1.15rem 1.15rem 2.5rem;
+  padding: 1.5rem 1.35rem 3rem;
 }
 
 /* ----- Site header ----- */
 .site-header {
   text-align: center;
-  margin: 0 0 1.25rem;
-  padding-bottom: 0.15rem;
+  margin: 0 0 1.75rem;
+  padding-bottom: 0.2rem;
 }
 .site-header .kicker {
-  font-size: 0.78rem;
+  font-family: var(--heading-font);
+  font-size: 0.72rem;
+  font-weight: 700;
   font-variant: small-caps;
   letter-spacing: 0.16em;
-  color: var(--gold);
-  margin: 0 0 0.45em;
+  color: var(--heading);
+  margin: 0 0 0.7em;
 }
-.site-header h1, .site-header .course-title {
-  font-weight: 400;
+.site-header h1,
+.site-header .course-title {
+  font-family: var(--heading-font);
+  font-weight: 700;
   font-size: 2.05rem;
-  line-height: 1.1;
+  line-height: 1.15;
   margin: 0;
   color: var(--heading);
-  letter-spacing: 0.02em;
+  letter-spacing: -0.02em;
 }
 .site-header .course-title a,
 .site-header h1 a {
@@ -86,39 +95,42 @@ a:focus-visible {
   text-decoration: none;
 }
 .site-header .course-title a:hover,
-.site-header h1 a:hover { color: var(--link); }
+.site-header h1 a:hover { color: var(--link-hover); }
 
 .site-header .subtitle {
-  font-style: italic;
+  font-family: var(--heading-font);
+  font-style: normal;
   font-weight: 400;
-  font-size: 1.2rem;
-  color: var(--heading);
-  margin: 0.22em 0 0.45em;
+  font-size: 1.15rem;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin: 0.35em 0 0.55em;
 }
 .site-header .byline {
-  font-size: 0.92rem;
+  font-family: var(--heading-font);
+  font-size: 0.82rem;
+  font-weight: 700;
   font-variant: small-caps;
   letter-spacing: 0.12em;
-  color: var(--gold);
+  color: var(--heading);
   margin: 0;
 }
 .rule {
   width: 1.15in;
   border: none;
-  border-top: 1.2px solid var(--rule);
-  margin: 0.65em auto 0;
+  border-top: 1.5px solid var(--rule);
+  margin: 0.85em auto 0;
 }
 
-/* Compact header on week and leader pages */
 .site-header.compact h1,
-.site-header.compact .course-title { font-size: 1.55rem; }
-.site-header.compact .subtitle { font-size: 1.05rem; margin-bottom: 0.2em; }
-.site-header.compact { margin-bottom: 1rem; }
+.site-header.compact .course-title { font-size: 1.5rem; }
+.site-header.compact .subtitle { font-size: 1.02rem; margin-bottom: 0.25em; }
+.site-header.compact { margin-bottom: 1.25rem; }
 
 /* ----- Thread verse ----- */
 blockquote.thread {
-  margin: 0 auto 1.4rem;
-  padding: 0.15em 0 0;
+  margin: 0 auto 2rem;
+  padding: 0.2em 0 0;
   border: none;
   text-align: center;
   max-width: 36rem;
@@ -126,17 +138,19 @@ blockquote.thread {
 blockquote.thread p {
   font-style: italic;
   font-size: 1.15rem;
-  line-height: 1.4;
-  color: var(--heading);
-  margin: 0 0 0.3em;
+  line-height: 1.45;
+  color: var(--ink);
+  margin: 0 0 0.4em;
 }
 blockquote.thread cite {
   display: block;
+  font-family: var(--heading-font);
   font-style: normal;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
+  font-weight: 700;
   font-variant: small-caps;
   letter-spacing: 0.1em;
-  color: var(--gold);
+  color: var(--heading);
   margin: 0;
 }
 
@@ -144,17 +158,19 @@ blockquote.thread cite {
 .layout { display: block; }
 
 .week-nav {
-  margin: 0 0 1.4rem;
-  padding: 0.15rem 0 0.85rem;
-  border-top: 0.6px solid var(--rule-soft);
-  border-bottom: 0.6px solid var(--rule-soft);
+  margin: 0 0 1.75rem;
+  padding: 0.2rem 0 1rem;
+  border-top: 1px solid var(--rule-soft);
+  border-bottom: 1px solid var(--rule-soft);
 }
 .week-nav .nav-heading {
-  font-size: 0.78rem;
+  font-family: var(--heading-font);
+  font-size: 0.72rem;
+  font-weight: 700;
   font-variant: small-caps;
   letter-spacing: 0.14em;
-  color: var(--gold);
-  margin: 0.7rem 0 0.35rem;
+  color: var(--heading);
+  margin: 0.85rem 0 0.45rem;
 }
 .week-nav .resources,
 .week-nav .weeks-list,
@@ -167,21 +183,22 @@ blockquote.thread cite {
   display: flex;
   align-items: center;
   min-height: 44px;
-  padding: 0.45rem 0.35rem;
+  padding: 0.5rem 0.4rem;
   color: var(--ink);
   text-decoration: none;
-  border-bottom: 0.4px solid var(--rule-soft);
+  border-bottom: 1px solid var(--rule-soft);
 }
 .week-nav a:hover { color: var(--link); background: var(--row); }
 .week-nav a[aria-current="page"] {
   font-weight: 700;
   color: var(--heading);
-  border-left: 2px solid var(--rule);
-  padding-left: calc(0.35rem - 2px);
+  border-left: 3px solid var(--accent);
+  padding-left: calc(0.4rem - 3px);
 }
 .week-nav .resources a { color: var(--link); }
 .week-nav .wn {
-  color: var(--gold);
+  color: var(--heading);
+  font-family: var(--heading-font);
   font-weight: 700;
   display: inline-block;
   width: 1.5em;
@@ -190,191 +207,209 @@ blockquote.thread cite {
 
 main { min-width: 0; }
 
-/* Home sessions list */
 ul.weeks {
-  margin: 0.2em 0 1em;
+  margin: 0.3em 0 1.25em;
   padding: 0;
   list-style: none;
 }
 ul.weeks li {
   margin: 0;
-  border-bottom: 0.4px solid var(--rule-soft);
+  border-bottom: 1px solid var(--rule-soft);
 }
 ul.weeks li a {
   display: block;
-  padding: 0.7rem 0.15rem;
+  padding: 0.85rem 0.15rem;
   min-height: 44px;
   color: inherit;
   text-decoration: none;
-  line-height: 1.35;
+  line-height: 1.4;
 }
-ul.weeks li a:hover { background: var(--row); }
+ul.weeks li a:hover { background: var(--row); color: var(--ink); }
 ul.weeks li .wn {
-  color: var(--gold);
+  color: var(--heading);
+  font-family: var(--heading-font);
   font-weight: 700;
   display: inline-block;
   width: 1.35em;
 }
-ul.weeks li .wt { font-weight: 700; color: var(--heading); }
+ul.weeks li .wt {
+  font-family: var(--heading-font);
+  font-weight: 700;
+  color: var(--heading);
+}
 
 /* Prose from source */
 h2 {
+  font-family: var(--heading-font);
   font-size: 1.05rem;
   font-weight: 700;
   color: var(--heading);
-  letter-spacing: 0.03em;
-  border-bottom: 0.6px solid var(--rule);
-  padding: 0 0 0.15em;
-  margin: 1.25em 0 0.4em;
+  letter-spacing: -0.01em;
+  border-bottom: 1px solid var(--rule);
+  padding: 0 0 0.2em;
+  margin: 1.6em 0 0.55em;
 }
-h2:first-child { margin-top: 0.2em; }
+h2:first-child { margin-top: 0.25em; }
 
-p { margin: 0 0 0.75em; }
+p { margin: 0 0 0.9em; }
 
 ol.outcomes {
-  margin: 0.15em 0 1em 1.2em;
+  margin: 0.2em 0 1.2em 1.2em;
   padding: 0;
 }
-ol.outcomes li { margin: 0 0 0.4em; }
+ol.outcomes li { margin: 0 0 0.5em; }
 
 ul.format {
-  margin: 0.15em 0 1em 1.2em;
+  margin: 0.2em 0 1.2em 1.2em;
   padding: 0;
 }
-ul.format li { margin: 0 0 0.35em; }
+ul.format li { margin: 0 0 0.45em; }
 
-.sess-head { margin: 0 0 0.85em; }
+.sess-head { margin: 0 0 1.05em; }
 .sess-head .weeklabel {
-  font-size: 0.82rem;
+  font-family: var(--heading-font);
+  font-size: 0.75rem;
+  font-weight: 700;
   font-variant: small-caps;
   letter-spacing: 0.14em;
-  color: var(--gold);
-  margin: 0 0 0.15em;
+  color: var(--heading);
+  margin: 0 0 0.25em;
 }
-.sess-head h1, .week-title {
-  font-weight: 400;
+.sess-head h1,
+.week-title {
+  font-family: var(--heading-font);
+  font-weight: 700;
   font-size: 1.75rem;
   line-height: 1.15;
   color: var(--heading);
-  margin: 0 0 0.4em;
-  letter-spacing: 0.01em;
+  margin: 0 0 0.5em;
+  letter-spacing: -0.02em;
 }
 .takeaway {
   font-style: italic;
   margin: 0;
-  color: var(--heading);
+  color: var(--ink);
 }
 .takeaway .label,
 .open .label,
 .passages .label,
 p.meta .label,
 .close-note .label {
+  font-family: var(--heading-font);
   font-style: normal;
   font-variant: small-caps;
   letter-spacing: 0.08em;
-  color: var(--gold);
+  color: var(--heading);
   font-weight: 700;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
 }
-.open { margin: 0 0 0.9em; }
-.passages { margin: 0 0 0.55em; }
+.open { margin: 0 0 1.1em; }
+.passages { margin: 0 0 0.7em; }
 
 blockquote.scripture {
-  margin: 0.2em 0 0.85em;
-  padding: 0.15em 0 0.15em 0.85em;
-  border-left: 1.5px solid var(--rule);
+  margin: 0.3em 0 1.1em;
+  padding: 0.2em 0 0.2em 0.95em;
+  border-left: 3px solid var(--rule);
   background: transparent;
 }
 blockquote.scripture p {
   font-style: italic;
-  margin: 0 0 0.2em;
-  color: var(--heading);
+  margin: 0 0 0.25em;
+  color: var(--ink);
 }
 blockquote.scripture cite {
   display: block;
+  font-family: var(--heading-font);
   font-style: normal;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
+  font-weight: 700;
   font-variant: small-caps;
   letter-spacing: 0.08em;
-  color: var(--gold);
+  color: var(--heading);
 }
 
 ol.movements, ol.discuss {
-  margin: 0.15em 0 1em 1.25em;
+  margin: 0.2em 0 1.2em 1.25em;
   padding: 0;
 }
 ol.movements li, ol.discuss li {
-  margin: 0 0 0.55em;
+  margin: 0 0 0.7em;
   padding: 0;
-  line-height: 1.45;
+  line-height: 1.5;
 }
 ol.movements li strong {
+  font-family: var(--heading-font);
   font-weight: 700;
   color: var(--heading);
 }
 
-.close-note { margin: 0.5em 0 1em; }
+.close-note { margin: 0.6em 0 1.2em; }
 
 .copyright {
-  margin-top: 1.4em;
-  padding-top: 0.7em;
-  border-top: 0.5px solid var(--rule-soft);
-  font-size: 0.78rem;
-  line-height: 1.4;
+  margin-top: 1.75em;
+  padding-top: 0.9em;
+  border-top: 1px solid var(--rule-soft);
+  font-size: 0.8rem;
+  line-height: 1.45;
   color: var(--muted);
 }
 
 .site-footer {
-  margin-top: 1.25rem;
+  margin-top: 1.5rem;
 }
 .pager-bar {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem 1rem;
-  margin: 1.25rem 0 0;
-  padding-top: 0.85rem;
-  border-top: 0.6px solid var(--rule-soft);
+  gap: 0.6rem 1.15rem;
+  margin: 1.6rem 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule-soft);
 }
 .pager-bar a {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
   padding: 0.2rem 0.1rem;
+  font-family: var(--heading-font);
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--link);
 }
+.pager-bar a:hover { color: var(--link-hover); text-decoration: underline; }
 .leader-link {
-  margin: 0.85rem 0 0;
+  margin: 1rem 0 0;
   font-size: 0.85rem;
   color: var(--muted);
 }
 .leader-link a { color: var(--muted); }
 
-/* Desktop: sidebar + reading column, sized for ~960px viewport */
+/* Desktop: sidebar + reading column, sized for about 960px viewport */
 @media (min-width: 760px) {
   .page {
     max-width: 58rem;
-    padding: 1.6rem 1.5rem 3rem;
+    padding: 2.1rem 1.75rem 3.5rem;
   }
   .layout {
     display: grid;
     grid-template-columns: 13.25rem minmax(0, 38rem);
-    column-gap: 2.25rem;
+    column-gap: 2.75rem;
     align-items: start;
   }
   .week-nav {
     position: sticky;
-    top: 1rem;
+    top: 1.25rem;
     margin: 0;
     padding: 0;
     border: none;
   }
   .week-nav a {
-    min-height: 2.15rem;
-    padding: 0.28rem 0.4rem;
+    min-height: 2.25rem;
+    padding: 0.32rem 0.45rem;
     font-size: 0.98rem;
   }
-  body { font-size: 1.14rem; line-height: 1.52; }
-  .sess-head h1, .week-title { font-size: 1.85rem; }
-  .site-header h1, .site-header .course-title { font-size: 2.25rem; }
+  body { font-size: 1.12rem; line-height: 1.58; }
+  .sess-head h1, .week-title { font-size: 1.9rem; }
+  .site-header h1, .site-header .course-title { font-size: 2.35rem; }
 }
 
 @media print {
@@ -384,5 +419,8 @@ ol.movements li strong {
   .layout { display: block; }
   a { color: inherit; text-decoration: none; }
   .copyright { color: #333; }
-  .site-header { margin-bottom: 0.8rem; }
+  .site-header { margin-bottom: 0.9rem; }
+  h2, .sess-head h1, .week-title, .site-header h1, .site-header .course-title {
+    color: #149B9B;
+  }
 }
